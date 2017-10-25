@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ioanap.classbook.SignInActivity">
+
+    <RelativeLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteY="-8dp">
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="162dp" />
+
+        <Button
+            android:id="@+id/signInButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/passwordEditText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Sign In" />
+
+        <TextView
+            android:id="@+id/switchToSignUpTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:text="Don't have an account? Sign up"
+            android:layout_below="@+id/signInButton"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/passwordEditText"
+        android:layout_alignEnd="@+id/switchToSignUpTextView"
+        android:layout_alignRight="@+id/switchToSignUpTextView"
+        android:ems="10"
+        android:hint="E-mail"
+        android:inputType="textEmailAddress"
+        tools:layout_editor_absoluteX="74dp"
+        tools:layout_editor_absoluteY="99dp" />
+
+</android.support.constraint.ConstraintLayout>
