@@ -17,7 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import javax.microedition.khronos.opengles.GL;
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private GlobalApp GLOBAL = GlobalApp.getInstance();
 
     private Button signInButton;
     private EditText emailEditText;
@@ -50,7 +54,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         if (task.isSuccessful()) {
                             // user is successfully logged in -- redirect him to his profile
                             Toast.makeText(SignInActivity.this, "User logged in", Toast.LENGTH_SHORT).show();
-                            SignUpActivity.userRedirect();
+                            GLOBAL.userRedirect();
                         } else {
                             // toast error message
                             Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -69,7 +73,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         // if user is already logged in redirect to activity
         if (firebaseAuth.getCurrentUser() != null) {
             finish();
-            SignUpActivity.userRedirect();
+            GLOBAL.userRedirect();
         }
 
         progressDialog = new ProgressDialog(this);
