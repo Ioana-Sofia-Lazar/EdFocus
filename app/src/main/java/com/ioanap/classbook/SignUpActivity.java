@@ -1,12 +1,11 @@
 package com.ioanap.classbook;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,67 +13,48 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.model.User;
+import com.ioanap.classbook.utils.FirebaseUtils;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private GlobalApp GLOBAL = GlobalApp.getInstance();
+    private static final String TAG = "SignUpActivity";
 
-    private Button signUpButton;
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private TextView switchToSignInTextView;
+    public static Activity signUpActivity;
 
-    private ProgressDialog progressDialog;
+    private Context mContext;
+    private Button mSignUpButton;
+    private EditText mEmailEditText;
+    private EditText mPasswordEditText;
+    private EditText mConfirmPasswordEditText;
+    private TextView mSwitchToSignInTextView;
+
+    private FirebaseUtils firebaseUtils;
 
     private String selectedUserType;
 
-
-
     private void signUp() {
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
+        String email = mEmailEditText.getText().toString().trim();
+        String password = mPasswordEditText.getText().toString();
+        String confirmPassword = mConfirmPasswordEditText.getText().toString();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+        // check if all required fields are filled in
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
             // empty e-mail or password
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        progressDialog.setMessage("Signing Up...");
-        progressDialog.show();
+        // check if passwords match
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // register user
-        GLOBAL.firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            // user is successfully registered and logged in
-                            //set user type
-                            FirebaseUser currentUser = task.getResult().getUser();
-                            User user = new User(selectedUserType);
-                            GLOBAL.mUserRef.child(currentUser.getUid()).setValue(user);
-
-                            Toast.makeText(SignUpActivity.this, "User registered", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // toast error message
-                            Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        User user = new User(selectedUserType);
+        firebaseUtils.registerNewUser(user, email, password);
 
     }
 
@@ -83,20 +63,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        mContext = SignUpActivity.this;
+        firebaseUtils = new FirebaseUtils(mContext);
+        signUpActivity = this;
+
         // if user is already logged in redirect to activity
-        if (GLOBAL.firebaseAuth.getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            firebaseUtils.userRedirect();
+            // jump to Login activity
+            //startActivity(new Intent(this, SignInActivity.class));
             finish();
-            GLOBAL.userRedirect();
         }
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.userTypeRadioGroup);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
-                switch(checkedId)
-                {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
                     case R.id.teacherRadioButton:
                         selectedUserType = "teacher";
                         break;
@@ -110,26 +93,29 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        progressDialog = new ProgressDialog(this);
+        mSignUpButton = (Button) findViewById(R.id.signUpButton);
+        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mConfirmPasswordEditText = (EditText) findViewById(R.id.confirmPasswordEditText);
+        mSwitchToSignInTextView = (TextView) findViewById(R.id.switchToSignInTextView);
 
-        signUpButton = (Button) findViewById(R.id.signUpButton);
-        emailEditText = (EditText) findViewById(R.id.emailEditText);
-        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-        switchToSignInTextView = (TextView) findViewById(R.id.switchToSignInTextView);
-
-        signUpButton.setOnClickListener(this);
-        switchToSignInTextView.setOnClickListener(this);
+        mSignUpButton.setOnClickListener(this);
+        mSwitchToSignInTextView.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View view) {
-        if (view == signUpButton) {
+        if (view == mSignUpButton) {
             signUp();
         }
-        if (view == switchToSignInTextView) {
+        if (view == mSwitchToSignInTextView) {
             // jump to Login activity
             startActivity(new Intent(this, SignInActivity.class));
         }
+    }
+
+    public static SignUpActivity getInstance() {
+        return SignUpActivity.getInstance();
     }
 }

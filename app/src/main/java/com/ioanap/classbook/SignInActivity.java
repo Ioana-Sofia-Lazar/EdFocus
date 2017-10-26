@@ -1,11 +1,13 @@
 package com.ioanap.classbook;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,25 +18,27 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import javax.microedition.khronos.opengles.GL;
+import com.google.firebase.auth.FirebaseUser;
+import com.ioanap.classbook.utils.FirebaseUtils;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private GlobalApp GLOBAL = GlobalApp.getInstance();
+    private static final String TAG = "SignInActivity";
 
-    private Button signInButton;
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private TextView switchToSignUpTextView;
+    private Button mSignInButton;
+    private EditText mEmailEditText;
+    private EditText mPasswordEditText;
+    private TextView mSwitchToSignUpTextView;
+    private ProgressDialog mProgressDialog;
+    private Context mContext;
 
-    private ProgressDialog progressDialog;
+    private FirebaseUtils firebaseUtils;
 
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private void signIn() {
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
+        String email = mEmailEditText.getText().toString().trim();
+        String password = mPasswordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             // empty e-mail or password
@@ -42,19 +46,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        progressDialog.setMessage("Signing In...");
-        progressDialog.show();
+        mProgressDialog.setMessage("Signing In...");
+        mProgressDialog.show();
 
         // log in user
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
+                        mProgressDialog.dismiss();
                         if (task.isSuccessful()) {
-                            // user is successfully logged in -- redirect him to his profile
-                            Toast.makeText(SignInActivity.this, "User logged in", Toast.LENGTH_SHORT).show();
-                            GLOBAL.userRedirect();
+
                         } else {
                             // toast error message
                             Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -68,31 +70,80 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        mContext = SignInActivity.this;
+        firebaseUtils = new FirebaseUtils(mContext);
+
+        setupFirebaseAuth();
 
         // if user is already logged in redirect to activity
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            firebaseUtils.userRedirect();
             finish();
-            GLOBAL.userRedirect();
         }
 
-        progressDialog = new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
 
-        signInButton = (Button) findViewById(R.id.signInButton);
-        emailEditText = (EditText) findViewById(R.id.emailEditText);
-        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-        switchToSignUpTextView = (TextView) findViewById(R.id.switchToSignUpTextView);
+        mSignInButton = (Button) findViewById(R.id.signInButton);
+        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
+        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        mSwitchToSignUpTextView = (TextView) findViewById(R.id.switchToSignUpTextView);
 
-        signInButton.setOnClickListener(this);
-        switchToSignUpTextView.setOnClickListener(this);
+        mSignInButton.setOnClickListener(this);
+        mSwitchToSignUpTextView.setOnClickListener(this);
+    }
+
+    private void setupFirebaseAuth() {
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                if (currentUser != null) {
+                    if (currentUser.isEmailVerified()) {
+                        firebaseUtils.userRedirect();
+                        Log.i("signed in", currentUser.getUid());
+                        Toast.makeText(SignInActivity.this, "Authenticated with: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
+
+                        finish();
+                        // remove SignUpActivity from stack too, so when pressing back in the profile page we won't go back to signing up
+                        SignUpActivity.signUpActivity.finish();
+                    } else {
+                        Toast.makeText(SignInActivity.this, "Check your Email Inbox for a Verification Link", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+
+                }
+            }
+        };
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuthStateListener != null) {
+            FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mAuthStateListener != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthStateListener);
+        }
     }
 
     @Override
     public void onClick(View view) {
-        if (view == signInButton) {
+        if (view == mSignInButton) {
             signIn();
         }
-        if (view == switchToSignUpTextView) {
+        if (view == mSwitchToSignUpTextView) {
             // jump to sign up activity
             startActivity(new Intent(this, SignUpActivity.class));
         }
