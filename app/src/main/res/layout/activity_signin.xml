@@ -6,9 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.ioanap.classbook.SignInActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="304dp"
         android:layout_height="495dp"
+        android:orientation="vertical"
+        android:gravity="center"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
@@ -16,8 +18,6 @@
             android:id="@+id/emailEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="130dp"
             android:ems="10"
             android:hint="E-mail"
             android:inputType="textEmailAddress" />
@@ -28,18 +28,12 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textPassword"
-            android:layout_below="@+id/emailEditText"
-            android:layout_alignLeft="@+id/emailEditText"
-            android:layout_alignStart="@+id/emailEditText"
-            android:layout_marginTop="20dp" />
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/signInButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/passwordEditText"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:text="Sign In" />
 
@@ -47,10 +41,8 @@
             android:id="@+id/switchToSignUpTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/signInButton"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="34dp"
             android:text="Don't have an account? Sign up" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

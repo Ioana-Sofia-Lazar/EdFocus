@@ -6,59 +6,20 @@
     android:layout_height="match_parent"
     tools:context="com.ioanap.classbook.SignUpActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="304dp"
         android:layout_height="437dp"
+        android:orientation="vertical"
+        android:gravity="center"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
-
-        <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/passwordEditText"
-            android:layout_alignLeft="@+id/passwordEditText"
-            android:layout_alignStart="@+id/passwordEditText"
-            android:layout_marginBottom="15dp"
-            android:ems="10"
-            android:hint="E-mail"
-            android:inputType="textEmailAddress" />
-
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/signUpButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/passwordEditText"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:text="Signup" />
-
-        <TextView
-            android:id="@+id/switchToSignInTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/signUpButton"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="67dp"
-            android:text="Already have an account? Sign In" />
 
         <RadioGroup
             android:id="@+id/userTypeRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp">
+            android:layout_centerHorizontal="true">
 
             <RadioButton
                 android:id="@+id/teacherRadioButton"
@@ -82,6 +43,49 @@
                 android:text="Child" />
 
         </RadioGroup>
-    </RelativeLayout>
+
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="E-mail"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:ems="10"
+            android:hint="Confirm Password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Signup" />
+
+        <TextView
+            android:id="@+id/switchToSignInTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Already have an account? Sign In" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
