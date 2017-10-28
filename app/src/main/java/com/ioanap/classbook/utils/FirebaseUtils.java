@@ -18,7 +18,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.SignInActivity;
+import com.ioanap.classbook.child.ChildProfileActivity;
 import com.ioanap.classbook.model.User;
+import com.ioanap.classbook.parent.ParentProfileActivity;
+import com.ioanap.classbook.teacher.TeacherProfileActivity;
 
 public class FirebaseUtils {
 
@@ -112,13 +115,13 @@ public class FirebaseUtils {
                         Intent intent;
 
                         if (userType.equals("teacher")) {
-                            intent = new Intent(mContext, com.ioanap.classbook.teacher.ProfileActivity.class);
+                            intent = new Intent(mContext, TeacherProfileActivity.class);
                             mContext.startActivity(intent);
                         } else if (userType.equals("parent")) {
-                            intent = new Intent(mContext, com.ioanap.classbook.parent.ProfileActivity.class);
+                            intent = new Intent(mContext, ParentProfileActivity.class);
                             mContext.startActivity(intent);
                         } else {
-                            intent = new Intent(mContext, com.ioanap.classbook.child.ProfileActivity.class);
+                            intent = new Intent(mContext, ChildProfileActivity.class);
                             mContext.startActivity(intent);
                         }
 

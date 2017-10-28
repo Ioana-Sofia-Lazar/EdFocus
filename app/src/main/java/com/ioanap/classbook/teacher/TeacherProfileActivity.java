@@ -1,15 +1,15 @@
-package com.ioanap.classbook.parent;
+package com.ioanap.classbook.teacher;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.ioanap.classbook.R;
 
-public class ProfileActivity extends AppCompatActivity {
+public class TeacherProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile2);
+        setContentView(R.layout.activity_teacher_profile);
     }
 }

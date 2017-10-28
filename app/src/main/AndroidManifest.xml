@@ -19,9 +19,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignInActivity" />
-        <activity android:name=".teacher.ProfileActivity" />
-        <activity android:name=".parent.ProfileActivity" />
-        <activity android:name=".child.ProfileActivity"></activity>
+        <activity android:name=".teacher.TeacherProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".parent.ParentProfileActivity" />
+        <activity android:name=".child.ChildProfileActivity"></activity>
     </application>
 
 </manifest>
