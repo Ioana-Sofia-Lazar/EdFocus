@@ -5,17 +5,34 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.ioanap.classbook"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    sourceSets {
+        main {
+            manifest.srcFile '/src/main/AndroidManifest.xml'
+            java.srcDirs = ['/src/main/java', '.apt_generated']
+            aidl.srcDirs = ['/src/main/aidl', 'apt_generated']
+            assets.srcDirs = ['/src/main/assests']
+            res.srcDirs =
+                    [
+                            '/src/main/res/layout/teacher/drawer',
+                            '/src/main/res/layout/teacher',
+                            '/src/main/res/layout',
+                            '/src/main/res'
+                    ]
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -24,19 +41,18 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
     // firebase
+    // design
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
-
-    // design
     compile 'com.android.support:design:25.1.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.android.support:support-v4:25.3.1'
+    testCompile 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'
