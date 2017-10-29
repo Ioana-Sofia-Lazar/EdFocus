@@ -1,30 +1,26 @@
-package com.ioanap.classbook;
+package com.ioanap.classbook.teacher;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.AbsListView;
 
-import com.ioanap.classbook.teacher.ContactsFragment;
-import com.ioanap.classbook.teacher.TeacherProfileFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.ioanap.classbook.R;
+import com.ioanap.classbook.SignInActivity;
 
-public class DrawerActivity extends AppCompatActivity
+public class TeacherDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
                    TeacherProfileFragment.OnFragmentInteractionListener,
                    ContactsFragment.OnFragmentInteractionListener {
@@ -43,23 +39,6 @@ public class DrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //mDrawerLayout.
-        /*mDrawerLayout.setOnScrollChangeListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            private void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == ) {
-                    mDrawerLayout.bringToFront();
-                    mDrawerLayout.requestLayout();
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-        });*/
 
         // set initially shown fragment
         displayFragment(new TeacherProfileFragment());
@@ -106,7 +85,9 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
-            
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
