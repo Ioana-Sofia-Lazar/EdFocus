@@ -3,6 +3,7 @@ package com.ioanap.classbook.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,7 +22,9 @@ import com.ioanap.classbook.SignInActivity;
 import com.ioanap.classbook.child.ChildProfileActivity;
 import com.ioanap.classbook.model.User;
 import com.ioanap.classbook.parent.ParentProfileActivity;
-import com.ioanap.classbook.teacher.TeacherProfileActivity;
+import com.ioanap.classbook.teacher.TeacherDrawerActivity;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FirebaseUtils {
 
@@ -102,6 +105,13 @@ public class FirebaseUtils {
         }
     }
 
+    public void saveToSharedPreferences(Boolean logged, String userType) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences("LoginInfo", MODE_PRIVATE).edit();
+        editor.putBoolean("logged", logged);
+        editor.putString("userType", userType);
+        editor.apply();
+    }
+
     public void userRedirect() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -112,10 +122,13 @@ public class FirebaseUtils {
                         User user = dataSnapshot.getValue(User.class);
                         String userType = user.getUserType();
 
-                        Intent intent;
+                        // save user type to Shared Preferences for future login
+                        saveToSharedPreferences(true, userType);
 
+                        // redirect user to corresponding type of profile
+                        Intent intent;
                         if (userType.equals("teacher")) {
-                            intent = new Intent(mContext, TeacherProfileActivity.class);
+                            intent = new Intent(mContext, TeacherDrawerActivity.class);
                             mContext.startActivity(intent);
                         } else if (userType.equals("parent")) {
                             intent = new Intent(mContext, ParentProfileActivity.class);

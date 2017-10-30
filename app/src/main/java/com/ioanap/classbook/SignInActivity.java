@@ -3,9 +3,10 @@ package com.ioanap.classbook;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ioanap.classbook.child.ChildProfileActivity;
+import com.ioanap.classbook.parent.ParentProfileActivity;
+import com.ioanap.classbook.teacher.TeacherDrawerActivity;
 import com.ioanap.classbook.utils.FirebaseUtils;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
@@ -56,6 +60,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         mProgressDialog.dismiss();
                         if (task.isSuccessful()) {
+                            // signed in with given email and password
 
                         } else {
                             // toast error message
@@ -63,6 +68,32 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         }
                     }
                 });
+    }
+
+    private void redirectAlreadyLoggedUser() {
+        // get from SharedPreferences the type of user that was logged in
+        SharedPreferences settings = getSharedPreferences("LoginInfo", 0);
+        boolean logged = settings.getBoolean("logged", false);
+        String userType = settings.getString("userType", "none");
+
+        if(userType.equals("none") || !logged) {
+            return;
+        }
+
+        Intent intent;
+
+        if (userType.equals("teacher")) {
+            intent = new Intent(mContext, TeacherDrawerActivity.class);
+            mContext.startActivity(intent);
+        } else if (userType.equals("parent")) {
+            intent = new Intent(mContext, ParentProfileActivity.class);
+            mContext.startActivity(intent);
+        } else {
+            intent = new Intent(mContext, ChildProfileActivity.class);
+            mContext.startActivity(intent);
+        }
+
+        Log.d(TAG, "redirecting already logged " + userType);
     }
 
     @Override
@@ -77,7 +108,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         // if user is already logged in redirect to activity
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            firebaseUtils.userRedirect();
+            redirectAlreadyLoggedUser();
+
             finish();
         }
 
@@ -93,7 +125,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setupFirebaseAuth() {
-
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -101,22 +132,28 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
                 if (currentUser != null) {
                     if (currentUser.isEmailVerified()) {
+                        // logging in as user with verified email
+
                         firebaseUtils.userRedirect();
+
                         Log.i("signed in", currentUser.getUid());
                         Toast.makeText(SignInActivity.this, "Authenticated with: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
-
                         finish();
+
+                        // TODO
                         // remove SignUpActivity from stack too, so when pressing back in the profile page we won't go back to signing up
-                        SignUpActivity.signUpActivity.finish();
+                        if (SignUpActivity.signUpActivity != null)
+                            SignUpActivity.signUpActivity.finish();
                     } else {
+                        firebaseUtils.saveToSharedPreferences(false, "none");
                         Toast.makeText(SignInActivity.this, "Check your Email Inbox for a Verification Link", Toast.LENGTH_LONG).show();
                     }
                 } else {
-
+                    // no user is logged in
+                    firebaseUtils.saveToSharedPreferences(false, "none");
                 }
             }
         };
-
 
     }
 

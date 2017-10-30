@@ -13,7 +13,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.ioanap.classbook.model.User;
 import com.ioanap.classbook.utils.FirebaseUtils;
 
@@ -66,14 +65,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mContext = SignUpActivity.this;
         firebaseUtils = new FirebaseUtils(mContext);
         signUpActivity = this;
-
-        // if user is already logged in redirect to activity
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            firebaseUtils.userRedirect();
-            // jump to Login activity
-            //startActivity(new Intent(this, SignInActivity.class));
-            finish();
-        }
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.userTypeRadioGroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
