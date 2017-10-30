@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,28 +14,28 @@
         tools:layout_editor_absoluteY="8dp">
 
         <RadioGroup
-            android:id="@+id/userTypeRadioGroup"
+            android:id="@+id/radio_group_user_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true">
 
             <RadioButton
-                android:id="@+id/teacherRadioButton"
+                android:id="@+id/radio_button_teacher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Teacher" />
 
             <RadioButton
-                android:id="@+id/parentRadioButton"
+                android:id="@+id/radio_button_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Parent" />
 
             <RadioButton
-                android:id="@+id/childRadioButton"
+                android:id="@+id/radio_button_child"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -45,7 +44,7 @@
         </RadioGroup>
 
         <EditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/edit_text_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -53,7 +52,7 @@
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/passwordEditText"
+            android:id="@+id/edit_text_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -62,7 +61,7 @@
             android:inputType="textPassword" />
 
         <EditText
-            android:id="@+id/confirmPasswordEditText"
+            android:id="@+id/edit_text_confirm_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -72,7 +71,7 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/signUpButton"
+            android:id="@+id/button_sign_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -80,7 +79,7 @@
             android:text="Signup" />
 
         <TextView
-            android:id="@+id/switchToSignInTextView"
+            android:id="@+id/text_switch_to_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

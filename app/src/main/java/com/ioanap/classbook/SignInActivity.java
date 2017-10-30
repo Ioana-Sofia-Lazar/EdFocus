@@ -36,10 +36,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private ProgressDialog mProgressDialog;
     private Context mContext;
 
-    private FirebaseUtils firebaseUtils;
+    private FirebaseUtils mFirebaseUtils;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
+    /**
+     * Gets the filled in values from the fields.
+     * Shows progress dialog and signs in the user with the email and password he introduced (if correct).
+     */
     private void signIn() {
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
@@ -61,7 +65,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         mProgressDialog.dismiss();
                         if (task.isSuccessful()) {
                             // signed in with given email and password
-
                         } else {
                             // toast error message
                             Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -70,6 +73,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 });
     }
 
+    /**
+     * When a user is already signed in, we get his type from previously saved SharedPreferences on sign in.
+     * Then we redirect him to his profile.
+     */
     private void redirectAlreadyLoggedUser() {
         // get from SharedPreferences the type of user that was logged in
         SharedPreferences settings = getSharedPreferences("LoginInfo", 0);
@@ -102,28 +109,31 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_signin);
 
         mContext = SignInActivity.this;
-        firebaseUtils = new FirebaseUtils(mContext);
+        mFirebaseUtils = new FirebaseUtils(mContext);
 
         setupFirebaseAuth();
 
-        // if user is already logged in redirect to activity
+        // if user is already logged in, redirect him to his profile
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             redirectAlreadyLoggedUser();
-
             finish();
         }
 
         mProgressDialog = new ProgressDialog(this);
 
-        mSignInButton = (Button) findViewById(R.id.signInButton);
-        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
-        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
-        mSwitchToSignUpTextView = (TextView) findViewById(R.id.switchToSignUpTextView);
+        mSignInButton = (Button) findViewById(R.id.button_sign_in);
+        mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
+        mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
+        mSwitchToSignUpTextView = (TextView) findViewById(R.id.text_switch_to_sign_up);
 
         mSignInButton.setOnClickListener(this);
         mSwitchToSignUpTextView.setOnClickListener(this);
     }
 
+    /**
+     * Sets up listener for the FirebaseAuth Object
+     * When user with verified email signs in (Auth statehas changed) he will be redirected to his profile
+     */
     private void setupFirebaseAuth() {
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -134,7 +144,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     if (currentUser.isEmailVerified()) {
                         // logging in as user with verified email
 
-                        firebaseUtils.userRedirect();
+                        mFirebaseUtils.userRedirect();
 
                         Log.i("signed in", currentUser.getUid());
                         Toast.makeText(SignInActivity.this, "Authenticated with: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
@@ -142,15 +152,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
                         // TODO
                         // remove SignUpActivity from stack too, so when pressing back in the profile page we won't go back to signing up
-                        if (SignUpActivity.signUpActivity != null)
-                            SignUpActivity.signUpActivity.finish();
+                        if (SignUpActivity.signUpActivity != null) SignUpActivity.signUpActivity.finish();
                     } else {
-                        firebaseUtils.saveToSharedPreferences(false, "none");
+                        mFirebaseUtils.saveToSharedPreferences(false, "none");
                         Toast.makeText(SignInActivity.this, "Check your Email Inbox for a Verification Link", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // no user is logged in
-                    firebaseUtils.saveToSharedPreferences(false, "none");
+                    mFirebaseUtils.saveToSharedPreferences(false, "none");
                 }
             }
         };

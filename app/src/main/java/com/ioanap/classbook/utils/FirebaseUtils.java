@@ -31,13 +31,10 @@ public class FirebaseUtils {
     private static final String TAG = "FirebaseUtils";
 
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRootRef, mUserRef;
 
     private Context mContext;
-
-    private String userId;
 
     private ProgressDialog mProgressDialog;
 
@@ -48,12 +45,16 @@ public class FirebaseUtils {
         mUserRef = mRootRef.child("users");
         mContext = context;
         mProgressDialog = new ProgressDialog(mContext);
-
-        if(mAuth.getCurrentUser() != null){
-            userId = mAuth.getCurrentUser().getUid();
-        }
     }
 
+    /**
+     * Registers new user and on success adds his information to the database and sends a verification
+     * link to his email address. The user will be then redirected to the login page.
+     *
+     * @param user      information to add to the database if register is successful
+     * @param email     email for the user that will be registered
+     * @param password  password for the user that will be registered
+     */
     public void registerNewUser(final User user, String email, String password){
         mProgressDialog.setMessage("Signing Up...");
         mProgressDialog.show();
@@ -71,8 +72,6 @@ public class FirebaseUtils {
                             sendEmailVerification();
 
                             Toast.makeText(mContext, "User registered", Toast.LENGTH_SHORT).show();
-                            userId = mAuth.getCurrentUser().getUid();
-                            Log.d(TAG, "Auth State - changed: " + userId);
 
                             mAuth.signOut();
 
@@ -87,6 +86,9 @@ public class FirebaseUtils {
                 });
     }
 
+    /**
+     * Sends a verification link to the email address of the currently logged user.
+     */
     public void sendEmailVerification(){
         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -105,6 +107,12 @@ public class FirebaseUtils {
         }
     }
 
+    /**
+     * Saves the current state to SharedPreferences (whether there is or not a logged in user and his type)
+     *
+     * @param logged    tells whether there is a logged in user
+     * @param userType  type of the logged in user
+     */
     public void saveToSharedPreferences(Boolean logged, String userType) {
         SharedPreferences.Editor editor = mContext.getSharedPreferences("LoginInfo", MODE_PRIVATE).edit();
         editor.putBoolean("logged", logged);
@@ -112,6 +120,10 @@ public class FirebaseUtils {
         editor.apply();
     }
 
+    /**
+     * Redirects the currently logged in user to his profile according to his type i.e Teacher,
+     * Parent or Child.
+     */
     public void userRedirect() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 

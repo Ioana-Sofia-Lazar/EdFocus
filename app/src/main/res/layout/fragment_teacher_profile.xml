@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/common_google_signin_btn_text_dark_default"
-    tools:context="com.ioanap.classbook.teacher.TeacherProfileActivity">
+    tools:context="com.ioanap.classbook.teacher.TeacherProfileFragment">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/toolbar2"
+                android:layout_alignBottom="@+id/toolbar"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
@@ -163,7 +163,7 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/emailAddress"
+                android:id="@+id/text_email_address"
                 android:layout_width="278dp"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_email_envelope"
@@ -173,7 +173,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/location"
+                android:id="@+id/text_location"
                 android:layout_width="278dp"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_location"

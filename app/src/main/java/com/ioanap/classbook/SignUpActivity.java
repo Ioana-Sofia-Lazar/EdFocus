@@ -29,9 +29,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText mConfirmPasswordEditText;
     private TextView mSwitchToSignInTextView;
 
-    private FirebaseUtils firebaseUtils;
+    private FirebaseUtils mFirebaseUtils;
 
-    private String selectedUserType;
+    private String mSelectedUserType;
 
     private void signUp() {
         String email = mEmailEditText.getText().toString().trim();
@@ -52,8 +52,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         // register user
-        User user = new User(selectedUserType);
-        firebaseUtils.registerNewUser(user, email, password);
+        User user = new User(mSelectedUserType);
+        mFirebaseUtils.registerNewUser(user, email, password);
 
     }
 
@@ -63,32 +63,32 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_signup);
 
         mContext = SignUpActivity.this;
-        firebaseUtils = new FirebaseUtils(mContext);
+        mFirebaseUtils = new FirebaseUtils(mContext);
         signUpActivity = this;
 
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.userTypeRadioGroup);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio_group_user_type);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case R.id.teacherRadioButton:
-                        selectedUserType = "teacher";
+                    case R.id.radio_button_teacher:
+                        mSelectedUserType = "teacher";
                         break;
-                    case R.id.parentRadioButton:
-                        selectedUserType = "parent";
+                    case R.id.radio_button_parent:
+                        mSelectedUserType = "parent";
                         break;
-                    case R.id.childRadioButton:
-                        selectedUserType = "child";
+                    case R.id.radio_button_child:
+                        mSelectedUserType = "child";
                         break;
                 }
             }
         });
 
-        mSignUpButton = (Button) findViewById(R.id.signUpButton);
-        mEmailEditText = (EditText) findViewById(R.id.emailEditText);
-        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
-        mConfirmPasswordEditText = (EditText) findViewById(R.id.confirmPasswordEditText);
-        mSwitchToSignInTextView = (TextView) findViewById(R.id.switchToSignInTextView);
+        mSignUpButton = (Button) findViewById(R.id.button_sign_in);
+        mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
+        mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
+        mConfirmPasswordEditText = (EditText) findViewById(R.id.edit_text_confirm_password);
+        mSwitchToSignInTextView = (TextView) findViewById(R.id.text_switch_to_sign_in);
 
         mSignUpButton.setOnClickListener(this);
         mSwitchToSignInTextView.setOnClickListener(this);

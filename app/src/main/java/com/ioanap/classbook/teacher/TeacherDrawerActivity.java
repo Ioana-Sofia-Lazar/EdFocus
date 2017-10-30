@@ -25,8 +25,11 @@ public class TeacherDrawerActivity extends AppCompatActivity
                    TeacherProfileFragment.OnFragmentInteractionListener,
                    ContactsFragment.OnFragmentInteractionListener {
 
-    private DrawerLayout mDrawerLayout;
-
+    /**
+     * Displays the fragment in the container.
+     *
+     * @param fragment fragment to display
+     */
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
@@ -67,15 +70,13 @@ public class TeacherDrawerActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // display fragments corresponding to clicked items from the drawer
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
             displayFragment(new TeacherProfileFragment());
-            Log.i("showing fragment","profile");
         } else if (id == R.id.nav_contacts) {
             displayFragment(new ContactsFragment());Log.i("showing fragment","contacts");
         } else if (id == R.id.nav_messages) {
@@ -85,6 +86,7 @@ public class TeacherDrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
+            // sign user out
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, SignInActivity.class));
             finish();

@@ -17,9 +17,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".teacher.TeacherProfileActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".parent.ParentProfileActivity" />
         <activity android:name=".child.ChildProfileActivity" />
         <activity

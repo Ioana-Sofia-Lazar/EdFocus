@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single" android:id="@+id/itemsGroup1">
+    <group android:checkableBehavior="single" android:id="@+id/group_items_1">
         <item
             android:id="@+id/nav_profile"
             android:enabled="true"
@@ -25,7 +24,7 @@
             android:title="My Classes" />
     </group>
 
-    <group android:checkableBehavior="single" android:id="@+id/itemsGroup2">
+    <group android:checkableBehavior="single" android:id="@+id/group_items_2">
         <item
             android:id="@+id/nav_settings"
             android:enabled="true"
