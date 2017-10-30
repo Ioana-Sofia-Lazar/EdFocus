@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
+    <color name="cyan">#00a8a9</color>
+    <color name="navyBlue">#2c2859</color>
+    <color name="coral">#FF7751</color>
+    <color name="lightCoral">#F9BC8E</color>
+    <color name="platinum">#e1e4e3</color>
+    <color name="grey">#565554</color>
 </resources>

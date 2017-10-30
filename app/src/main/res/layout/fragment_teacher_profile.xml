@@ -31,13 +31,26 @@
                 android:layout_alignParentStart="true">
             </android.support.v7.widget.Toolbar>
 
+            <Button
+                android:id="@+id/button_edit_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:background="@android:color/transparent"
+                android:text="Edit Profile"
+                android:textSize="12sp"
+                android:layout_above="@+id/linearLayout"
+                android:layout_alignParentEnd="true" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:id="@+id/linearLayout">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="170dp"
@@ -65,19 +78,6 @@
                     android:textColor="@android:color/holo_blue_dark" />
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/toolbar"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="right"
-                android:layout_marginRight="10dp"
-                android:background="@android:color/transparent"
-                android:text="Edit Profile"
-                android:textSize="12sp" />
 
         </RelativeLayout>
 

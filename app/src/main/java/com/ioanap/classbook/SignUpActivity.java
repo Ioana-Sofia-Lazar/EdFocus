@@ -84,7 +84,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        mSignUpButton = (Button) findViewById(R.id.button_sign_in);
+        mSignUpButton = (Button) findViewById(R.id.button_sign_up);
         mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
         mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
         mConfirmPasswordEditText = (EditText) findViewById(R.id.edit_text_confirm_password);

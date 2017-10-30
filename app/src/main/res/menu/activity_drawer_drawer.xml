@@ -5,22 +5,22 @@
         <item
             android:id="@+id/nav_profile"
             android:enabled="true"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/ic_profile"
             android:title="Profile" />
         <item
             android:id="@+id/nav_contacts"
             android:enabled="true"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/ic_contact"
             android:title="Contacts" />
         <item
             android:id="@+id/nav_messages"
             android:enabled="true"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/ic_message"
             android:title="Messages" />
         <item
             android:id="@+id/nav_classes"
             android:enabled="true"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/ic_classes"
             android:title="My Classes" />
     </group>
 
@@ -28,17 +28,17 @@
         <item
             android:id="@+id/nav_settings"
             android:enabled="true"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/ic_settings"
             android:title="Settings" />
         <item
             android:id="@+id/nav_help_feedback"
             android:enabled="true"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/ic_help_feedback"
             android:title="Help and Feedback" />
         <item
             android:id="@+id/nav_logout"
             android:enabled="true"
-            android:icon="@drawable/ic_location"
+            android:icon="@drawable/ic_logout"
             android:title="Log Out" />
     </group>
 
