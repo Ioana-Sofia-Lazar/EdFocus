@@ -137,16 +137,23 @@ public class FirebaseUtils {
                         // save user type to Shared Preferences for future login
                         saveToSharedPreferences(true, userType);
 
-                        // redirect user to corresponding type of profile
+                        // redirect user to corresponding type of profile and delete all previous
+                        // activities from stack
                         Intent intent;
                         if (userType.equals("teacher")) {
                             intent = new Intent(mContext, TeacherDrawerActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
                         } else if (userType.equals("parent")) {
                             intent = new Intent(mContext, ParentProfileActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
                         } else {
                             intent = new Intent(mContext, ChildProfileActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
                         }
 
@@ -159,6 +166,18 @@ public class FirebaseUtils {
                     }
                 });
 
+    }
+
+    /**
+     * Signs currently logged user out and clears all activities from stack (except from the first
+     * one i.e. SignInActivity)
+     */
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();
+
+        Intent intent = new Intent(mContext, SignInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mContext.startActivity(intent);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.ioanap.classbook.teacher;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,14 +16,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.ioanap.classbook.R;
-import com.ioanap.classbook.SignInActivity;
+import com.ioanap.classbook.utils.FirebaseUtils;
+import com.ioanap.classbook.utils.UniversalImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TeacherDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
                    TeacherProfileFragment.OnFragmentInteractionListener,
                    ContactsFragment.OnFragmentInteractionListener {
+
+    private Context mContext = TeacherDrawerActivity.this;
+    private FirebaseUtils mFirebaseUtils;
 
     /**
      * Displays the fragment in the container.
@@ -43,8 +47,13 @@ public class TeacherDrawerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+        mFirebaseUtils = new FirebaseUtils(mContext);
+
         // set initially shown fragment
         displayFragment(new TeacherProfileFragment());
+
+        // initialize image loader
+        initImageLoader();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,6 +79,11 @@ public class TeacherDrawerActivity extends AppCompatActivity
         }
     }
 
+    private void initImageLoader(){
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
+        ImageLoader.getInstance().init(universalImageLoader.getConfig());
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // display fragments corresponding to clicked items from the drawer
@@ -87,8 +101,8 @@ public class TeacherDrawerActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             // sign user out
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(this, SignInActivity.class));
+            mFirebaseUtils.signOut();
+
             finish();
         }
 

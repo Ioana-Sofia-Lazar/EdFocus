@@ -3,6 +3,8 @@
     package="com.ioanap.classbook">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- cache images on SD card -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,14 +21,11 @@
         </activity>
         <activity android:name=".parent.ParentProfileActivity" />
         <activity android:name=".child.ChildProfileActivity" />
-        <activity
-            android:name=".SignUpActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".teacher.TeacherDrawerActivity"
-            android:label="@string/title_activity_drawer"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".teacher.TeacherDrawerActivity"
+            android:label=""/>
+        <activity android:name=".teacher.EditProfileActivity"
+            android:label="Edit your profile" />
     </application>
 
 </manifest>

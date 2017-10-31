@@ -1,14 +1,19 @@
 package com.ioanap.classbook.teacher;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.utils.UniversalImageLoader;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +23,7 @@ import com.ioanap.classbook.R;
  * Use the {@link TeacherProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TeacherProfileFragment extends Fragment {
+public class TeacherProfileFragment extends Fragment  implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,6 +34,8 @@ public class TeacherProfileFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private Button mEditProfileButton;
+    private ImageView mProfilePhotoImageView;
 
     public TeacherProfileFragment() {
         // Required empty public constructor
@@ -53,12 +60,24 @@ public class TeacherProfileFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mProfilePhotoImageView = (ImageView) view.findViewById(R.id.image_profile_photo);
+        mEditProfileButton = (Button) view.findViewById(R.id.button_edit_profile);
+        mEditProfileButton.setOnClickListener(this);
+
+        setProfilePhoto();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -86,10 +105,23 @@ public class TeacherProfileFragment extends Fragment {
         }
     }
 
+    private void setProfilePhoto() {
+        String url = "cap.stanford.edu/profiles/viewImage?profileId=9633&type=square";
+        UniversalImageLoader.setImage(url, mProfilePhotoImageView, null, "https://");
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == mEditProfileButton) {
+            // jump to edit profile page
+            startActivity(new Intent(getActivity(), EditProfileActivity.class));
+        }
     }
 
     /**
