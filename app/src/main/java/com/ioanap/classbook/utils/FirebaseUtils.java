@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ioanap.classbook.R;
 import com.ioanap.classbook.SignInActivity;
 import com.ioanap.classbook.child.ChildProfileActivity;
 import com.ioanap.classbook.model.User;
@@ -119,6 +120,34 @@ public class FirebaseUtils {
         Log.d(TAG, "settings: " + settings);
 
         return settings;
+    }
+
+    /**
+     * Update "user_account_settings" node for current user.
+     *
+     * @param name
+     * @param description
+     * @param location
+     * @param phoneNumber
+     */
+    public void updateUserAccountSettings(String name, String description, String location, String phoneNumber, String profilePhoto) {
+        DatabaseReference ref = mSettingsRef.child(userID);
+
+        if (name != null) {
+            ref.child(mContext.getString(R.string.field_name)).setValue(name);
+        }
+        if (description != null) {
+            ref.child(mContext.getString(R.string.field_description)).setValue(description);
+        }
+        if (location != null) {
+            ref.child(mContext.getString(R.string.field_location)).setValue(location);
+        }
+        if (phoneNumber != null) {
+            ref.child(mContext.getString(R.string.field_phone_number)).setValue(phoneNumber);
+        }
+        if (profilePhoto != null) {
+            ref.child(mContext.getString(R.string.field_profile_photo)).setValue(profilePhoto);
+        }
     }
 
     /**

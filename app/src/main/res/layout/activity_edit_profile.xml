@@ -72,11 +72,12 @@
             android:orientation="vertical"
             android:padding="8dp"
             android:paddingBottom="8dp"
-            android:paddingTop="0dp">
-
+            android:paddingTop="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_photo"
+                android:id="@+id/edit_profile_photo"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
@@ -87,7 +88,7 @@
                 tools:layout_editor_absoluteY="56dp" />
 
             <TextView
-                android:id="@+id/text_change_profile_pic"
+                android:id="@+id/text_edit_profile_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -95,18 +96,17 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name" />
+                android:hint="Name" />
 
             <EditText
                 android:id="@+id/edit_text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:text="Name" />
 
             <TextView
                 android:id="@+id/textView7"
