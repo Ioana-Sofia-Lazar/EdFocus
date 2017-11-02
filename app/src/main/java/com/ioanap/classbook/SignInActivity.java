@@ -149,7 +149,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         Log.i("signed in", currentUser.getUid());
                         Toast.makeText(SignInActivity.this, "Authenticated with: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
                         finish();
-                        
+
                     } else {
                         mFirebaseUtils.saveToSharedPreferences(false, "none");
                         Toast.makeText(SignInActivity.this, "Check your Email Inbox for a Verification Link", Toast.LENGTH_LONG).show();

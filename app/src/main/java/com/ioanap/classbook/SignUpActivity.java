@@ -52,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         // register user
-        User user = new User(mSelectedUserType);
+        User user = new User(email, mSelectedUserType);
         mFirebaseUtils.registerNewUser(user, email, password);
 
     }

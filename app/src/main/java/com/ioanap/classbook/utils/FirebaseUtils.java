@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.SignInActivity;
 import com.ioanap.classbook.child.ChildProfileActivity;
 import com.ioanap.classbook.model.User;
+import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.teacher.TeacherDrawerActivity;
 
@@ -32,7 +33,8 @@ public class FirebaseUtils {
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mRootRef, mUserRef;
+    private DatabaseReference mRootRef, mUserRef, mSettingsRef;
+    private String userID;
 
     private Context mContext;
 
@@ -43,8 +45,13 @@ public class FirebaseUtils {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = mFirebaseDatabase.getReference();
         mUserRef = mRootRef.child("users");
+        mSettingsRef = mRootRef.child("user_account_settings");
         mContext = context;
         mProgressDialog = new ProgressDialog(mContext);
+
+        if(mAuth.getCurrentUser() != null){
+            userID = mAuth.getCurrentUser().getUid();
+        }
     }
 
     /**
@@ -65,10 +72,12 @@ public class FirebaseUtils {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         mProgressDialog.dismiss();
                         if (task.isSuccessful()) {
-                            // set user type
+                            // save info to firebase
                             FirebaseUser currentUser = task.getResult().getUser();
-                            mUserRef.child(currentUser.getUid()).setValue(user);
+                            user.setId(currentUser.getUid());
+                            addUserInfo(user, new UserAccountSettings());
 
+                            // send verification link to the email address
                             sendEmailVerification();
 
                             Toast.makeText(mContext, "User registered", Toast.LENGTH_SHORT).show();
@@ -84,6 +93,32 @@ public class FirebaseUtils {
 
                     }
                 });
+    }
+
+    /**
+     * Adds data to Firebase for the user with ID user.getId().
+     *
+     * @param user
+     * @param settings
+     */
+    public void addUserInfo(User user, UserAccountSettings settings) {
+        mUserRef.child(user.getId()).setValue(user);
+
+        settings.setId(user.getId());
+        settings.setEmail(user.getEmail());
+        settings.setUserType(user.getUserType());
+        mSettingsRef.child(user.getId()).setValue(settings);
+    }
+
+    public UserAccountSettings getUserAccountSettings(DataSnapshot dataSnapshot) {
+        Log.d(TAG, "getting user account settings");
+
+        Log.d(TAG, "dataSnapshot: " + dataSnapshot);
+
+        UserAccountSettings settings = dataSnapshot.child(userID).getValue(UserAccountSettings.class);
+        Log.d(TAG, "settings: " + settings);
+
+        return settings;
     }
 
     /**
