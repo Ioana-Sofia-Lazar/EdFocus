@@ -1,15 +1,25 @@
 package com.ioanap.classbook.teacher;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,23 +28,33 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.utils.FirebaseUtils;
+import com.ioanap.classbook.utils.SelectProfilePhotoDialog;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener,
+            SelectProfilePhotoDialog.OnPhotoSelectedListener {
 
     private static final String TAG = "EditProfileActivity";
+    private static final int REQUEST_CODE = 1;
 
+    // widgets
     private ImageView mCancelImageView, mSaveImageView, mEditProfilePhotoImageView;
     private TextView mEditProfilePhotoTextView;
     private EditText mNameEditText, mDescriptionEditText, mLocationEditText, mEmailEditText, mPhoneNumberEditText;
+    private ProgressBar mProgressBar;
 
     // firebase
-    private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRootRef, mSettingsRef;
     private FirebaseUtils mFirebaseUtils;
     private Context mContext;
 
+    // variables
+    private Bitmap mSelectedBitmap;
+    private Uri mSelectedUri;
     private UserAccountSettings mSettings;
 
     @Override
@@ -58,6 +78,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         mLocationEditText = (EditText) findViewById(R.id.edit_text_location);
         mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
         mPhoneNumberEditText = (EditText) findViewById(R.id.edit_text_phone_number);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_edit_profile);
 
         // toolbar buttons
         mCancelImageView = (ImageView) findViewById(R.id.image_cancel);
@@ -67,6 +88,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         mCancelImageView.setOnClickListener(this);
         mSaveImageView.setOnClickListener(this);
 
+        mEditProfilePhotoTextView.setOnClickListener(this);
     }
 
     @Override
@@ -80,6 +102,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
             finish();
         }
+        if (view == mEditProfilePhotoTextView) {
+            // verify permissions
+            verifyPermissions();
+
+        }
     }
 
     /**
@@ -90,7 +117,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         String description = mDescriptionEditText.getText().toString();
         String location = mLocationEditText.getText().toString();
         String phoneNumber = mPhoneNumberEditText.getText().toString();
-        // String profilePhoto = "";
 
         if (!mSettings.getName().equals(name)) {
             mFirebaseUtils.updateUserAccountSettings(name, null, null, null, null);
@@ -103,6 +129,12 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         }
         if (!mSettings.getPhoneNumber().equals(phoneNumber)) {
             mFirebaseUtils.updateUserAccountSettings(null, null, null, phoneNumber, null);
+        }
+
+        if (mSelectedBitmap != null && mSelectedUri == null) {
+            compressThenUploadNewPhoto(mSelectedBitmap);
+        } else if (mSelectedBitmap == null && mSelectedUri != null) {
+            compressThenUploadNewPhoto(mSelectedUri);
         }
 
     }
@@ -125,7 +157,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setProfilePhoto(String url) {
-        UniversalImageLoader.setImage(url, mEditProfilePhotoImageView, null, "");
+        UniversalImageLoader.setImage(url, mEditProfilePhotoImageView, null);
     }
 
     /**
@@ -135,7 +167,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private void setupFirebase() {
         Log.d(TAG, "setupFirebase");
 
-        mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = mFirebaseDatabase.getReference();
         mSettingsRef = mRootRef.child("user_account_settings");
@@ -157,5 +188,144 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+    }
+
+    /**
+     * Verifies permissions for accessing storage and camera.
+     * Explicitly asks for permissions if they are not granted yet.
+     */
+    private void verifyPermissions() {
+        Log.d(TAG, "asking user for permissions");
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[1]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[2]) == PackageManager.PERMISSION_GRANTED) {
+
+            // all permissions granted - show select photo dialog
+            SelectProfilePhotoDialog dialog = new SelectProfilePhotoDialog();
+            dialog.show(getSupportFragmentManager(), "SelectPhoto");
+
+        } else {
+            // explicitly ask for permissions
+            ActivityCompat.requestPermissions(EditProfileActivity.this,
+                    permissions,
+                    REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        verifyPermissions();
+    }
+
+    /**
+     * Image uri is going to show up here after the dialog has closed and the user has selected an image.
+     *
+     * @param imagePath
+     */
+    @Override
+    public void getImagePath(Uri imagePath) {
+        Log.d(TAG, "getImagePath: setting the image to imageview");
+        UniversalImageLoader.setImage(imagePath.toString(), mEditProfilePhotoImageView, null);
+        //assign to global variable
+        mSelectedBitmap = null;
+        mSelectedUri = imagePath;
+    }
+
+    /**
+     * Image bitmap is going to show up here after the dialog has closed and the user has taken a photo.
+     *
+     * @param bitmap
+     */
+    @Override
+    public void getImageBitmap(Bitmap bitmap) {
+        Log.d(TAG, "getImageBitmap: setting the image to imageview");
+        mEditProfilePhotoImageView.setImageBitmap(bitmap);
+        //assign to a global variable
+        mSelectedUri = null;
+        mSelectedBitmap = bitmap;
+    }
+
+    /**
+     * Compresses image (background task to prevent slowing down the UI).
+     */
+    public class ImageCompressionInBackground extends AsyncTask<Uri, Integer, byte[]> {
+
+        Bitmap mBitmap;
+
+        public ImageCompressionInBackground(Bitmap bitmap) {
+            if(bitmap != null){
+                this.mBitmap = bitmap;
+            }
+        }
+
+        // runs on the main thread, not in background
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(mContext, "Compressing image", Toast.LENGTH_SHORT).show();
+            showProgressBar();
+        }
+
+        @Override
+        protected byte[] doInBackground(Uri... params) {
+            Log.d(TAG, "doInBackground: started.");
+
+            if(mBitmap == null){
+                // we have a uri
+                try {
+                    // get bitmap from the uri (we need a bitmap for uploading)
+                    mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), params[0]);
+                } catch (IOException e){
+                    Log.e(TAG, "doInBackground: IOException: " + e.getMessage());
+                }
+            }
+            byte[] bytes = null;
+            bytes = bitmapToBytes(mBitmap, 100);
+            return bytes;
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+
+            hideProgressBar();
+
+            // execute the upload to firebase task
+            mFirebaseUtils.uploadProfilePhoto(bytes);
+        }
+    }
+
+    private void compressThenUploadNewPhoto(Bitmap bitmap){
+        Log.d(TAG, "uploadNewPhoto: uploading a new image bitmap to storage");
+        ImageCompressionInBackground compress = new ImageCompressionInBackground(bitmap);
+        Uri uri = null;
+        compress.execute(uri);
+    }
+
+    private void compressThenUploadNewPhoto(Uri imagePath){
+        Log.d(TAG, "uploadNewPhoto: uploading a new image uri to storage.");
+        ImageCompressionInBackground resize = new ImageCompressionInBackground(null);
+        resize.execute(imagePath);
+    }
+
+    public static byte[] bitmapToBytes(Bitmap bitmap, int quality){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality,stream);
+        return stream.toByteArray();
+    }
+
+    private void showProgressBar(){
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar(){
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 }

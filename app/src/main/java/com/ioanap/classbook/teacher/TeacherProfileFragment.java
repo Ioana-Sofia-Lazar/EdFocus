@@ -181,7 +181,7 @@ public class TeacherProfileFragment extends Fragment  implements View.OnClickLis
     }
 
     private void setProfilePhoto(String url) {
-        UniversalImageLoader.setImage(url, mProfilePhotoImageView, null, "");
+        UniversalImageLoader.setImage(url, mProfilePhotoImageView, null);
     }
 
     @Override

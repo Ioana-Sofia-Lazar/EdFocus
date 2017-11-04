@@ -55,12 +55,11 @@ public class UniversalImageLoader {
      * @param imgURL URL of image to display
      * @param image ImageView to display it in
      * @param mProgressBar
-     * @param append "https://" for example
      */
-    public static void setImage(String imgURL, ImageView image, final ProgressBar mProgressBar, String append){
+    public static void setImage(String imgURL, ImageView image, final ProgressBar mProgressBar){
 
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(append + imgURL, image, new ImageLoadingListener() {
+        imageLoader.displayImage(imgURL, image, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 if(mProgressBar != null){

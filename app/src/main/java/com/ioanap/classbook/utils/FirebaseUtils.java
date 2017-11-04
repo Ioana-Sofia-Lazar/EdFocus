@@ -4,11 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.SignInActivity;
 import com.ioanap.classbook.child.ChildProfileActivity;
@@ -148,6 +154,38 @@ public class FirebaseUtils {
         if (profilePhoto != null) {
             ref.child(mContext.getString(R.string.field_profile_photo)).setValue(profilePhoto);
         }
+
+    }
+
+    /**
+     * Receive an image as a byte array, save image to Firebase Storage, get uri(reference) to
+     * the image and then call "updateUserAccountSettings" to save reference in Firebase Database.
+     *
+     * @param bytes
+     */
+    public void uploadProfilePhoto(byte[] bytes) {
+        // add photo to directory in firebase storage
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                .child("photos/" + userID + "/profilePhoto");
+        UploadTask uploadTask = storageReference.putBytes(bytes);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // get image url
+                Uri firebaseUri = taskSnapshot.getDownloadUrl();
+
+                Log.d(TAG, "success - firebase download url: " + firebaseUri.toString());
+
+                // save image url to firebase database
+                updateUserAccountSettings(null, null, null, null, firebaseUri.toString());
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(mContext, "Could not upload photo", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

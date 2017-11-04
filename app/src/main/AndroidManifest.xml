@@ -3,8 +3,9 @@
     package="com.ioanap.classbook">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- cache images on SD card -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"

@@ -23,8 +23,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TeacherDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                   TeacherProfileFragment.OnFragmentInteractionListener,
-                   ContactsFragment.OnFragmentInteractionListener {
+        TeacherProfileFragment.OnFragmentInteractionListener,
+        ContactsFragment.OnFragmentInteractionListener {
+
+    private static final String TAG = "TeacherDrawerActivity";
 
     private Context mContext = TeacherDrawerActivity.this;
     private FirebaseUtils mFirebaseUtils;
@@ -79,7 +81,7 @@ public class TeacherDrawerActivity extends AppCompatActivity
         }
     }
 
-    private void initImageLoader(){
+    private void initImageLoader() {
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
         ImageLoader.getInstance().init(universalImageLoader.getConfig());
     }
@@ -92,7 +94,8 @@ public class TeacherDrawerActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             displayFragment(new TeacherProfileFragment());
         } else if (id == R.id.nav_contacts) {
-            displayFragment(new ContactsFragment());Log.i("showing fragment","contacts");
+            displayFragment(new ContactsFragment());
+            Log.i("showing fragment", "contacts");
         } else if (id == R.id.nav_messages) {
 
         } else if (id == R.id.nav_classes) {
