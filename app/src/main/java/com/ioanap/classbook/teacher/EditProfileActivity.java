@@ -73,7 +73,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
         if (view == mCancelImageView) {
             finish();
-        } else if (view == mSaveImageView) {
+        }
+        if (view == mSaveImageView) {
             // save information
             saveProfileSettings();
 

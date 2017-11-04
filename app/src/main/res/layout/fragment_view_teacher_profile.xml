@@ -76,6 +76,81 @@
                 android:layout_height="wrap_content"
                 android:background="@color/common_google_signin_btn_text_dark_default"
                 android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="10dp">
+
+                <!-- Number of Contacts and Classes -->
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:padding="8dp"
+                    android:rowCount="2">
+
+                    <TextView
+                        android:id="@+id/text_contacts"
+                        android:layout_column="0"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="0"
+                        android:text="300"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_column="0"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="1"
+                        android:text="Contacts"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_column="1"
+                        android:layout_row="0"
+                        android:layout_rowSpan="2"
+                        android:layout_rowWeight="1"
+                        android:background="@color/common_google_signin_btn_text_light_default" />
+
+                    <TextView
+                        android:id="@+id/text_classes"
+                        android:layout_column="2"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="0"
+                        android:text="3"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_column="2"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="1"
+                        android:text="Classes"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </GridLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/common_google_signin_btn_text_dark_default"
+                android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_scrollFlags="scroll|enterAlways">
 
@@ -93,101 +168,33 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-                <GridLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:columnCount="3"
-                    android:padding="16dp"
-                    android:rowCount="2">
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="300"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="250"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="500"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="Following"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="Followers"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="Likes"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                </GridLayout>
-
-            </LinearLayout>
-
+            <!-- Additional info -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#EEEEEE"
                 android:orientation="vertical"
-                android:padding="16dp"
-                app:layout_scrollFlags="scroll|enterAlways">
+                android:padding="16dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/text_email"
+                    android:layout_width="278dp"
                     android:layout_height="wrap_content"
-                    android:text="Lasem Code"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:drawableLeft="@drawable/ic_email_envelope"
+                    android:drawablePadding="2dp"
+                    android:gravity="fill_vertical"
+                    android:text="address@something.com"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/text_location"
+                    android:layout_width="278dp"
                     android:layout_height="wrap_content"
-                    android:text="\@lasemcode"
-                    android:textColor="#37474F" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus mattis posuere quam" />
+                    android:drawableLeft="@drawable/ic_location"
+                    android:drawablePadding="4dp"
+                    android:gravity="fill_vertical"
+                    android:text="Hawaii"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
