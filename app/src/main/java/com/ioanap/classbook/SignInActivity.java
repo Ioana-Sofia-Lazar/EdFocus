@@ -1,12 +1,10 @@
 package com.ioanap.classbook;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,36 +13,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ioanap.classbook.child.ChildProfileActivity;
 import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.teacher.TeacherDrawerActivity;
-import com.ioanap.classbook.utils.FirebaseUtils;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignInActivity extends BaseActivity implements View.OnClickListener{
 
     private static final String TAG = "SignInActivity";
 
-    private Button mSignInButton;
-    private EditText mEmailEditText;
-    private EditText mPasswordEditText;
-    private TextView mSwitchToSignUpTextView;
-    private ProgressDialog mProgressDialog;
-    private Context mContext;
+    // request code for google sign in
+    private static final int RC_GOOGLE_SIGN_IN = 2;
 
-    private FirebaseUtils mFirebaseUtils;
+    private GoogleApiClient mGoogleApiClient;
+
+    private Button mSignInButton;
+    private SignInButton mGoogleSignInButton;
+    private EditText mEmailEditText, mPasswordEditText;
+    private TextView mSwitchToSignUpTextView;
+    private Context mContext;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     /**
-     * Gets the filled in values from the fields.
-     * Shows progress dialog and signs in the user with the email and password he introduced (if correct).
+     * Gets the filled in values from the fields and sends them to the Base Activity that will
+     * perform the sign in.
      */
-    private void signIn() {
+    private void prepareSignIn() {
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
 
@@ -54,23 +52,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        mProgressDialog.setMessage("Signing In...");
-        mProgressDialog.show();
+        signIn(email, password);
 
-        // log in user
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        mProgressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            // signed in with given email and password
-                        } else {
-                            // toast error message
-                            Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     /**
@@ -109,7 +92,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_signin);
 
         mContext = SignInActivity.this;
-        mFirebaseUtils = new FirebaseUtils(mContext);
 
         setupFirebaseAuth();
 
@@ -119,15 +101,18 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             finish();
         }
 
-        mProgressDialog = new ProgressDialog(this);
-
         mSignInButton = (Button) findViewById(R.id.button_sign_in);
+        mGoogleSignInButton = (SignInButton) findViewById(R.id.button_google_sign_in);
         mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
         mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
         mSwitchToSignUpTextView = (TextView) findViewById(R.id.text_switch_to_sign_up);
 
         mSignInButton.setOnClickListener(this);
         mSwitchToSignUpTextView.setOnClickListener(this);
+
+        // click listener
+        mGoogleSignInButton.setOnClickListener(this);
+
     }
 
     /**
@@ -144,19 +129,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     if (currentUser.isEmailVerified()) {
                         // logging in as user with verified email
 
-                        mFirebaseUtils.userRedirect();
+                        userRedirect();
 
                         Log.i("signed in", currentUser.getUid());
                         Toast.makeText(SignInActivity.this, "Authenticated with: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
                         finish();
 
                     } else {
-                        mFirebaseUtils.saveToSharedPreferences(false, "none");
+                        saveToSharedPreferences(false, "none");
                         Toast.makeText(SignInActivity.this, "Check your Email Inbox for a Verification Link", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // no user is logged in
-                    mFirebaseUtils.saveToSharedPreferences(false, "none");
+                    saveToSharedPreferences(false, "none");
                 }
             }
         };
@@ -184,11 +169,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view == mSignInButton) {
-            signIn();
+            prepareSignIn();
         }
         if (view == mSwitchToSignUpTextView) {
             // jump to sign up activity
             startActivity(new Intent(this, SignUpActivity.class));
         }
+        if (view == mGoogleSignInButton) {
+            googleSignIn();
+        }
     }
+
 }

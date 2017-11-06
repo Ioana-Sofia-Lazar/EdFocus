@@ -11,17 +11,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
-import com.ioanap.classbook.utils.FirebaseUtils;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class TeacherDrawerActivity extends AppCompatActivity
+public class TeacherDrawerActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         TeacherProfileFragment.OnFragmentInteractionListener,
         ContactsFragment.OnFragmentInteractionListener {
@@ -29,7 +28,7 @@ public class TeacherDrawerActivity extends AppCompatActivity
     private static final String TAG = "TeacherDrawerActivity";
 
     private Context mContext = TeacherDrawerActivity.this;
-    private FirebaseUtils mFirebaseUtils;
+    //private FirebaseUtils mFirebaseUtils;
 
     /**
      * Displays the fragment in the container.
@@ -49,7 +48,7 @@ public class TeacherDrawerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
-        mFirebaseUtils = new FirebaseUtils(mContext);
+        //mFirebaseUtils = new FirebaseUtils(mContext);
 
         // set initially shown fragment
         displayFragment(new TeacherProfileFragment());
@@ -104,7 +103,7 @@ public class TeacherDrawerActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             // sign user out
-            mFirebaseUtils.signOut();
+            signOut();
 
             finish();
         }

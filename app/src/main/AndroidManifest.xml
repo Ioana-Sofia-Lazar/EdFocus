@@ -17,16 +17,20 @@
         <activity android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".parent.ParentProfileActivity" />
         <activity android:name=".child.ChildProfileActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".teacher.TeacherDrawerActivity"
-            android:label=""/>
-        <activity android:name=".teacher.EditProfileActivity"
+        <activity
+            android:name=".teacher.TeacherDrawerActivity"
+            android:label="" />
+        <activity
+            android:name=".teacher.EditProfileActivity"
             android:label="Edit your profile" />
+        <activity android:name=".BaseActivity"></activity>
     </application>
 
 </manifest>

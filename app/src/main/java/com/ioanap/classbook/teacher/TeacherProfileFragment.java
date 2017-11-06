@@ -20,9 +20,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.utils.FirebaseUtils;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
 /**
@@ -33,7 +33,7 @@ import com.ioanap.classbook.utils.UniversalImageLoader;
  * Use the {@link TeacherProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TeacherProfileFragment extends Fragment  implements View.OnClickListener {
+public class TeacherProfileFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -56,7 +56,6 @@ public class TeacherProfileFragment extends Fragment  implements View.OnClickLis
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRootRef, mSettingsRef;
-    private FirebaseUtils mFirebaseUtils;
     private Context mContext;
 
     public TeacherProfileFragment() {
@@ -118,13 +117,12 @@ public class TeacherProfileFragment extends Fragment  implements View.OnClickLis
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = mFirebaseDatabase.getReference();
         mSettingsRef = mRootRef.child("user_account_settings");
-        mFirebaseUtils = new FirebaseUtils(mContext);
 
         mSettingsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
-                UserAccountSettings settings = mFirebaseUtils.getUserAccountSettings(dataSnapshot);
+                UserAccountSettings settings = ((BaseActivity) getActivity()).getUserAccountSettings(dataSnapshot);
                 Log.d(TAG, "settings from db changed: " + settings);
 
                 // setup widgets to display user info from the database

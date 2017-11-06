@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -22,19 +21,17 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.utils.FirebaseUtils;
 import com.ioanap.classbook.utils.SelectProfilePhotoDialog;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener,
+public class EditProfileActivity extends BaseActivity implements View.OnClickListener,
             SelectProfilePhotoDialog.OnPhotoSelectedListener {
 
     private static final String TAG = "EditProfileActivity";
@@ -46,10 +43,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private EditText mNameEditText, mDescriptionEditText, mLocationEditText, mEmailEditText, mPhoneNumberEditText;
     private ProgressBar mProgressBar;
 
-    // firebase
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mRootRef, mSettingsRef;
-    private FirebaseUtils mFirebaseUtils;
     private Context mContext;
 
     // variables
@@ -119,16 +112,16 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         String phoneNumber = mPhoneNumberEditText.getText().toString();
 
         if (!mSettings.getName().equals(name)) {
-            mFirebaseUtils.updateUserAccountSettings(name, null, null, null, null);
+            updateUserAccountSettings(name, null, null, null, null);
         }
         if (!mSettings.getDescription().equals(description)) {
-            mFirebaseUtils.updateUserAccountSettings(null, description, null, null, null);
+            updateUserAccountSettings(null, description, null, null, null);
         }
         if (!mSettings.getLocation().equals(location)) {
-            mFirebaseUtils.updateUserAccountSettings(null, null, location, null, null);
+            updateUserAccountSettings(null, null, location, null, null);
         }
         if (!mSettings.getPhoneNumber().equals(phoneNumber)) {
-            mFirebaseUtils.updateUserAccountSettings(null, null, null, phoneNumber, null);
+            updateUserAccountSettings(null, null, null, phoneNumber, null);
         }
 
         if (mSelectedBitmap != null && mSelectedUri == null) {
@@ -167,16 +160,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private void setupFirebase() {
         Log.d(TAG, "setupFirebase");
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mRootRef = mFirebaseDatabase.getReference();
-        mSettingsRef = mRootRef.child("user_account_settings");
-        mFirebaseUtils = new FirebaseUtils(mContext);
-
         mSettingsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
-                UserAccountSettings settings = mFirebaseUtils.getUserAccountSettings(dataSnapshot);
+                UserAccountSettings settings = getUserAccountSettings(dataSnapshot);
 
                 // setup widgets to display user info from the database
                 setEditProfileWidgets(settings);
@@ -298,7 +286,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             hideProgressBar();
 
             // execute the upload to firebase task
-            mFirebaseUtils.uploadProfilePhoto(bytes);
+            uploadProfilePhoto(bytes);
         }
     }
 

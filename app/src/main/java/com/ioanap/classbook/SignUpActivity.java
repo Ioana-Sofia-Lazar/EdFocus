@@ -1,10 +1,8 @@
 package com.ioanap.classbook;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -14,13 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ioanap.classbook.model.User;
-import com.ioanap.classbook.utils.FirebaseUtils;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignUpActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "SignUpActivity";
-
-    public static Activity signUpActivity;
 
     private Context mContext;
     private Button mSignUpButton;
@@ -28,8 +23,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText mPasswordEditText;
     private EditText mConfirmPasswordEditText;
     private TextView mSwitchToSignInTextView;
-
-    private FirebaseUtils mFirebaseUtils;
 
     private String mSelectedUserType;
 
@@ -53,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         // register user
         User user = new User(email, mSelectedUserType);
-        mFirebaseUtils.registerNewUser(user, email, password);
+        registerNewUser(user, email, password);
 
     }
 
@@ -63,8 +56,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_signup);
 
         mContext = SignUpActivity.this;
-        mFirebaseUtils = new FirebaseUtils(mContext);
-        signUpActivity = this;
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio_group_user_type);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -106,7 +97,4 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public static SignUpActivity getInstance() {
-        return SignUpActivity.getInstance();
-    }
 }
