@@ -48,15 +48,15 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private static final String TAG = "Base Activity";
 
+    // firebase
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef;
     protected String userID;
+    protected GoogleApiClient mGoogleApiClient;
 
     private Context mContext;
     protected ProgressDialog mProgressDialog;
-
-    protected GoogleApiClient mGoogleApiClient;
 
     // request code for google sign in
     private static final int RC_GOOGLE_SIGN_IN = 2;
@@ -311,15 +311,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void signIn(String email, String password) {
-        mProgressDialog.setMessage("Signing In...");
-        mProgressDialog.show();
+        showProgressDialog("Signing In...");
 
         // log in user
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        mProgressDialog.dismiss();
+                        hideProgressDialog();
                         if (task.isSuccessful()) {
                             // signed in with given email and password
                         } else {
@@ -402,6 +401,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        Log.d(TAG, "token: " + acct.getIdToken());
+
+        // TODO check if email is already in the database
+        // if YES, then proceed to sign him in as he has been signed in before
+        // if NO, then this is the first sign in (and using Google so add data to the db)
+
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

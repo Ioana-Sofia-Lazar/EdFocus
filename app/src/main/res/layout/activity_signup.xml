@@ -3,45 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.ioanap.classbook.SignUpActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="304dp"
+        android:layout_height="493dp"
         android:orientation="vertical"
         android:gravity="center"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <RadioGroup
-            android:id="@+id/radio_group_user_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
-
-            <RadioButton
-                android:id="@+id/radio_button_teacher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Teacher" />
-
-            <RadioButton
-                android:id="@+id/radio_button_parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Parent" />
-
-            <RadioButton
-                android:id="@+id/radio_button_child"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Child" />
-
-        </RadioGroup>
+        <include
+            android:id="@+id/choose_user_type"
+            layout="@layout/choose_user_type" />
 
         <EditText
             android:id="@+id/edit_text_email"
