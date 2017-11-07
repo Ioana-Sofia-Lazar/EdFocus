@@ -41,10 +41,12 @@ import com.ioanap.classbook.model.User;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.teacher.TeacherDrawerActivity;
+import com.ioanap.classbook.utils.ChooseUserTypeDialog;
 
 import java.util.concurrent.Executor;
 
-public class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
+        ChooseUserTypeDialog.OnUserTypeSelectedListener {
 
     private static final String TAG = "Base Activity";
 
@@ -60,6 +62,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     // request code for google sign in
     private static final int RC_GOOGLE_SIGN_IN = 2;
+
+    GoogleSignInAccount mGoogleAccount;
+    String mUserType; // for users signing in with Google account
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,8 +279,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        String userType = user.getUserType();
+                        String userType;
 
+                        if (user == null) {
+                            // this is user's first sign in with Google and he doesn't have his data added yet
+                            userType = mUserType;
+                        } else {
+                            userType = user.getUserType();
+                        }
                         // save user type to Shared Preferences for future login
                         saveToSharedPreferences(true, userType);
 
@@ -300,6 +311,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         }
 
                         Log.d(TAG, "redirecting as" + userType);
+
                     }
 
                     @Override
@@ -389,32 +401,89 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                mGoogleAccount = result.getSignInAccount();
+
+                checkFirstGoogleSignIn(mGoogleAccount.getEmail());
+
             } else {
                 Toast.makeText(getApplicationContext(), "Sign In with Google Account failed...", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+    /**
+     * Checks if email is already in the database
+     * If YES, then proceed to sign him in as he has been signed in before
+     * If NO, then this is the first sign in (and using Google so add data to the db)
+     *
+     * @param email
+     */
+    private void checkFirstGoogleSignIn(String email) {
+        // check if there already is an account with this email in the database
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        Log.d(TAG, "token: " + acct.getIdToken());
+        Log.d(TAG, "checkFirstGoogleSignIn for " + email);
 
-        // TODO check if email is already in the database
-        // if YES, then proceed to sign him in as he has been signed in before
-        // if NO, then this is the first sign in (and using Google so add data to the db)
+        mUserRef
+                .orderByChild("email")
+                .equalTo(email)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() > 0) {
+                            // we already have a user for this e-mail
+                            Log.d(TAG, "checkFirstGoogleSignIn: not first time");
+
+                            firebaseAuthWithGoogle(false);
+
+                        } else {
+                            // this is the first sign in for this user
+                            // show dialog to select the type of user
+                            Log.d(TAG, "checkFirstGoogleSignIn: first time");
+
+                            ChooseUserTypeDialog dialog = new ChooseUserTypeDialog();
+                            dialog.show(getSupportFragmentManager(), "SelectUserType");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    /**
+     * Gets an associated firebase credential for the Google account and signs in with it.
+     *
+     * @param firstTime if this is the first time user signs in (and with Google) default info will
+     *                  be added for him in the database
+     */
+    private void firebaseAuthWithGoogle(final Boolean firstTime) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + mGoogleAccount.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(mGoogleAccount.getIdToken(), null);
 
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                            if (firstTime) {
+                                // add user default data
+                                User user = new User(mGoogleAccount.getEmail(), mUserType);
+                                UserAccountSettings settings = new UserAccountSettings();
+
+                                user.setId(mAuth.getCurrentUser().getUid());
+                                // get info from Google account
+                                settings.setName(mGoogleAccount.getDisplayName());
+                                settings.setProfilePhoto(mGoogleAccount.getPhotoUrl().toString());
+
+                                addUserInfo(user, settings);
+                            }
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -426,8 +495,23 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
     }
 
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * We get the user type chosen by the new user from the dialog and proceed to sign him in.
+     *
+     * @param type
+     */
+    @Override
+    public void getUserType(String type) {
+        Log.d(TAG, "getUserType: " + type);
+
+        mUserType = type;
+        firebaseAuthWithGoogle(true);
+
     }
 }

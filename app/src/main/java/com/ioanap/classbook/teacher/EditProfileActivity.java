@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +40,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private ImageView mCancelImageView, mSaveImageView, mEditProfilePhotoImageView;
     private TextView mEditProfilePhotoTextView;
     private EditText mNameEditText, mDescriptionEditText, mLocationEditText, mEmailEditText, mPhoneNumberEditText;
-    private ProgressBar mProgressBar;
 
     private Context mContext;
 
@@ -71,7 +69,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         mLocationEditText = (EditText) findViewById(R.id.edit_text_location);
         mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
         mPhoneNumberEditText = (EditText) findViewById(R.id.edit_text_phone_number);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_edit_profile);
 
         // toolbar buttons
         mCancelImageView = (ImageView) findViewById(R.id.image_cancel);
@@ -258,7 +255,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         protected void onPreExecute() {
             super.onPreExecute();
             Toast.makeText(mContext, "Compressing image", Toast.LENGTH_SHORT).show();
-            showProgressBar();
+            showProgressDialog("");
         }
 
         @Override
@@ -283,7 +280,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         protected void onPostExecute(byte[] bytes) {
             super.onPostExecute(bytes);
 
-            hideProgressBar();
+            hideProgressDialog();
 
             // execute the upload to firebase task
             uploadProfilePhoto(bytes);
@@ -309,11 +306,4 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         return stream.toByteArray();
     }
 
-    private void showProgressBar(){
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar(){
-        mProgressBar.setVisibility(View.INVISIBLE);
-    }
 }

@@ -17,8 +17,7 @@
             app:contentScrim="@color/cyan"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:titleEnabled="false"
-            android:background="@drawable/back">
+            app:titleEnabled="false">
 
             <EditText
                 style="@style/Animation.AppCompat.Dialog"

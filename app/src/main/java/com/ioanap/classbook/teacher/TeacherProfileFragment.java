@@ -45,6 +45,7 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private BaseActivity mBaseActivity;
 
     //widgets
     private Button mEditProfileButton;
@@ -122,7 +123,8 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
-                UserAccountSettings settings = ((BaseActivity) getActivity()).getUserAccountSettings(dataSnapshot);
+                Log.d(TAG, "setupfirebase - datasnapshot : " + dataSnapshot);
+                UserAccountSettings settings = mBaseActivity.getUserAccountSettings(dataSnapshot);
                 Log.d(TAG, "settings from db changed: " + settings);
 
                 // setup widgets to display user info from the database
@@ -170,6 +172,7 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mBaseActivity = (BaseActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
