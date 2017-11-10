@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +19,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -32,17 +31,14 @@ import com.ioanap.classbook.teacher.TeacherDrawerActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 public class SignInActivity extends BaseActivity implements View.OnClickListener{
 
     private static final String TAG = "SignInActivity";
 
-    // request code for google sign in
-    private static final int RC_GOOGLE_SIGN_IN = 2;
-
-    private GoogleApiClient mGoogleApiClient;
-
     private Button mSignInButton;
-    private SignInButton mGoogleSignInButton;
+    RelativeLayout mGoogleSignInButton, mFacebookSignInButton;
     private EditText mEmailEditText, mPasswordEditText;
     private TextView mSwitchToSignUpTextView;
     private Context mContext;
@@ -106,7 +102,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mContext = SignInActivity.this;
 
         setupFirebaseAuth();
-        setupFacebookSignIn();
 
         // if user is already logged in, redirect him to his profile
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -115,7 +110,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
 
         mSignInButton = (Button) findViewById(R.id.button_sign_in);
-        mGoogleSignInButton = (SignInButton) findViewById(R.id.button_google_sign_in);
+        mGoogleSignInButton = (RelativeLayout) findViewById(R.id.button_google_sign_in);
+        mFacebookSignInButton = (RelativeLayout) findViewById(R.id.button_facebook_sign_in);
         mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
         mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
         mSwitchToSignUpTextView = (TextView) findViewById(R.id.text_switch_to_sign_up);
@@ -124,15 +120,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mSignInButton.setOnClickListener(this);
         mSwitchToSignUpTextView.setOnClickListener(this);
         mGoogleSignInButton.setOnClickListener(this);
+        mFacebookSignInButton.setOnClickListener(this);
+
+        setupFacebookSignIn();
 
     }
 
     public void setupFacebookSignIn() {
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton) findViewById(R.id.button_facebook_sign_in);
-        loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
@@ -248,6 +245,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
         if (view == mGoogleSignInButton) {
             googleSignIn();
+        }
+        if (view == mFacebookSignInButton) {
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
         }
     }
 
