@@ -13,13 +13,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.ioanap.classbook.child.ChildProfileActivity;
 import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.teacher.TeacherDrawerActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SignInActivity extends BaseActivity implements View.OnClickListener{
 
@@ -89,11 +100,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_signin);
 
         mContext = SignInActivity.this;
 
         setupFirebaseAuth();
+        setupFacebookSignIn();
 
         // if user is already logged in, redirect him to his profile
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -107,11 +120,60 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
         mSwitchToSignUpTextView = (TextView) findViewById(R.id.text_switch_to_sign_up);
 
+        // click listeners
         mSignInButton.setOnClickListener(this);
         mSwitchToSignUpTextView.setOnClickListener(this);
-
-        // click listener
         mGoogleSignInButton.setOnClickListener(this);
+
+    }
+
+    public void setupFacebookSignIn() {
+        // Initialize Facebook Login button
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = (LoginButton) findViewById(R.id.button_facebook_sign_in);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("SignInActivity", response.toString());
+
+                                // Application code
+                                try {
+                                    String email = object.getString("email");
+
+                                    checkFirstFacebookSignIn(email);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+                mFacebookAccessToken = loginResult.getAccessToken();
+                //handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
+            }
+        });
 
     }
 
@@ -124,9 +186,18 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
                 if (currentUser != null) {
-                    if (currentUser.isEmailVerified()) {
+
+                    // check if user is logged in with facebook
+                    Boolean loggedWithFacebook = false;
+                    for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+                        if (user.getProviderId().equals("facebook.com")) {
+                            loggedWithFacebook = true;
+                        }
+                    }
+
+                    // if user is logged in with Facebook he doesn't need to have email verified
+                    if (currentUser.isEmailVerified() || loggedWithFacebook) {
                         // logging in as user with verified email
 
                         userRedirect();

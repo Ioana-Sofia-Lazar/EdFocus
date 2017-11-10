@@ -5,17 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -30,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -65,11 +72,18 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     private Context mContext;
     protected ProgressDialog mProgressDialog;
 
-    // request code for google sign in
-    private static final int RC_GOOGLE_SIGN_IN = 2;
+    // signing in mode : facebook | google | email
+    private static String MODE = "email";
 
+    // request code for google sign in
+    private static final int RC_GOOGLE_SIGN_IN = 2, RC_FACEBOOK_SIGN_IN = 3;
+    // Google sign in
     GoogleSignInAccount mGoogleAccount;
     String mUserType; // for users signing in with Google account
+
+    // Facebook
+    protected CallbackManager mCallbackManager;
+    protected AccessToken mFacebookAccessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +102,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
         setupGoogleSignIn();
+
     }
 
-    // ========== Progress Dialog =============
+    // ============= Progress Dialog ===============
 
     protected void showProgressDialog(String msg) {
         if (mProgressDialog != null && mProgressDialog.isShowing())
@@ -106,7 +121,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    // ============ Sign Up ===============
+    // ====================== Sign Up =========================
 
     /**
      * Registers new user and on success adds his information to the database and sends a verification
@@ -197,7 +212,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         editor.apply();
     }
 
-    // =========== Modify/Retrieve User Data ==============
+    // =============== Modify/Retrieve User Data =================
 
     public UserAccountSettings getUserAccountSettings(DataSnapshot dataSnapshot) {
         Log.d(TAG, "getting user account settings");
@@ -270,7 +285,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         });
     }
 
-    // =============== Sign In ===================
+    // ====================== Sign In ==========================
 
     /**
      * Redirects the currently logged in user to his profile according to his type i.e Teacher,
@@ -346,7 +361,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
     }
 
-    // =============== Sign Out ===============
+    // ====================== Sign Out ==========================
 
     /**
      * Signs currently logged user out and clears all activities from stack (except from the first
@@ -355,6 +370,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     public void signOut() {
         // Firebase sign out
         FirebaseAuth.getInstance().signOut();
+
+        // Facebook sign out
+        LoginManager.getInstance().logOut();
 
         // Google sign out
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
@@ -371,7 +389,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mContext.startActivity(intent);
     }
 
-    // ================ Google Sign In =====================
+    // ================== Google Sign In =====================
 
     protected void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -395,25 +413,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_GOOGLE_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
-                mGoogleAccount = result.getSignInAccount();
-
-                checkFirstGoogleSignIn(mGoogleAccount.getEmail());
-
-            } else {
-                Toast.makeText(getApplicationContext(), "Sign In with Google Account failed...", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     /**
@@ -445,6 +444,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                             // show dialog to select the type of user
                             Log.d(TAG, "checkFirstGoogleSignIn: first time");
 
+                            MODE = "google";
                             ChooseUserTypeDialog dialog = new ChooseUserTypeDialog();
                             dialog.show(getSupportFragmentManager(), "SelectUserType");
                         }
@@ -452,7 +452,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        MODE = "email";
                     }
                 });
     }
@@ -515,8 +515,93 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         Log.d(TAG, "getUserType: " + type);
 
         mUserType = type;
-        firebaseAuthWithGoogle(true);
 
+        // if result comes from user that signed in for the first time using Google
+        if (MODE.equals("google")){
+            firebaseAuthWithGoogle(true);
+        } else {
+            // result comes from user that signed in for the first time using Facebook
+            handleFacebookAccessToken(true);
+        }
+
+    }
+
+    // ================== Facebook Sign In ==================
+
+    protected void handleFacebookAccessToken(final Boolean firstTime) {
+        Log.d(TAG, "handleFacebookAccessToken:" + mFacebookAccessToken);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(mFacebookAccessToken.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser currentUser = mAuth.getCurrentUser();
+
+                            if (firstTime) {
+                                // add user default data
+                                User user = new User(currentUser.getEmail(), mUserType);
+                                UserAccountSettings settings = new UserAccountSettings();
+
+                                user.setId(mAuth.getCurrentUser().getUid());
+                                // get info from Facebook account
+                                settings.setName(task.getResult().getUser().getDisplayName());
+                                settings.setProfilePhoto(task.getResult().getUser().getPhotoUrl().toString());
+
+                                addUserInfo(user, settings);
+                            }
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(BaseActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Checks if email is already in the database
+     * If YES, then proceed to sign him in as he has been signed in before
+     * If NO, then this is the first sign in (and using Facebook so add data to the db)
+     *
+     * @param email
+     */
+    protected void checkFirstFacebookSignIn(String email) {
+        // check if there already is an account with this email in the database
+
+        Log.d(TAG, "checkFirstFacebookSignIn for " + email);
+
+        mUserRef
+                .orderByChild("email")
+                .equalTo(email)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() > 0) {
+                            // we already have a user for this e-mail
+                            Log.d(TAG, "checkFirstFacebookSignIn: not first time");
+
+                            handleFacebookAccessToken(false);
+
+                        } else {
+                            Log.d(TAG, "checkFirstFacebookSignIn: first time");
+
+                            MODE = "facebook";
+                            ChooseUserTypeDialog dialog = new ChooseUserTypeDialog();
+                            dialog.show(getSupportFragmentManager(), "SelectUserType");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        MODE = "email";
+                    }
+                });
     }
 
     // ========================= Keyboard ===========================
@@ -536,7 +621,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     /**
-     * Hide keyboard when clicking outside of it (except from clicking inside an EditText)
+     * Hide keyboard when tapping outside of it (except from tapping inside an EditText)
      *
      * @param ev
      * @return
@@ -565,6 +650,42 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
         return handleReturn;
+    }
+
+    // ====================== Icons =====================
+
+    protected void setScaledDrawableButton(Button button, int id, double scale) {
+        Drawable drawable = ContextCompat.getDrawable(this, id);
+        drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * scale),
+                (int) (drawable.getIntrinsicHeight() * scale));
+        button.setCompoundDrawables(drawable, null, null, null);
+    }
+
+    // =================== Handle Activity Result ====================
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_GOOGLE_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // Google Sign In was successful, authenticate with Firebase
+                mGoogleAccount = result.getSignInAccount();
+
+                checkFirstGoogleSignIn(mGoogleAccount.getEmail());
+
+            } else {
+                Toast.makeText(getApplicationContext(), "Sign In with Google Account failed...", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        // Result returned
+        //if (requestCode == RC_FACEBOOK_SIGN_IN) {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        //}
+
     }
 
 }
