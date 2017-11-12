@@ -13,7 +13,9 @@
     <string name="title_activity_drawer">DrawerActivity</string>
 
     <!-- Firebase fields -->
-    <string name="field_name">name</string>
+    <string name="field_first_name">firstName</string>
+    <string name="field_last_name">lastName</string>
+    <string name="field_display_name">displayName</string>
     <string name="field_description">description</string>
     <string name="field_location">location</string>
     <string name="field_phone_number">phoneNumber</string>

@@ -39,7 +39,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     // widgets
     private ImageView mCancelImageView, mSaveImageView, mEditProfilePhotoImageView;
     private TextView mEditProfilePhotoTextView;
-    private EditText mNameEditText, mDescriptionEditText, mLocationEditText, mEmailEditText, mPhoneNumberEditText;
+    private EditText mFirstNameEditText, mLastNameEditText, mDescriptionEditText, mLocationEditText, mEmailEditText, mPhoneNumberEditText;
 
     private Context mContext;
 
@@ -64,7 +64,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         // widgets
         mEditProfilePhotoImageView = (ImageView) findViewById(R.id.edit_profile_photo);
         mEditProfilePhotoTextView = (TextView) findViewById(R.id.text_edit_profile_photo);
-        mNameEditText = (EditText) findViewById(R.id.edit_text_name);
+        mFirstNameEditText = (EditText) findViewById(R.id.edit_text_first_name);
+        mLastNameEditText = (EditText) findViewById(R.id.edit_text_last_name);
         mDescriptionEditText = (EditText) findViewById(R.id.edit_text_description);
         mLocationEditText = (EditText) findViewById(R.id.edit_text_location);
         mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
@@ -103,22 +104,26 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
      * Retrieves info entered by the user and saves it to the database.
      */
     private void saveProfileSettings() {
-        String name = mNameEditText.getText().toString();
+        String firstName = mFirstNameEditText.getText().toString();
+        String lastName = mLastNameEditText.getText().toString();
         String description = mDescriptionEditText.getText().toString();
         String location = mLocationEditText.getText().toString();
         String phoneNumber = mPhoneNumberEditText.getText().toString();
 
-        if (!mSettings.getName().equals(name)) {
-            updateUserAccountSettings(name, null, null, null, null);
+        if (!mSettings.getLastName().equals(lastName)) {
+            updateUserAccountSettings(lastName, null, null, null, null, null);
+        }
+        if (!mSettings.getFirstName().equals(firstName)) {
+            updateUserAccountSettings(null, firstName, null, null, null, null);
         }
         if (!mSettings.getDescription().equals(description)) {
-            updateUserAccountSettings(null, description, null, null, null);
+            updateUserAccountSettings(null, null, description, null, null, null);
         }
         if (!mSettings.getLocation().equals(location)) {
-            updateUserAccountSettings(null, null, location, null, null);
+            updateUserAccountSettings(null, null, null, location, null, null);
         }
         if (!mSettings.getPhoneNumber().equals(phoneNumber)) {
-            updateUserAccountSettings(null, null, null, phoneNumber, null);
+            updateUserAccountSettings(null, null, null, null, phoneNumber, null);
         }
 
         if (mSelectedBitmap != null && mSelectedUri == null) {
@@ -137,7 +142,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private void setEditProfileWidgets(UserAccountSettings settings) {
         mSettings = settings;
 
-        mNameEditText.setText(settings.getName());
+        mFirstNameEditText.setText(settings.getFirstName());
+        mLastNameEditText.setText(settings.getLastName());
         mDescriptionEditText.setText(settings.getDescription());
         mLocationEditText.setText(settings.getLocation());
         mEmailEditText.setText(settings.getEmail());

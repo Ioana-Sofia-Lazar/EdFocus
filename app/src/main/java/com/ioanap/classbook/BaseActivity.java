@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.internal.CallbackManagerImpl;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -55,8 +56,6 @@ import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.teacher.TeacherDrawerActivity;
 import com.ioanap.classbook.utils.ChooseUserTypeDialog;
 
-import java.util.concurrent.Executor;
-
 public class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         ChooseUserTypeDialog.OnUserTypeSelectedListener {
 
@@ -76,7 +75,11 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     private static String MODE = "email";
 
     // request code for google sign in
-    private static final int RC_GOOGLE_SIGN_IN = 2, RC_FACEBOOK_SIGN_IN = 3;
+    private static final int RC_GOOGLE_SIGN_IN = 2;
+
+    // request code for facebook sign in
+    private static final int RC_FACEBOOK_SIGN_IN = CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode();
+
     // Google sign in
     GoogleSignInAccount mGoogleAccount;
     String mUserType; // for users signing in with Google account
@@ -228,16 +231,20 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     /**
      * Update "user_account_settings" node for current user.
      *
-     * @param name
+     * @param lastName
+     * @param firstName
      * @param description
      * @param location
      * @param phoneNumber
      */
-    public void updateUserAccountSettings(String name, String description, String location, String phoneNumber, String profilePhoto) {
+    public void updateUserAccountSettings(String lastName, String firstName, String description, String location, String phoneNumber, String profilePhoto) {
         DatabaseReference ref = mSettingsRef.child(userID);
 
-        if (name != null) {
-            ref.child(mContext.getString(R.string.field_name)).setValue(name);
+        if (lastName != null) {
+            ref.child(mContext.getString(R.string.field_last_name)).setValue(lastName);
+        }
+        if (firstName != null) {
+            ref.child(mContext.getString(R.string.field_first_name)).setValue(firstName);
         }
         if (description != null) {
             ref.child(mContext.getString(R.string.field_description)).setValue(description);
@@ -274,7 +281,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 Log.d(TAG, "success - firebase download url: " + firebaseUri.toString());
 
                 // save image url to firebase database
-                updateUserAccountSettings(null, null, null, null, firebaseUri.toString());
+                updateUserAccountSettings(null, null, null, null, null, firebaseUri.toString());
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -347,7 +354,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
         // log in user
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(BaseActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideProgressDialog();
@@ -483,7 +490,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
                                 user.setId(mAuth.getCurrentUser().getUid());
                                 // get info from Google account
-                                settings.setName(mGoogleAccount.getDisplayName());
+                                settings.setFirstName(mGoogleAccount.getGivenName());
+                                settings.setLastName(mGoogleAccount.getFamilyName());
+                                settings.setDisplayName(mGoogleAccount.getGivenName() + " " + mGoogleAccount.getFamilyName());
                                 settings.setProfilePhoto(mGoogleAccount.getPhotoUrl().toString());
 
                                 addUserInfo(user, settings);
@@ -513,6 +522,20 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void getUserType(String type) {
         Log.d(TAG, "getUserType: " + type);
+
+        if (type.equals("none")) {
+            // action cancelled
+            // Google sign out (otherwise user won't be able to choose another Google account after cancelling)
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(@NonNull Status status) {
+
+                        }
+                    });
+
+            return;
+        }
 
         mUserType = type;
 
@@ -548,7 +571,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
                                 user.setId(mAuth.getCurrentUser().getUid());
                                 // get info from Facebook account
-                                settings.setName(task.getResult().getUser().getDisplayName());
+                                settings.setFirstName(task.getResult().getUser().getDisplayName());
+                                settings.setDisplayName(task.getResult().getUser().getDisplayName());
                                 settings.setProfilePhoto(task.getResult().getUser().getPhotoUrl().toString());
 
                                 addUserInfo(user, settings);
@@ -681,10 +705,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         }
 
-        // Result returned
-        //if (requestCode == RC_FACEBOOK_SIGN_IN) {
+        // Result returned from facebook
+        if (requestCode == RC_FACEBOOK_SIGN_IN) {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        //}
+        }
 
     }
 

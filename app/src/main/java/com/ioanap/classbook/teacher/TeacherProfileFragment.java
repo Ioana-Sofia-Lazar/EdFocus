@@ -145,7 +145,7 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
      * @param settings
      */
     private void setProfileWidgets(UserAccountSettings settings) {
-        mNameTextView.setText(settings.getName());
+        mNameTextView.setText(settings.getFirstName() + " " + settings.getLastName());
         mDescriptionTextView.setText(settings.getDescription());
         mContactsTextView.setText(String.valueOf(settings.getNoOfContacts()));
         mClassesTextView.setText(String.valueOf(settings.getNoOfClasses()));

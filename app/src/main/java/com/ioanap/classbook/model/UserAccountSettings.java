@@ -5,7 +5,9 @@ public class UserAccountSettings {
     private String id;
     private String email;
     private String userType;
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String displayName;
     private String description;
     private String location;
     private String profilePhoto;
@@ -14,14 +16,16 @@ public class UserAccountSettings {
     private int noOfClasses;
 
     public UserAccountSettings() {
-        this("", "", "", "", "", "", "", "", 0, 0);
+        this("", "", "", "", "", "", "", "", "", "", 0, 0);
     }
 
-    public UserAccountSettings(String id, String email, String userType, String name, String description, String location, String profilePhoto, String phoneNumber, int noOfContacts, int noOfClasses) {
+    public UserAccountSettings(String id, String email, String userType, String firstName, String lastName, String displayName, String description, String location, String profilePhoto, String phoneNumber, int noOfContacts, int noOfClasses) {
         this.id = id;
         this.email = email;
         this.userType = userType;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.displayName = displayName;
         this.description = description;
         this.location = location;
         this.profilePhoto = profilePhoto;
@@ -54,12 +58,28 @@ public class UserAccountSettings {
         this.userType = userType;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getDescription() {
