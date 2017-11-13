@@ -1,18 +1,33 @@
 package com.ioanap.classbook.teacher;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
+import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.utils.ContactsListAdapter;
 
 import java.util.ArrayList;
@@ -25,7 +40,7 @@ import java.util.ArrayList;
  * Use the {@link ContactsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "ContactsFragment";
 
@@ -38,8 +53,18 @@ public class ContactsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    // widgets
     private RecyclerView mContactsRecyclerView;
+    private FloatingActionButton mFabAddContact;
+    private EditText mSearchEditText;
+
+    // variables
+    private ArrayList<Contact> mContacts;
+    private OnFragmentInteractionListener mListener;
+    private ContactsListAdapter mContactsListAdapter;
+
+    // db reference
+    private DatabaseReference mContactsRef, mSettingsRef;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -70,61 +95,125 @@ public class ContactsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mContactsRef = FirebaseDatabase.getInstance().getReference().child("contacts");
+        mSettingsRef = FirebaseDatabase.getInstance().getReference().child("user_account_settings");
     }
 
-    private void testList() {
-        //Create the Person objects
-        Contact john = new Contact("John","12-20-1998","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact steve = new Contact("Steve","08-03-1987","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact stacy = new Contact("Stacy","11-15-2000","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact ashley = new Contact("Ashley","07-02-1999","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt = new Contact("Matt","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt2 = new Contact("Matt2","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt3 = new Contact("Matt3","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt4 = new Contact("Matt4","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt5 = new Contact("Matt5","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt6 = new Contact("Matt6","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt7 = new Contact("Matt7","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt8 = new Contact("Matt8","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt9 = new Contact("Matt9","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt10 = new Contact("Matt10","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
-        Contact matt11 = new Contact("Matt11","03-29-2001","http://recruitstaffonline.com/wp-content/uploads/2013/05/small-business.jpg");
+    /**
+     * Display contacts for the current user
+     */
+    private void displayContacts() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        //Add the Person objects to an ArrayList
-        ArrayList<Contact> peopleList = new ArrayList<>();
-        peopleList.add(john);
-        peopleList.add(steve);
-        peopleList.add(stacy);
-        peopleList.add(ashley);
-        peopleList.add(matt);
-        peopleList.add(matt2);
-        peopleList.add(matt3);
-        peopleList.add(matt4);
-        peopleList.add(matt5);
-        peopleList.add(matt6);
-        peopleList.add(matt7);
-        peopleList.add(matt8);
-        peopleList.add(matt9);
-        peopleList.add(matt10);
-        peopleList.add(matt11);
+        ((BaseActivity) getActivity()).showProgressDialog("");
+        mContactsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mContacts.clear();
 
-        ContactsListAdapter adapter = new ContactsListAdapter(getContext(), peopleList);
-        mContactsRecyclerView.setAdapter(adapter);
-        mContactsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    String contactId = data.getValue(String.class);
+
+                    // for this contact (user) id get info to display in the contacts list
+                    showContactData(contactId);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ((BaseActivity) getActivity()).hideProgressDialog();
+    }
+
+    /**
+     * Get info to display in the contacts list for the contact with given id.
+     *
+     * @param id
+     */
+    private void showContactData(final String id) {
+        mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
+                Log.d(TAG, "getcontactdata : " + settings.toString());
+
+                Contact contact = new Contact();
+                contact.setId(id);
+                contact.setName(settings.getDisplayName());
+                contact.setEmail(settings.getEmail());
+                contact.setProfilePhoto(settings.getProfilePhoto());
+                contact.setUserType(settings.getUserType());
+
+                mContacts.add(contact); Log.d(TAG, "contact : " + contact.toString());
+                mContactsListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mContactsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_contacts);
-        testList();
+        mContacts = new ArrayList<>();
 
+        mFabAddContact = (FloatingActionButton) view.findViewById(R.id.fab_add_contact);
+        mContactsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_contacts);
+        mSearchEditText = (EditText) view.findViewById(R.id.edit_text_search_contact);
+
+        mContactsListAdapter = new ContactsListAdapter(getContext(), mContacts);
+        mContactsRecyclerView.setAdapter(mContactsListAdapter);
+        mContactsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mFabAddContact.setOnClickListener(this);
+
+        displayContacts();
+
+        // filter contacts according to text that user enters
+        mSearchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // filter list according to user input
+                filterContactsList(s.toString());
+            }
+        });
+    }
+
+    void filterContactsList(String text){
+        ArrayList<Contact> temp = new ArrayList();
+        text = text.toLowerCase();
+
+        for(Contact contact: mContacts){
+            if(contact.getName().toLowerCase().contains(text) || contact.getEmail().contains(text)){
+                temp.add(contact);
+            }
+        }
+
+        //update recycler view
+        mContactsListAdapter.updateList(temp);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_contacts, container, false);
     }
@@ -153,6 +242,14 @@ public class ContactsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view == mFabAddContact) {
+            // jump to search activity
+            startActivity(new Intent(getActivity(), SearchActivity.class));
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -167,4 +264,5 @@ public class ContactsFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

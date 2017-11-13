@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ioanap.classbook.R;
-import com.ioanap.classbook.model.Contact;
+import com.ioanap.classbook.model.Person;
 
 import java.util.ArrayList;
 
@@ -18,11 +18,11 @@ import java.util.ArrayList;
  * Created by ioana on 11/3/2017.
  */
 
-public class ContactsCustomAdapter extends ArrayAdapter<Contact> {
+public class PeopleListAdapter extends ArrayAdapter<Person> {
 
-    private static final String TAG = "ContactsCustomAdapter";
+    private static final String TAG = "PeopleListAdapter";
 
-    private ArrayList<Contact> contacts;
+    private ArrayList<Person> people;
     private Context mContext;
     private int mResource;
 
@@ -30,8 +30,8 @@ public class ContactsCustomAdapter extends ArrayAdapter<Contact> {
      * Holds variables in a View
      */
     private static class ViewHolder {
-        ImageView mContactProfilePhoto, mMessageContactImageView;
-        TextView mContactName, mContactEmail;
+        ImageView mPersonProfilePhoto, mMessageContactImageView;
+        TextView mPersonName, mPersonUserType;
     }
 
     /**
@@ -40,7 +40,7 @@ public class ContactsCustomAdapter extends ArrayAdapter<Contact> {
      * @param resource
      * @param objects
      */
-    public ContactsCustomAdapter(Context context, int resource, ArrayList<Contact> objects) {
+    public PeopleListAdapter(Context context, int resource, ArrayList<Person> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
@@ -49,13 +49,14 @@ public class ContactsCustomAdapter extends ArrayAdapter<Contact> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // get contact information
+        // get person information
+        String id = getItem(position).getId();
         String name = getItem(position).getName();
-        String email = getItem(position).getEmail();
+        String userType = getItem(position).getUserType();
         String profilePhoto = getItem(position).getProfilePhoto();
 
-        // create the contact object with the information
-        Contact contact = new Contact(name, email, profilePhoto);
+        // create the person object with the information
+        Person person = new Person(id, name, userType, profilePhoto);
 
         ViewHolder holder;
 
@@ -63,18 +64,18 @@ public class ContactsCustomAdapter extends ArrayAdapter<Contact> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(mResource, parent, false);
             holder = new ViewHolder();
-            holder.mContactName = (TextView) convertView.findViewById(R.id.text_contact_name);
-            holder.mContactEmail = (TextView) convertView.findViewById(R.id.text_contact_email);
-            holder.mContactProfilePhoto = (ImageView) convertView.findViewById(R.id.image_contact_profile_photo);
+            holder.mPersonName = (TextView) convertView.findViewById(R.id.text_person_name);
+            holder.mPersonUserType = (TextView) convertView.findViewById(R.id.text_person_user_type);
+            holder.mPersonProfilePhoto = (ImageView) convertView.findViewById(R.id.image_person_profile_photo);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.mContactName.setText(contact.getName());
-        holder.mContactEmail.setText(contact.getEmail());
-        UniversalImageLoader.setImage(contact.getProfilePhoto(), holder.mContactProfilePhoto, null);
+        holder.mPersonName.setText(person.getName());
+        holder.mPersonUserType.setText(person.getUserType());
+        UniversalImageLoader.setImage(person.getProfilePhoto(), holder.mPersonProfilePhoto, null);
 
         return convertView;
     }

@@ -64,7 +64,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     // firebase
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
-    protected DatabaseReference mRootRef, mUserRef, mSettingsRef;
+    protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef;
     protected String userID;
     protected GoogleApiClient mGoogleApiClient;
 
@@ -97,6 +97,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mRootRef = mFirebaseDatabase.getReference();
         mUserRef = mRootRef.child("users");
         mSettingsRef = mRootRef.child("user_account_settings");
+        mContactsRef = mRootRef.child("contacts");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -110,14 +111,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     // ============= Progress Dialog ===============
 
-    protected void showProgressDialog(String msg) {
+    public void showProgressDialog(String msg) {
         if (mProgressDialog != null && mProgressDialog.isShowing())
             hideProgressDialog();
 
         mProgressDialog = ProgressDialog.show(this, getResources().getString(R.string.app_name), msg);
     }
 
-    protected void hideProgressDialog() {
+    public void hideProgressDialog() {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
             mProgressDialog = null;

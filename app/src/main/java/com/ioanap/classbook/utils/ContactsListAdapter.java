@@ -51,8 +51,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         // Set item views based on your views and data model
         viewHolder.mContactName.setText(contact.getName());
         viewHolder.mContactEmail.setText(contact.getEmail());
-
-        // TODO set photo
+        UniversalImageLoader.setImage(contact.getProfilePhoto(), viewHolder.mContactProfilePhoto, null);
     }
 
     @Override
@@ -81,4 +80,13 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         }
     }
 
+    /**
+     * Function to update the list.
+     *
+     * @param list
+     */
+    public void updateList(ArrayList<Contact> list){
+        mContacts = list;
+        notifyDataSetChanged();
+    }
 }

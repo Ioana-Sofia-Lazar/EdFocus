@@ -34,13 +34,14 @@
                 android:id="@+id/button_edit_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/toolbar"
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:background="@android:color/transparent"
                 android:text="Edit Profile"
-                android:textSize="12sp"
-                android:layout_below="@+id/toolbar"
-                android:layout_alignParentEnd="true" />
+                android:textColor="@color/navyBlue"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="User Full Name"
-                    android:textColor="@android:color/holo_blue_dark"
+                    android:textColor="@color/cyan"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -75,7 +76,7 @@
                     android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="This will be the user's description, centered text on multiple rows."
-                    android:textColor="@android:color/holo_blue_dark" />
+                    android:textColor="@color/grey" />
 
             </LinearLayout>
 
@@ -105,7 +106,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="0"
                     android:text="300"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/coral"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -116,7 +117,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="1"
                     android:text="Contacts"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/coral"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -127,7 +128,7 @@
                     android:layout_row="0"
                     android:layout_rowSpan="2"
                     android:layout_rowWeight="1"
-                    android:background="@color/common_google_signin_btn_text_light_default" />
+                    android:background="@color/coral" />
 
                 <TextView
                     android:id="@+id/text_classes"
@@ -137,7 +138,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="0"
                     android:text="3"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/coral"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -148,7 +149,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="1"
                     android:text="Classes"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/coral"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -172,6 +173,7 @@
                 android:drawablePadding="2dp"
                 android:gravity="fill_vertical"
                 android:text="address@something.com"
+                android:textColor="@color/grey"
                 android:textSize="18sp" />
 
             <TextView
@@ -182,6 +184,7 @@
                 android:drawablePadding="4dp"
                 android:gravity="fill_vertical"
                 android:text="Hawaii"
+                android:textColor="@color/grey"
                 android:textSize="18sp" />
 
         </LinearLayout>

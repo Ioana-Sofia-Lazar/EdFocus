@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#70ABAE</color>
-    <color name="colorPrimaryDark">#598d8f</color>
+    <color name="colorPrimary">#669ACC</color>
+    <color name="colorPrimaryDark">#5b89b6</color>
     <color name="colorAccent">#F7988F</color>
 
-    <color name="cyan">#70ABAE</color>
+    <color name="cyan">#669ACC</color>
     <color name="navyBlue">#022546</color>
     <color name="coral">#F7988F</color>
     <color name="lightCoral">#F9BC8E</color>
-    <color name="light">#fafafa</color>
+    <color name="white">#F2F2F2</color>
     <color name="grey">#707070</color>
 </resources>

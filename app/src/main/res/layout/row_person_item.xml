@@ -5,7 +5,7 @@
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/image_contact_profile_photo"
+        android:id="@+id/image_person_profile_photo"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@drawable/profile_pic" />
@@ -18,13 +18,13 @@
         android:layout_marginLeft="10dp">
 
         <TextView
-            android:id="@+id/text_contact_name"
+            android:id="@+id/text_person_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="3dp" />
 
         <TextView
-            android:id="@+id/text_contact_email"
+            android:id="@+id/text_person_user_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="3dp" />
@@ -38,10 +38,10 @@
         android:layout_weight="1" />
 
     <ImageView
-        android:id="@+id/image_message_contact"
+        android:id="@+id/image_add_person"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_message" />
+        android:src="@drawable/ic_add_person" />
 
 </LinearLayout>
