@@ -27,10 +27,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
+import com.ioanap.classbook.model.Request;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.utils.ContactsListAdapter;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,11 +62,12 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
     // variables
     private ArrayList<Contact> mContacts;
+    private ArrayList<Request> mRequests;
     private OnFragmentInteractionListener mListener;
     private ContactsListAdapter mContactsListAdapter;
 
     // db reference
-    private DatabaseReference mContactsRef, mSettingsRef;
+    private DatabaseReference mContactsRef, mSettingsRef, mRequestsRef;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -97,6 +100,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         }
 
         mContactsRef = FirebaseDatabase.getInstance().getReference().child("contacts");
+        mRequestsRef = FirebaseDatabase.getInstance().getReference().child("requests");
         mSettingsRef = FirebaseDatabase.getInstance().getReference().child("user_account_settings");
     }
 
@@ -160,23 +164,88 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    /**
+     * Display requests for the current user
+     */
+    private void displayRequests() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        ((BaseActivity) getActivity()).showProgressDialog("");
+        mRequestsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mRequests.clear();
+
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Map<String, Object> newRequest = (Map<String, Object>) data.getValue();
+                    Log.d(TAG, "from: " + (String) newRequest.get("from") + "\t type: " + (String) newRequest.get("requestType"));
+
+                    String id = (String) newRequest.get("from");
+                    String requestType = (String) newRequest.get("requestType");
+
+                    // for this contact (user) id get info to display in the requests list
+                    showRequestData(id, requestType);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ((BaseActivity) getActivity()).hideProgressDialog();
+    }
+
+    /**
+     * Get info to display in the requests list for the contact with given id.
+     *
+     * @param id
+     */
+    private void showRequestData(final String id, final String requestType) {
+        mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
+                Log.d(TAG, "getrequestdata : " + settings.toString());
+
+                Request request = new Request();
+                request.setPersonId(id);
+                request.setName(settings.getDisplayName());
+                request.setProfilePhoto(settings.getProfilePhoto());
+                request.setRequestType(requestType);
+
+                mRequests.add(request); mRequests.add(request);mRequests.add(request);mRequests.add(request);mRequests.add(request);mRequests.add(request);mRequests.add(request);mRequests.add(request);
+                mContactsListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mContacts = new ArrayList<>();
+        mRequests = new ArrayList<>();
 
         mFabAddContact = (FloatingActionButton) view.findViewById(R.id.fab_add_contact);
         mContactsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_contacts);
         mSearchEditText = (EditText) view.findViewById(R.id.edit_text_search_contact);
 
-        mContactsListAdapter = new ContactsListAdapter(getContext(), mContacts);
+        mContactsListAdapter = new ContactsListAdapter(getContext(), mContacts, mRequests);
         mContactsRecyclerView.setAdapter(mContactsListAdapter);
         mContactsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mFabAddContact.setOnClickListener(this);
 
         displayContacts();
+        displayRequests();
 
         // filter contacts according to text that user enters
         mSearchEditText.addTextChangedListener(new TextWatcher() {
@@ -207,7 +276,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         }
 
         //update recycler view
-        mContactsListAdapter.updateList(temp);
+        mContactsListAdapter.updateLists(temp);
     }
 
     @Override
