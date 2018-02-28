@@ -12,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.ioanap.classbook.BaseActivity;
@@ -47,8 +46,6 @@ public class TeacherDrawerActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-
-        //mFirebaseUtils = new FirebaseUtils(mContext);
 
         // set initially shown fragment
         displayFragment(new TeacherProfileFragment());
@@ -94,11 +91,10 @@ public class TeacherDrawerActivity extends BaseActivity
             displayFragment(new TeacherProfileFragment());
         } else if (id == R.id.nav_contacts) {
             displayFragment(new ContactsFragment());
-            Log.i("showing fragment", "contacts");
         } else if (id == R.id.nav_messages) {
 
         } else if (id == R.id.nav_classes) {
-
+            displayFragment(new ClassesFragment());
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingTop="20dp">
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:gravity="center_horizontal"
+                android:text="Choose a course:" />
+
+            <Spinner
+                android:id="@+id/spinner_courses"
+                style="@style/Spinner" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:gravity="center_horizontal"
+                android:text="Course starts at:" />
+
+            <TimePicker
+                android:id="@+id/time_picker_start"
+                style="@style/TimePicker" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:gravity="center_horizontal"
+                android:text="Course ends at:" />
+
+            <TimePicker
+                android:id="@+id/time_picker_end"
+                style="@style/TimePicker" />
+
+            <Button
+                android:id="@+id/btn_create"
+                style="@style/Button"
+                android:text="Add" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/img_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_x_cancel" />
+
+</RelativeLayout>

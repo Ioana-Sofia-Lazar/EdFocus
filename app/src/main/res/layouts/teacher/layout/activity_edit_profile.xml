@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ioanap.classbook.teacher.EditProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/cyan"
+        android:minHeight="?attr/actionBarSize"
+        android:navigationIcon="@drawable/back"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="0dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image_cancel"
+                style="@style/ToolbarIcon"
+                android:src="@drawable/ic_x_cancel" />
+
+            <TextView
+                style="@style/ActivityTitle"
+                android:text="Edit Your Profile" />
+
+            <ImageView
+                android:id="@+id/image_save"
+                style="@style/ToolbarIcon"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_check"
+                android:tint="@color/lightCoral" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_search"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="0dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/edit_profile_photo"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/profile_pic"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="4dp"
+                tools:layout_editor_absoluteX="85dp"
+                tools:layout_editor_absoluteY="56dp" />
+
+            <TextView
+                android:id="@+id/text_edit_profile_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Change Photo"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView4"
+                style="@style/FormFieldTitle"
+                android:hint="Name"
+                android:text="First Name" />
+
+            <EditText
+                android:id="@+id/edit_text_first_name"
+                style="@style/FormFieldInput"
+                android:hint="First Name"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/textView10"
+                style="@style/FormFieldTitle"
+                android:hint="Name"
+                android:text="Last Name" />
+
+            <EditText
+                android:id="@+id/edit_text_last_name"
+                style="@style/FormFieldInput"
+                android:hint="Last Name"
+                android:inputType="textPersonName" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description" />
+
+            <EditText
+                android:id="@+id/edit_text_description"
+                style="@style/FormFieldInput"
+                android:hint="Your description here"
+                android:inputType="textMultiLine" />
+
+            <TextView
+                android:id="@+id/textView5"
+                style="@style/FormFieldTitle"
+                android:text="Location" />
+
+            <EditText
+                android:id="@+id/edit_text_location"
+                style="@style/FormFieldInput"
+                android:hint="Location"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Private information"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView8"
+                style="@style/FormFieldTitle"
+                android:text="E-mail" />
+
+            <EditText
+                android:id="@+id/edit_text_email"
+                style="@style/FormFieldInput"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="textEmailAddress"
+                android:text="email here" />
+
+            <TextView
+                android:id="@+id/textView9"
+                style="@style/FormFieldTitle"
+                android:text="Phone number" />
+
+            <EditText
+                android:id="@+id/edit_text_phone_number"
+                style="@style/FormFieldInput"
+                android:hint="Your phone number"
+                android:inputType="phone" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_edit_profile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:elevation="2dp"
+        android:visibility="invisible"
+        tools:layout_editor_absoluteX="135dp"
+        tools:layout_editor_absoluteY="161dp" />
+
+
+</android.support.constraint.ConstraintLayout>

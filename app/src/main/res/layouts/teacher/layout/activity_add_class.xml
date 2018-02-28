@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cyan"
+        android:minHeight="?attr/actionBarSize"
+
+        android:navigationIcon="@drawable/back"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image_back"
+                style="@style/ToolbarIcon" />
+
+            <TextView
+                style="@style/ActivityTitle"
+                android:layout_toRightOf="@+id/image_cancel"
+                android:text="Add a New Class" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="203dp"
+                android:layout_gravity="center_horizontal"
+                android:foregroundGravity="center_horizontal"
+                android:scaleType="fitCenter"
+                android:src="@drawable/photo_placeholder" />
+
+            <TextView
+                android:id="@+id/txt_add_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:gravity="center_horizontal"
+                android:text="Change Photo"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:text="Class Name" />
+
+            <EditText
+                android:id="@+id/txt_name"
+                style="@style/FormFieldInput"
+                android:hint="Class Name" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:text="School" />
+
+            <EditText
+                android:id="@+id/txt_school"
+                style="@style/FormFieldInput"
+                android:hint="School Name" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:text="Description" />
+
+            <EditText
+                android:id="@+id/txt_description"
+                style="@style/FormFieldInput"
+                android:hint="Class Description" />
+
+            <TextView
+                style="@style/InfoText"
+                android:text="@string/add_class_info" />
+
+            <Button
+                android:id="@+id/btn_create"
+                style="@style/Button"
+                android:text="Create" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -53,7 +53,13 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".teacher.SearchActivity"></activity>
+        <activity android:name=".teacher.SearchActivity" />
+        <activity android:name=".teacher.ViewTeacherProfileActivity" />
+        <activity android:name=".teacher.ClassActivity" />
+        <activity android:name=".teacher.AddClassActivity" />
+        <activity android:name=".teacher.ClassTokenActivity" />
+        <activity android:name=".teacher.CoursesActivity" />
+        <activity android:name=".teacher.ScheduleActivity"></activity>
     </application>
 
 </manifest>

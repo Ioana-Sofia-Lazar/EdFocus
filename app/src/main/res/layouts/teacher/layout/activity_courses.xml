@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ioanap.classbook.teacher.EditProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cyan"
+        android:minHeight="?attr/actionBarSize"
+        android:navigationIcon="@drawable/back"
+        android:theme="?attr/actionBarTheme"
+        tools:layout_editor_absoluteY="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_back"
+                style="@style/ToolbarIcon"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                style="@style/ActivityTitle"
+                android:text="Courses" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:id="@+id/layout_no_courses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Courses Yet." />
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/list_courses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_no_classes"
+            android:layout_margin="20dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="6dp"
+            android:scrollbars="none"></ListView>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_course"
+        style="@style/FabButton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_plus"
+        app:useCompatPadding="true" />
+
+</RelativeLayout>

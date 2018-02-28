@@ -1,0 +1,91 @@
+package com.ioanap.classbook.teacher;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.ioanap.classbook.BaseActivity;
+import com.ioanap.classbook.R;
+import com.ioanap.classbook.model.Class;
+import com.ioanap.classbook.utils.UniversalImageLoader;
+
+public class ClassActivity extends BaseActivity implements View.OnClickListener {
+
+    private static final String TAG = "ClassActivity";
+
+    // variables
+    private String mClassId;
+
+    // widgets
+    private CardView mCoursesCard, mScheduleCard;
+    private TextView mClassNameText, mSchoolText;
+    private ImageView mBackButton, mClassPhoto;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_class);
+
+        // get id of class to display
+        Intent myIntent = getIntent();
+        mClassId = myIntent.getStringExtra("classId");
+
+        // widgets
+        mCoursesCard = (CardView) findViewById(R.id.card_courses);
+        mScheduleCard = (CardView) findViewById(R.id.card_schedule);
+        mClassNameText = (TextView) findViewById(R.id.txt_class_name);
+        mSchoolText = (TextView) findViewById(R.id.txt_school);
+        mBackButton = (ImageView) findViewById(R.id.img_back);
+        mClassPhoto = (ImageView) findViewById(R.id.img_class_photo);
+
+        // display class info from firebase
+        displayClassInfo();
+
+        // listeners
+        mCoursesCard.setOnClickListener(this);
+        mScheduleCard.setOnClickListener(this);
+        mBackButton.setOnClickListener(this);
+
+    }
+
+    private void displayClassInfo() {
+        mClassesRef.child(userID).child(mClassId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Class aClass = dataSnapshot.getValue(Class.class);
+
+                mClassNameText.setText(aClass.getName());
+                mSchoolText.setText(aClass.getSchool());
+                UniversalImageLoader.setImage(aClass.getPhoto(), mClassPhoto, null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == mCoursesCard) {
+            Intent myIntent = new Intent(getApplicationContext(), CoursesActivity.class);
+            myIntent.putExtra("classId", mClassId);
+            startActivity(myIntent);
+        }
+        if (view == mScheduleCard) {
+            Intent myIntent = new Intent(getApplicationContext(), ScheduleActivity.class);
+            myIntent.putExtra("classId", mClassId);
+            startActivity(myIntent);
+        }
+        if (view == mBackButton) {
+            finish();
+        }
+    }
+}

@@ -60,33 +60,27 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         ChooseUserTypeDialog.OnUserTypeSelectedListener {
 
     private static final String TAG = "Base Activity";
-
+    // request code for google sign in
+    private static final int RC_GOOGLE_SIGN_IN = 2;
+    // request code for facebook sign in
+    private static final int RC_FACEBOOK_SIGN_IN = CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode();
+    // signing in mode : facebook | google | email
+    private static String MODE = "email";
     // firebase
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
-    protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef;
+    protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
+            mClassTokensRef, mClassCoursesRef;
     protected String userID;
     protected GoogleApiClient mGoogleApiClient;
-
-    private Context mContext;
     protected ProgressDialog mProgressDialog;
-
-    // signing in mode : facebook | google | email
-    private static String MODE = "email";
-
-    // request code for google sign in
-    private static final int RC_GOOGLE_SIGN_IN = 2;
-
-    // request code for facebook sign in
-    private static final int RC_FACEBOOK_SIGN_IN = CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode();
-
-    // Google sign in
-    GoogleSignInAccount mGoogleAccount;
-    String mUserType; // for users signing in with Google account
-
     // Facebook
     protected CallbackManager mCallbackManager;
     protected AccessToken mFacebookAccessToken;
+    // Google sign in
+    GoogleSignInAccount mGoogleAccount;
+    String mUserType; // for users signing in with Google account
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +92,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mUserRef = mRootRef.child("users");
         mSettingsRef = mRootRef.child("user_account_settings");
         mContactsRef = mRootRef.child("contacts");
+        mRequestsRef = mRootRef.child("requests");
+        mClassesRef = mRootRef.child("classes");
+        mClassTokensRef = mRootRef.child("classTokens");
+        mClassCoursesRef = mRootRef.child("classCourses");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -218,13 +216,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     // =============== Modify/Retrieve User Data =================
 
+    public String getCurrentUserId() {
+        return userID;
+    }
+
     public UserAccountSettings getUserAccountSettings(DataSnapshot dataSnapshot) {
         Log.d(TAG, "getting user account settings");
 
-        Log.d(TAG, "dataSnapshot: " + dataSnapshot);
-
-        UserAccountSettings settings = dataSnapshot.child(userID).getValue(UserAccountSettings.class);
-        Log.d(TAG, "settings: " + settings);
+        UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
 
         return settings;
     }

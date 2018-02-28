@@ -48,6 +48,12 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private Uri mSelectedUri;
     private UserAccountSettings mSettings;
 
+    public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+        return stream.toByteArray();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +102,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         if (view == mEditProfilePhotoTextView) {
             // verify permissions
             verifyPermissions();
-
         }
     }
 
@@ -161,9 +166,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
      * made in the database.
      */
     private void setupFirebase() {
-        Log.d(TAG, "setupFirebase");
-
-        mSettingsRef.addValueEventListener(new ValueEventListener() {
+        // add listener for the settings of the currently logged user
+        mSettingsRef.child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
@@ -243,6 +247,19 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         mSelectedBitmap = bitmap;
     }
 
+    private void compressThenUploadNewPhoto(Bitmap bitmap) {
+        Log.d(TAG, "uploadNewPhoto: uploading a new image bitmap to storage");
+        ImageCompressionInBackground compress = new ImageCompressionInBackground(bitmap);
+        Uri uri = null;
+        compress.execute(uri);
+    }
+
+    private void compressThenUploadNewPhoto(Uri imagePath) {
+        Log.d(TAG, "uploadNewPhoto: uploading a new image uri to storage.");
+        ImageCompressionInBackground resize = new ImageCompressionInBackground(null);
+        resize.execute(imagePath);
+    }
+
     /**
      * Compresses image (background task to prevent slowing down the UI).
      */
@@ -291,25 +308,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             // execute the upload to firebase task
             uploadProfilePhoto(bytes);
         }
-    }
-
-    private void compressThenUploadNewPhoto(Bitmap bitmap){
-        Log.d(TAG, "uploadNewPhoto: uploading a new image bitmap to storage");
-        ImageCompressionInBackground compress = new ImageCompressionInBackground(bitmap);
-        Uri uri = null;
-        compress.execute(uri);
-    }
-
-    private void compressThenUploadNewPhoto(Uri imagePath){
-        Log.d(TAG, "uploadNewPhoto: uploading a new image uri to storage.");
-        ImageCompressionInBackground resize = new ImageCompressionInBackground(null);
-        resize.execute(imagePath);
-    }
-
-    public static byte[] bitmapToBytes(Bitmap bitmap, int quality){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality,stream);
-        return stream.toByteArray();
     }
 
 }

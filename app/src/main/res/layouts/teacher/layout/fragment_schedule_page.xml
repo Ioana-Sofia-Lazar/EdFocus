@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/layout_no_courses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Courses In This Day's Schedule." />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:padding="26dp"
+        android:scrollbars="none" />
+
+    <Button
+        android:id="@+id/btn_add_course"
+        style="@style/Button"
+        android:layout_below="@id/list_schedule"
+        android:text="Add Course" />
+
+</RelativeLayout>

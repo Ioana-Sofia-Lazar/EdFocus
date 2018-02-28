@@ -1,9 +1,9 @@
 package com.ioanap.classbook.teacher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -112,9 +112,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mPeopleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick : " + mPeople.get(position).getId());
+                String tappedUserId = mPeople.get(position).getId();
 
                 // display tapped person's profile
+                Intent myIntent = new Intent(getApplicationContext(), ViewTeacherProfileActivity.class);
+                myIntent.putExtra("userId", tappedUserId);
+                startActivity(myIntent);
             }
         });
     }

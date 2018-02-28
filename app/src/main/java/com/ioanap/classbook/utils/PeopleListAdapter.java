@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 /**
  * Created by ioana on 11/3/2017.
+ * Used for Search Activity.
  */
 
 public class PeopleListAdapter extends ArrayAdapter<Person> {
@@ -25,14 +26,6 @@ public class PeopleListAdapter extends ArrayAdapter<Person> {
     private ArrayList<Person> people;
     private Context mContext;
     private int mResource;
-
-    /**
-     * Holds variables in a View
-     */
-    private static class ViewHolder {
-        ImageView mPersonProfilePhoto, mMessageContactImageView;
-        TextView mPersonName, mPersonUserType;
-    }
 
     /**
      * Default constructor for the PersonListAdapter
@@ -78,6 +71,14 @@ public class PeopleListAdapter extends ArrayAdapter<Person> {
         UniversalImageLoader.setImage(person.getProfilePhoto(), holder.mPersonProfilePhoto, null);
 
         return convertView;
+    }
+
+    /**
+     * Holds variables in a View
+     */
+    private static class ViewHolder {
+        ImageView mPersonProfilePhoto, mAddContactImageView;
+        TextView mPersonName, mPersonUserType;
     }
 
 }
