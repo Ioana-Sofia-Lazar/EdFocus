@@ -23,11 +23,9 @@ import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Course;
 import com.ioanap.classbook.model.ScheduleEntry;
 import com.ioanap.classbook.model.ScheduleEntryAndCourse;
-import com.ioanap.classbook.model.ScheduleEntryAndCourseComparator;
 import com.ioanap.classbook.utils.ScheduleListAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by ioana on 2/28/2018.
@@ -81,9 +79,9 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
 
-        mScheduleListView = (ListView) view.findViewById(R.id.list_schedule);
-        mNoCoursesLayout = (RelativeLayout) view.findViewById(R.id.layout_no_courses);
-        mAddCourseButton = (Button) view.findViewById(R.id.btn_add_course);
+        mScheduleListView = view.findViewById(R.id.list_schedule);
+        mNoCoursesLayout = view.findViewById(R.id.layout_no_courses);
+        mAddCourseButton = view.findViewById(R.id.btn_add_course);
 
         mAddCourseButton.setOnClickListener(this);
 
@@ -98,8 +96,8 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
     private void displaySchedule() {
         String day = DAYS[mDayIndex];
 
-        // retrieve schedule from firebase for the currently selected day
-        mScheduleRef.child(mClassId).child(day).addValueEventListener(new ValueEventListener() {
+        // retrieve schedule from firebase for the currently selected day, sorted by starting time
+        mScheduleRef.child(mClassId).child(day).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEntries.clear();
@@ -117,8 +115,6 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
                                 Course course = dataSnapshot.getValue(Course.class);
 
                                 mEntries.add(new ScheduleEntryAndCourse(entry, course));
-                                // sort by starting time
-                                Collections.sort(mEntries, new ScheduleEntryAndCourseComparator());
                                 mScheduleListAdapter.notifyDataSetChanged();
                             }
 
@@ -127,6 +123,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
 
                             }
                         });
+
                     }
                 }
 
@@ -145,13 +142,13 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         dialog.setContentView(R.layout.dialog_add_schedule_course);
 
         // dialog widgets
-        final TimePicker startTimePicker = (TimePicker) dialog.findViewById(R.id.time_picker_start);
+        final TimePicker startTimePicker = dialog.findViewById(R.id.time_picker_start);
         startTimePicker.setIs24HourView(true);
-        final TimePicker endTimePicker = (TimePicker) dialog.findViewById(R.id.time_picker_end);
+        final TimePicker endTimePicker = dialog.findViewById(R.id.time_picker_end);
         endTimePicker.setIs24HourView(true);
-        Button createBtn = (Button) dialog.findViewById(R.id.btn_create);
-        ImageView cancelImg = (ImageView) dialog.findViewById(R.id.img_cancel);
-        final Spinner coursesSpinner = (Spinner) dialog.findViewById(R.id.spinner_courses);
+        Button createBtn = dialog.findViewById(R.id.btn_create);
+        ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
+        final Spinner coursesSpinner = dialog.findViewById(R.id.spinner_courses);
 
         populateSpinner(coursesSpinner);
 
@@ -166,7 +163,8 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
 
                 // get id where to put the new entry for schedule in firebase
                 String entryId = mScheduleRef.child(mClassId).child(DAYS[mDayIndex]).push().getKey();
-                ScheduleEntry entry = new ScheduleEntry(entryId, startsAt, endsAt, courseId);
+                float compareValue = getStartsAtFloat(startsAt);
+                ScheduleEntry entry = new ScheduleEntry(entryId, startsAt, endsAt, courseId, compareValue);
 
                 // save to firebase
                 mScheduleRef.child(mClassId).child(DAYS[mDayIndex]).child(entryId).setValue(entry);
@@ -184,6 +182,19 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
 
         dialog.show();
 
+    }
+
+    /**
+     * Value that starting times will be compared by
+     *
+     * @param startsAt string in format hh:mm
+     * @return float hh.mm
+     */
+    private float getStartsAtFloat(String startsAt) {
+        String[] parts = startsAt.split(":");
+        float time = Float.parseFloat(parts[0] + "." + parts[1]);
+
+        return time;
     }
 
     private void populateSpinner(Spinner spinner) {

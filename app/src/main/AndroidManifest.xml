@@ -59,7 +59,10 @@
         <activity android:name=".teacher.AddClassActivity" />
         <activity android:name=".teacher.ClassTokenActivity" />
         <activity android:name=".teacher.CoursesActivity" />
-        <activity android:name=".teacher.ScheduleActivity"></activity>
+        <activity android:name=".teacher.ScheduleActivity" />
+        <activity
+            android:name=".teacher.StudentsActivity"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

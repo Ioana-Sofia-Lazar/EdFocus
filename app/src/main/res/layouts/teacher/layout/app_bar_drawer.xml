@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:elevation="0dp"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     </RelativeLayout>
 

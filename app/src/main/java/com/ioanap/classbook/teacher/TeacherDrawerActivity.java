@@ -21,8 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TeacherDrawerActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        TeacherProfileFragment.OnFragmentInteractionListener,
-        ContactsFragment.OnFragmentInteractionListener {
+        TeacherProfileFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "TeacherDrawerActivity";
 
@@ -53,23 +52,23 @@ public class TeacherDrawerActivity extends BaseActivity
         // initialize image loader
         initImageLoader();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.bringToFront();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -104,7 +103,7 @@ public class TeacherDrawerActivity extends BaseActivity
             finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

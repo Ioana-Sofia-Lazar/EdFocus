@@ -44,7 +44,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            style="@style/NormalText"
+            style="@style/TextNormal"
             android:gravity="center_horizontal"
             android:text="@string/class_created_info" />
 
@@ -77,7 +77,7 @@
         </LinearLayout>
 
         <TextView
-            style="@style/InfoText"
+            style="@style/InfoTextSmall"
             android:gravity="center_horizontal"
             android:text="@string/class_created_token_info" />
 

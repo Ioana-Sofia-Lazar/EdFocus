@@ -9,7 +9,32 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@color/pureWhite</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/cyan</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:contentInsetLeft">0dp</item>
+        <item name="android:contentInsetStart">0dp</item>
+        <item name="android:contentInsetRight">0dp</item>
+        <item name="android:contentInsetEnd">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetRight">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+    </style>
+
+    <style name="ToolbarIcon">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:tint">@color/pureWhite</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:src">@drawable/ic_back</item>
+        <item name="android:layout_marginLeft">10dp</item>
     </style>
 
     <style name="ActivityTitle" parent="TextAppearance.AppCompat">
@@ -31,14 +56,7 @@
         <item name="fabSize">normal</item>
     </style>
 
-    <style name="ToolbarIcon">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:tint">@color/pureWhite</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:src">@drawable/ic_back</item>
-    </style>
-
+    <!-- Form -->
     <style name="FormFieldTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -50,36 +68,60 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">45dp</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:ems">10</item>
+        <item name="android:inputType">text</item>
     </style>
 
+    <style name="TimePicker">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:timePickerMode">spinner</item>
+        <item name="android:layout_margin">-32dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Spinner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <!-- Separator lines -->
     <style name="VerticalSeparator">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/grey</item>
+        <item name="android:background">@color/gray</item>
     </style>
 
     <style name="HorizontalSeparator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/grey</item>
+        <item name="android:background">@color/gray</item>
     </style>
 
-    <style name="NormalText">
+    <!--  Text -->
+    <style name="TextNormal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
-    <style name="InfoText">
+    <style name="TextBig">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/cyan</item>
+    </style>
+
+    <style name="InfoTextSmall">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
+    <!-- Buttons -->
     <style name="Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -129,6 +171,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- Schedule Tabs -->
     <style name="TabLayout" parent="Widget.Design.TabLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -148,19 +191,29 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="TimePicker">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:timePickerMode">spinner</item>
-        <item name="android:layout_margin">-32dp</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="Spinner">
+    <!-- Search Box -->
+    <style name="SearchBoxEditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">8dp</item>
+        <item name="android:background">@drawable/search_box</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textColorHint">@color/lightGray</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!---->
+    <style name="AlertDialogPositiveButton">
+        <item name="android:textColor">@color/lightGray</item>
+    </style>
+
+    <style name="AlertDialogNegativeButton">
+        <item name="android:textColor">@color/coral</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:buttonBarPositiveButtonStyle">@style/AlertDialogPositiveButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/AlertDialogNegativeButton</item>
     </style>
 
 </resources>

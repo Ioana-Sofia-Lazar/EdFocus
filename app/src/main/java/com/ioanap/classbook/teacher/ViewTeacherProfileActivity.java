@@ -42,15 +42,15 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
         Log.d(TAG, "viewing profile for " + userId);
 
         // widgets
-        mProfilePhotoImageView = (ImageView) findViewById(R.id.image_profile_photo);
-        mAddContactButton = (Button) findViewById(R.id.button_add_contact);
-        mBackButton = (ImageView) findViewById(R.id.image_back);
-        mNameTextView = (TextView) findViewById(R.id.text_name);
-        mDescriptionTextView = (TextView) findViewById(R.id.text_description);
-        mContactsTextView = (TextView) findViewById(R.id.text_contacts);
-        mClassesTextView = (TextView) findViewById(R.id.text_classes);
-        mEmailTextView = (TextView) findViewById(R.id.text_email);
-        mLocationTextView = (TextView) findViewById(R.id.text_location);
+        mProfilePhotoImageView = findViewById(R.id.image_profile_photo);
+        mAddContactButton = findViewById(R.id.button_add_contact);
+        mBackButton = findViewById(R.id.image_back);
+        mNameTextView = findViewById(R.id.text_name);
+        mDescriptionTextView = findViewById(R.id.text_description);
+        mContactsTextView = findViewById(R.id.text_contacts);
+        mClassesTextView = findViewById(R.id.text_classes);
+        mEmailTextView = findViewById(R.id.text_email);
+        mLocationTextView = findViewById(R.id.text_location);
 
         showUserInfo();
 
@@ -153,7 +153,7 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
     }
 
     private void disableButton(String mode) {
-        mAddContactButton.setBackgroundColor(getResources().getColor(R.color.grey));
+        mAddContactButton.setBackgroundColor(getResources().getColor(R.color.gray));
         mAddContactButton.setText(mode);
         mAddContactButton.setEnabled(false);
     }

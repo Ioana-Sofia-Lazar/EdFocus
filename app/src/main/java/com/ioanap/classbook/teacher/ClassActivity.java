@@ -23,7 +23,7 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
     private String mClassId;
 
     // widgets
-    private CardView mCoursesCard, mScheduleCard;
+    private CardView mCoursesCard, mScheduleCard, mStudentsCard;
     private TextView mClassNameText, mSchoolText;
     private ImageView mBackButton, mClassPhoto;
 
@@ -37,12 +37,13 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mClassId = myIntent.getStringExtra("classId");
 
         // widgets
-        mCoursesCard = (CardView) findViewById(R.id.card_courses);
-        mScheduleCard = (CardView) findViewById(R.id.card_schedule);
-        mClassNameText = (TextView) findViewById(R.id.txt_class_name);
-        mSchoolText = (TextView) findViewById(R.id.txt_school);
-        mBackButton = (ImageView) findViewById(R.id.img_back);
-        mClassPhoto = (ImageView) findViewById(R.id.img_class_photo);
+        mCoursesCard = findViewById(R.id.card_courses);
+        mScheduleCard = findViewById(R.id.card_schedule);
+        mStudentsCard = findViewById(R.id.card_students);
+        mClassNameText = findViewById(R.id.txt_class_name);
+        mSchoolText = findViewById(R.id.txt_school);
+        mBackButton = findViewById(R.id.img_back);
+        mClassPhoto = findViewById(R.id.img_class_photo);
 
         // display class info from firebase
         displayClassInfo();
@@ -50,6 +51,7 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         // listeners
         mCoursesCard.setOnClickListener(this);
         mScheduleCard.setOnClickListener(this);
+        mStudentsCard.setOnClickListener(this);
         mBackButton.setOnClickListener(this);
 
     }
@@ -81,6 +83,11 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         }
         if (view == mScheduleCard) {
             Intent myIntent = new Intent(getApplicationContext(), ScheduleActivity.class);
+            myIntent.putExtra("classId", mClassId);
+            startActivity(myIntent);
+        }
+        if (view == mStudentsCard) {
+            Intent myIntent = new Intent(getApplicationContext(), StudentsActivity.class);
             myIntent.putExtra("classId", mClassId);
             startActivity(myIntent);
         }

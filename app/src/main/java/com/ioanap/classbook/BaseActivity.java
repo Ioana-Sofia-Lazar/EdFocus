@@ -1,5 +1,6 @@
 package com.ioanap.classbook;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -70,7 +71,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
-            mClassTokensRef, mClassCoursesRef;
+            mClassTokensRef, mClassCoursesRef, mClassStudentsRef;
     protected String userID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -81,6 +82,19 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     GoogleSignInAccount mGoogleAccount;
     String mUserType; // for users signing in with Google account
     private Context mContext;
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager inputManager = (InputMethodManager) activity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View currentFocusedView = activity.getCurrentFocus();
+        if (currentFocusedView != null) {
+            inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    // ============= Progress Dialog ===============
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +110,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mClassesRef = mRootRef.child("classes");
         mClassTokensRef = mRootRef.child("classTokens");
         mClassCoursesRef = mRootRef.child("classCourses");
+        mClassStudentsRef = mRootRef.child("classStudents");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -107,8 +122,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    // ============= Progress Dialog ===============
-
     public void showProgressDialog(String msg) {
         if (mProgressDialog != null && mProgressDialog.isShowing())
             hideProgressDialog();
@@ -116,14 +129,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mProgressDialog = ProgressDialog.show(this, getResources().getString(R.string.app_name), msg);
     }
 
+    // ====================== Sign Up =========================
+
     public void hideProgressDialog() {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }
     }
-
-    // ====================== Sign Up =========================
 
     /**
      * Registers new user and on success adds his information to the database and sends a verification
@@ -201,6 +214,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
+    // =============== Modify/Retrieve User Data =================
+
     /**
      * Saves the current state to SharedPreferences (whether there is or not a logged in user and his type)
      *
@@ -213,8 +228,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         editor.putString("userType", userType);
         editor.apply();
     }
-
-    // =============== Modify/Retrieve User Data =================
 
     public String getCurrentUserId() {
         return userID;
@@ -261,6 +274,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
+    // ====================== Sign In ==========================
+
     /**
      * Receive an image as a byte array, save image to Firebase Storage, get uri(reference) to
      * the image and then call "updateUserAccountSettings" to save reference in Firebase Database.
@@ -291,8 +306,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
-
-    // ====================== Sign In ==========================
 
     /**
      * Redirects the currently logged in user to his profile according to his type i.e Teacher,
@@ -349,6 +362,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
+    // ====================== Sign Out ==========================
+
     public void signIn(String email, String password) {
         showProgressDialog("Signing In...");
 
@@ -368,7 +383,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
     }
 
-    // ====================== Sign Out ==========================
+    // ================== Google Sign In =====================
 
     /**
      * Signs currently logged user out and clears all activities from stack (except from the first
@@ -395,8 +410,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mContext.startActivity(intent);
     }
-
-    // ================== Google Sign In =====================
 
     protected void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -514,6 +527,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
+    // ================== Facebook Sign In ==================
+
     /**
      * We get the user type chosen by the new user from the dialog and proceed to sign him in.
      *
@@ -548,8 +563,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
     }
-
-    // ================== Facebook Sign In ==================
 
     protected void handleFacebookAccessToken(final Boolean firstTime) {
         Log.d(TAG, "handleFacebookAccessToken:" + mFacebookAccessToken);
@@ -587,6 +600,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                     }
                 });
     }
+
+    // ========================= Keyboard ===========================
 
     /**
      * Checks if email is already in the database
@@ -627,8 +642,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                     }
                 });
     }
-
-    // ========================= Keyboard ===========================
 
     protected Rect getLocationOnScreen(EditText mEditText) {
         Rect mRect = new Rect();

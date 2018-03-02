@@ -74,6 +74,7 @@
             <EditText
                 android:id="@+id/txt_name"
                 style="@style/FormFieldInput"
+                android:ems="10"
                 android:hint="Class Name" />
 
             <TextView
@@ -83,6 +84,7 @@
             <EditText
                 android:id="@+id/txt_school"
                 style="@style/FormFieldInput"
+                android:ems="10"
                 android:hint="School Name" />
 
             <TextView
@@ -92,10 +94,11 @@
             <EditText
                 android:id="@+id/txt_description"
                 style="@style/FormFieldInput"
-                android:hint="Class Description" />
+                android:hint="Class Description"
+                android:inputType="textMultiLine" />
 
             <TextView
-                style="@style/InfoText"
+                style="@style/InfoTextSmall"
                 android:text="@string/add_class_info" />
 
             <Button

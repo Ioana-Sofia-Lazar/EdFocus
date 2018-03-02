@@ -11,12 +11,14 @@ public class ScheduleEntry {
     String startsAt;
     String endsAt;
     String courseId;
+    float compareValue;
 
-    public ScheduleEntry(String id, String startsAt, String endsAt, String courseId) {
+    public ScheduleEntry(String id, String startsAt, String endsAt, String courseId, float compareValue) {
         this.id = id;
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.courseId = courseId;
+        this.compareValue = compareValue;
     }
 
     public ScheduleEntry() {
@@ -52,5 +54,13 @@ public class ScheduleEntry {
 
     public void setCourseId(String courseId) {
         this.courseId = courseId;
+    }
+
+    public float getCompareValue() {
+        return compareValue;
+    }
+
+    public void setCompareValue(float compareValue) {
+        this.compareValue = compareValue;
     }
 }

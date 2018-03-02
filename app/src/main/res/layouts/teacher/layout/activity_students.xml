@@ -8,7 +8,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="115dp"
+        android:layout_height="140dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:elevation="3dp">
@@ -23,12 +23,12 @@
             app:titleEnabled="false">
 
             <EditText
-                android:id="@+id/edit_text_search_contact"
+                android:id="@+id/text_search"
                 style="@style/SearchBoxEditText"
                 android:layout_gravity="bottom"
-                android:drawableLeft="@drawable/ic_search"
+                android:drawableStart="@drawable/ic_search"
                 android:gravity="start|center_vertical"
-                android:hint="Search contact"
+                android:hint="Search student"
                 android:maxLines="1" />
 
             <android.support.v7.widget.Toolbar
@@ -37,9 +37,19 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-                <TextView
-                    style="@style/ActivityTitle"
-                    android:text="Contacts" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_back"
+                        style="@style/ToolbarIcon"
+                        android:src="@drawable/ic_back" />
+
+                    <TextView
+                        style="@style/ActivityTitle"
+                        android:text="Students" />
+                </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
 
@@ -48,9 +58,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_contacts"
+        android:id="@+id/recycler_students"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/lightGray"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
@@ -58,6 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:adjustViewBounds="false"
         android:clickable="true"
         android:src="@drawable/ic_plus"
         app:backgroundTint="@color/coral"
@@ -66,3 +78,4 @@
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
+

@@ -50,12 +50,12 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         mClassId = myIntent.getStringExtra("classId");
 
         // widgets
-        mAddCourseFab = (FloatingActionButton) findViewById(R.id.fab_add_course);
-        mCoursesListView = (ListView) findViewById(R.id.list_courses);
-        mNoCoursesLayout = (RelativeLayout) findViewById(R.id.layout_no_courses);
-        mBackButton = (ImageView) findViewById(R.id.img_back);
+        mAddCourseFab = findViewById(R.id.fab_add_course);
+        mCoursesListView = findViewById(R.id.list_courses);
+        mNoCoursesLayout = findViewById(R.id.layout_no_courses);
+        mBackButton = findViewById(R.id.img_back);
 
-        mCoursesListAdapter = new CoursesListAdapter(getApplicationContext(), R.layout.row_course, mCourses, mClassId);
+        mCoursesListAdapter = new CoursesListAdapter(CoursesActivity.this, R.layout.row_course, mCourses, mClassId);
         mCoursesListView.setAdapter(mCoursesListAdapter);
 
         // listeners
@@ -105,12 +105,12 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         dialog.setContentView(R.layout.dialog_add_course);
 
         // dialog widgets
-        final TextView titleTest = (TextView) dialog.findViewById(R.id.txt_title);
-        final EditText nameText = (EditText) dialog.findViewById(R.id.txt_name);
-        final EditText teacherText = (EditText) dialog.findViewById(R.id.txt_teacher);
-        final EditText descriptionText = (EditText) dialog.findViewById(R.id.txt_description);
-        Button createBtn = (Button) dialog.findViewById(R.id.btn_create);
-        ImageView cancelImg = (ImageView) dialog.findViewById(R.id.img_cancel);
+        final TextView titleTest = dialog.findViewById(R.id.txt_title);
+        final EditText nameText = dialog.findViewById(R.id.txt_name);
+        final EditText teacherText = dialog.findViewById(R.id.txt_teacher);
+        final EditText descriptionText = dialog.findViewById(R.id.txt_description);
+        Button createBtn = dialog.findViewById(R.id.btn_create);
+        ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
 
         titleTest.setText("Edit Course Info");
         createBtn.setText("Save");
@@ -155,11 +155,11 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         dialog.setContentView(R.layout.dialog_add_course);
 
         // dialog widgets
-        final EditText nameText = (EditText) dialog.findViewById(R.id.txt_name);
-        final EditText teacherText = (EditText) dialog.findViewById(R.id.txt_teacher);
-        final EditText descriptionText = (EditText) dialog.findViewById(R.id.txt_description);
-        Button createBtn = (Button) dialog.findViewById(R.id.btn_create);
-        ImageView cancelImg = (ImageView) dialog.findViewById(R.id.img_cancel);
+        final EditText nameText = dialog.findViewById(R.id.txt_name);
+        final EditText teacherText = dialog.findViewById(R.id.txt_teacher);
+        final EditText descriptionText = dialog.findViewById(R.id.txt_description);
+        Button createBtn = dialog.findViewById(R.id.btn_create);
+        ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
 
         // create course button click
         createBtn.setOnClickListener(new View.OnClickListener() {

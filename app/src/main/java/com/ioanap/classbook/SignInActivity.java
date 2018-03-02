@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,10 +41,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private static final String TAG = "SignInActivity";
 
     private Button mSignInButton;
-    RelativeLayout mGoogleSignInButton, mFacebookSignInButton;
+    private RelativeLayout mGoogleSignInButton, mFacebookSignInButton;
     private EditText mEmailEditText, mPasswordEditText;
     private TextView mSwitchToSignUpTextView;
     private Context mContext;
+    private ImageView mSeePasswordImg;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -109,18 +113,33 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             finish();
         }
 
-        mSignInButton = (Button) findViewById(R.id.button_sign_in);
-        mGoogleSignInButton = (RelativeLayout) findViewById(R.id.button_google_sign_in);
-        mFacebookSignInButton = (RelativeLayout) findViewById(R.id.button_facebook_sign_in);
-        mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
-        mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
-        mSwitchToSignUpTextView = (TextView) findViewById(R.id.text_switch_to_sign_up);
+        mSignInButton = findViewById(R.id.button_sign_in);
+        mGoogleSignInButton = findViewById(R.id.button_google_sign_in);
+        mFacebookSignInButton = findViewById(R.id.button_facebook_sign_in);
+        mEmailEditText = findViewById(R.id.edit_text_email);
+        mPasswordEditText = findViewById(R.id.edit_text_password);
+        mSwitchToSignUpTextView = findViewById(R.id.text_switch_to_sign_up);
+        mSeePasswordImg = findViewById(R.id.img_see_password);
 
         // click listeners
         mSignInButton.setOnClickListener(this);
         mSwitchToSignUpTextView.setOnClickListener(this);
         mGoogleSignInButton.setOnClickListener(this);
         mFacebookSignInButton.setOnClickListener(this);
+        mSeePasswordImg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mPasswordEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mPasswordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
 
         setupFacebookSignIn();
 

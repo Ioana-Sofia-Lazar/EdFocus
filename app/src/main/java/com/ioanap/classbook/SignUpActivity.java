@@ -3,7 +3,9 @@ package com.ioanap.classbook;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +20,11 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
     private static final String TAG = "SignUpActivity";
     private final float ALPHA = (float) 0.2; // opacity of user types that are not selected
-
+    // choose user type included layout
+    View mChooseUserTypeView;
+    LinearLayout mChooseTeacherLayout, mChoosePupilLayout, mChooseParentLayout;
+    ImageView mChooseTeacherImg, mChoosePupilImg, mChooseParentImg;
+    TextView mChooseTeacherText, mChoosePupilText, mChooseParentText;
     // widgets
     private Context mContext;
     private Button mSignUpButton;
@@ -27,12 +33,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private EditText mConfirmPasswordEditText;
     private TextView mSwitchToSignInTextView;
     private String mSelectedUserType;
-
-    // choose user type included layout
-    View mChooseUserTypeView;
-    LinearLayout mChooseTeacherLayout, mChoosePupilLayout, mChooseParentLayout;
-    ImageView mChooseTeacherImg, mChoosePupilImg, mChooseParentImg;
-    TextView mChooseTeacherText, mChoosePupilText, mChooseParentText;
+    private ImageView mSeePasswordImg, mSeeConfirmPasswordImg;
 
     private void signUp() {
         String email = mEmailEditText.getText().toString().trim();
@@ -75,26 +76,28 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
     private void setupWidgets() {
         // widgets
-        mSignUpButton = (Button) findViewById(R.id.button_sign_up);
-        mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
-        mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
-        mConfirmPasswordEditText = (EditText) findViewById(R.id.edit_text_confirm_password);
-        mSwitchToSignInTextView = (TextView) findViewById(R.id.text_switch_to_sign_in);
+        mSignUpButton = findViewById(R.id.button_sign_up);
+        mEmailEditText = findViewById(R.id.edit_text_email);
+        mPasswordEditText = findViewById(R.id.edit_text_password);
+        mConfirmPasswordEditText = findViewById(R.id.edit_text_confirm_password);
+        mSwitchToSignInTextView = findViewById(R.id.text_switch_to_sign_in);
+        mSeePasswordImg = findViewById(R.id.img_see_password);
+        mSeeConfirmPasswordImg = findViewById(R.id.img_see_confirm_password);
 
         // included layout
-        mChooseUserTypeView = (View) findViewById(R.id.choose_user_type);
+        mChooseUserTypeView = findViewById(R.id.choose_user_type);
 
-        mChooseTeacherLayout = (LinearLayout) mChooseUserTypeView.findViewById(R.id.linear_layout_choose_teacher);
-        mChooseTeacherImg = (ImageView) mChooseUserTypeView.findViewById(R.id.img_choose_teacher);
-        mChooseTeacherText = (TextView) mChooseUserTypeView.findViewById(R.id.text_choose_teacher);
+        mChooseTeacherLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_teacher);
+        mChooseTeacherImg = mChooseUserTypeView.findViewById(R.id.img_choose_teacher);
+        mChooseTeacherText = mChooseUserTypeView.findViewById(R.id.text_choose_teacher);
 
-        mChoosePupilLayout = (LinearLayout) mChooseUserTypeView.findViewById(R.id.linear_layout_choose_pupil);
-        mChoosePupilImg = (ImageView) mChooseUserTypeView.findViewById(R.id.img_choose_pupil);
-        mChoosePupilText = (TextView) mChooseUserTypeView.findViewById(R.id.text_choose_pupil);
+        mChoosePupilLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_pupil);
+        mChoosePupilImg = mChooseUserTypeView.findViewById(R.id.img_choose_pupil);
+        mChoosePupilText = mChooseUserTypeView.findViewById(R.id.text_choose_pupil);
 
-        mChooseParentLayout = (LinearLayout) mChooseUserTypeView.findViewById(R.id.linear_layout_choose_parent);
-        mChooseParentImg = (ImageView) mChooseUserTypeView.findViewById(R.id.img_choose_parent);
-        mChooseParentText = (TextView) mChooseUserTypeView.findViewById(R.id.text_choose_parent);
+        mChooseParentLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_parent);
+        mChooseParentImg = mChooseUserTypeView.findViewById(R.id.img_choose_parent);
+        mChooseParentText = mChooseUserTypeView.findViewById(R.id.text_choose_parent);
 
         // listeners
         mSignUpButton.setOnClickListener(this);
@@ -102,6 +105,34 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         mChooseTeacherLayout.setOnClickListener(this);
         mChoosePupilLayout.setOnClickListener(this);
         mChooseParentLayout.setOnClickListener(this);
+        mSeePasswordImg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mPasswordEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mPasswordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
+        mSeeConfirmPasswordImg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mConfirmPasswordEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mConfirmPasswordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override

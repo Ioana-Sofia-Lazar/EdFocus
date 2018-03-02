@@ -10,6 +10,6 @@
     <color name="coral">#F7988F</color>
     <color name="lightCoral">#F9BC8E</color>
     <color name="white">#F2F2F2</color>
-    <color name="grey">#707070</color>
-    <color name="lightGrey">#9b9b9b</color>
+    <color name="gray">#707070</color>
+    <color name="lightGray">#b6b6b6</color>
 </resources>

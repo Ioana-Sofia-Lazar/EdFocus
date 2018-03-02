@@ -25,7 +25,7 @@
             android:layout_centerVertical="false"
             android:layout_margin="16dp"
             android:src="@drawable/ic_back"
-            android:tint="@color/grey" />
+            android:tint="@color/gray" />
 
         <TextView
             android:id="@+id/txt_class_name"

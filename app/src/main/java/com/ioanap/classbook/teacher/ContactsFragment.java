@@ -1,8 +1,6 @@
 package com.ioanap.classbook.teacher;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -46,7 +44,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     // variables
     private ArrayList<Contact> mContacts;
     private ArrayList<RequestInfo> mRequests;
-    private OnFragmentInteractionListener mListener;
     private ContactsListAdapter mContactsListAdapter;
 
     // db reference
@@ -101,7 +98,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
      * @param id
      */
     private void showContactData(final String id) {
-        mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mSettingsRef.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
@@ -140,7 +137,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Map<String, Object> newRequest = (Map<String, Object>) data.getValue();
 
-                    String id = (String) data.getKey();
+                    String id = data.getKey();
                     String requestType = (String) newRequest.get("requestType");
 
                     // for this contact (user) id get info to display in the requests list
@@ -191,12 +188,14 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((BaseActivity) getActivity()).hideKeyboard(getActivity());
+
         mContacts = new ArrayList<>();
         mRequests = new ArrayList<>();
 
-        mFabAddContact = (FloatingActionButton) view.findViewById(R.id.fab_add_contact);
-        mContactsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_contacts);
-        mSearchEditText = (EditText) view.findViewById(R.id.edit_text_search_contact);
+        mFabAddContact = view.findViewById(R.id.fab_add_contact);
+        mContactsRecyclerView = view.findViewById(R.id.recycler_view_contacts);
+        mSearchEditText = view.findViewById(R.id.edit_text_search_contact);
 
         mContactsListAdapter = new ContactsListAdapter(getContext(), mContacts, mRequests);
         mContactsRecyclerView.setAdapter(mContactsListAdapter);
@@ -248,43 +247,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public void onClick(View view) {
         if (view == mFabAddContact) {
             // jump to search activity
             startActivity(new Intent(getActivity(), SearchActivity.class));
         }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 }
