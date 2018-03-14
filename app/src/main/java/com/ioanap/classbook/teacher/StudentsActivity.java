@@ -31,6 +31,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
     private ArrayList<Contact> mStudents;
     private StudentsListAdapter mStudentsListAdapter;
     private String mClassId;
+    private boolean mIsInSelectMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +68,21 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         });
 
         mStudentsListAdapter = new StudentsListAdapter(StudentsActivity.this, mStudents);
+        // todo
+        mStudentsListAdapter.onActivityAction = getInterface();
         mStudentsRecycler.setAdapter(mStudentsListAdapter);
         mStudentsRecycler.setLayoutManager(new LinearLayoutManager(StudentsActivity.this));
 
         displayStudents();
+    }
+
+    private StudentsListAdapter.OnActivityAction getInterface() {
+        return new StudentsListAdapter.OnActivityAction() {
+            @Override
+            public void action() {
+
+            }
+        };
     }
 
     private void displayStudents() {

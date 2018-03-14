@@ -8,15 +8,10 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/cyan"
-        android:minHeight="?attr/actionBarSize"
-        android:navigationIcon="@drawable/back"
+        style="@style/Toolbar"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="0dp" >
+        app:layout_constraintRight_toRightOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"

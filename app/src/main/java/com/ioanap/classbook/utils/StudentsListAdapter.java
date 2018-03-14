@@ -18,6 +18,7 @@ import java.util.ArrayList;
  */
 
 public class StudentsListAdapter extends RecyclerView.Adapter<StudentsListAdapter.StudentViewHolder> {
+    public OnActivityAction onActivityAction;
     private ArrayList<Contact> mStudents = new ArrayList<>();
     private Context mContext;
 
@@ -48,6 +49,11 @@ public class StudentsListAdapter extends RecyclerView.Adapter<StudentsListAdapte
         return mStudents.size();
     }
 
+    public interface OnActivityAction {
+        void action();
+
+    }
+
     public class StudentViewHolder extends RecyclerView.ViewHolder {
         ImageView mProfilePhoto;
         TextView mName;
@@ -59,6 +65,15 @@ public class StudentsListAdapter extends RecyclerView.Adapter<StudentsListAdapte
             mName = itemView.findViewById(R.id.text_name);
             mProfilePhoto = itemView.findViewById(R.id.image_profile_photo);
             mContext = itemView.getContext();
+
+            // todo
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onActivityAction.action();
+                    return false;
+                }
+            });
         }
 
         public void bindStudent(Contact student) {
