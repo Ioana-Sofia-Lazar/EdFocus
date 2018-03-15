@@ -57,11 +57,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <ListView
         android:id="@+id/recycler_students"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lightGray"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton

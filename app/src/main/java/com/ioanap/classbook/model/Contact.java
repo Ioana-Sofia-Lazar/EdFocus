@@ -1,10 +1,12 @@
 package com.ioanap.classbook.model;
 
+import java.io.Serializable;
+
 /**
  * Data model for Contact.
  */
 
-public class Contact {
+public class Contact implements Serializable {
 
     private String id;
     private String name;
@@ -28,20 +30,20 @@ public class Contact {
         return name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getProfilePhoto() {
-        return profilePhoto;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
     }
 
     public void setProfilePhoto(String profilePhoto) {

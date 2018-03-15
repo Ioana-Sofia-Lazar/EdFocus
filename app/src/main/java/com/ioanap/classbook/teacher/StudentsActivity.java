@@ -1,13 +1,14 @@
 package com.ioanap.classbook.teacher;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.view.ActionMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +17,7 @@ import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.UserAccountSettings;
+import com.ioanap.classbook.utils.ActionModeCallback;
 import com.ioanap.classbook.utils.StudentsListAdapter;
 
 import java.util.ArrayList;
@@ -24,19 +26,21 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
 
     // widgets
     ImageView mBackButton;
-    RecyclerView mStudentsRecycler;
+    ListView mStudentsRecycler;
     EditText mSearchEditText;
 
     // variables
     private ArrayList<Contact> mStudents;
     private StudentsListAdapter mStudentsListAdapter;
     private String mClassId;
-    private boolean mIsInSelectMode = false;
+    private ActionMode mActionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_students);
+
+        mActionMode = null;
 
         // get class id
         mClassId = getIntent().getStringExtra("classId");
@@ -48,8 +52,19 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         mStudentsRecycler = findViewById(R.id.recycler_students);
         mSearchEditText = findViewById(R.id.text_search);
 
-        // listeners
+        mStudentsListAdapter = new StudentsListAdapter(StudentsActivity.this,
+                R.layout.row_student, mStudents);
+        mStudentsRecycler.setAdapter(mStudentsListAdapter);
+
+        setupListeners();
+
+        displayStudents();
+    }
+
+    public void setupListeners() {
+        // toolbar back button
         mBackButton.setOnClickListener(this);
+
         // filter students according to text that teacher enters
         mSearchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -67,24 +82,69 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
             }
         });
 
-        mStudentsListAdapter = new StudentsListAdapter(StudentsActivity.this, mStudents);
-        // todo
-        mStudentsListAdapter.onActivityAction = getInterface();
-        mStudentsRecycler.setAdapter(mStudentsListAdapter);
-        mStudentsRecycler.setLayoutManager(new LinearLayoutManager(StudentsActivity.this));
-
-        displayStudents();
-    }
-
-    private StudentsListAdapter.OnActivityAction getInterface() {
-        return new StudentsListAdapter.OnActivityAction() {
+        // list item click and long click events
+        mStudentsRecycler.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void action() {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // clicking item in select mode
+                if (mActionMode != null) {
+                    onListItemSelect(position);
+                }
             }
-        };
+        });
+        mStudentsRecycler.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                onListItemSelect(position);
+                return true;
+            }
+        });
     }
 
+    // selecting list item according to the current state of the activity
+    private void onListItemSelect(int position) {
+        // toggle item selection
+        mStudentsListAdapter.toggleSelection(position);
+        boolean hasSelectedItems = mStudentsListAdapter.getSelectedCount() > 0;
+        if (hasSelectedItems && mActionMode == null) {
+            // an item has just been selected, start the actionMode
+            mActionMode = this.startSupportActionMode(new ActionModeCallback
+                    (StudentsActivity.this, mStudentsListAdapter, mStudents));
+        } else if (!hasSelectedItems && mActionMode != null) {
+            // there are no selected items anymore, exit the action mode
+            mActionMode.finish();
+        }
+        // set action mode title
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.valueOf(mStudentsListAdapter.getSelectedCount())
+                    + " students selected");
+        }
+    }
+
+    public void setNullActionMode() {
+        if (mActionMode != null) {
+            mActionMode = null;
+        }
+    }
+
+    /*
+        // Delete selected rows
+        public void deleteRows() {
+            SparseBooleanArray selected = mStudentsListAdapter
+                    .getSelectedIds();//Get selected ids
+            //Loop all selected ids
+            for (int i = (selected.size() - 1); i >= 0; i--) {
+                if (selected.valueAt(i)) {
+                    //If current id is selected remove the item via key
+                    mStudents.remove(selected.keyAt(i));
+                    mStudentsListAdapter.notifyDataSetChanged();//notify adapter
+
+                }
+            }
+            Toast.makeText(getApplicationContext(), selected.size() + " item deleted.", Toast.LENGTH_SHORT).show();//Show Toast
+            mActionMode.finish();//Finish action mode after use
+        }
+    */
     private void displayStudents() {
         mClassStudentsRef.child(mClassId).addValueEventListener(new ValueEventListener() {
             @Override

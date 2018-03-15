@@ -53,7 +53,11 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mScheduleCard.setOnClickListener(this);
         mStudentsCard.setOnClickListener(this);
         mBackButton.setOnClickListener(this);
-
+/*
+        Typeface font = Typeface.createFromAsset( getAssets(), "fonts/fa-regular-400.ttf" );
+        TextView icon = (TextView) findViewById(R.id.icon);
+        icon.setTypeface(font);
+*/
     }
 
     private void displayClassInfo() {

@@ -10,6 +10,10 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@color/pureWhite</item>
         <item name="android:textColor">@color/gray</item>
+        <!--  Action mode overlays toolbar -->
+        <item name="windowActionModeOverlay">true</item>
+        <!--  For Custom Action Mode Background Color/Drawable -->
+        <item name="actionModeBackground">@color/colorAccent</item>
     </style>
 
     <!-- Toolbar -->

@@ -28,6 +28,13 @@
             android:tint="@color/gray" />
 
         <TextView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ic_caca"
+            android:textSize="24sp" />
+
+        <TextView
             android:id="@+id/txt_class_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
