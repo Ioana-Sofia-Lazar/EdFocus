@@ -28,7 +28,7 @@ public class FontAwesomeIcon extends android.support.v7.widget.AppCompatTextView
     private void init() {
         // Font name should not contain "/".
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-                "fa-regular-400.ttf");
+                "fa.ttf");
         setTypeface(tf);
     }
 

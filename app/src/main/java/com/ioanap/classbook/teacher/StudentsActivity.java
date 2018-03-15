@@ -1,5 +1,6 @@
 package com.ioanap.classbook.teacher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.text.Editable;
@@ -89,6 +90,11 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
                 // clicking item in select mode
                 if (mActionMode != null) {
                     onListItemSelect(position);
+                } else {
+                    // not in selection action mode, so redirect to student activity
+                    Intent myIntent = new Intent(StudentsActivity.this, StudentActivity.class);
+                    myIntent.putExtra("studentId", mStudents.get(position).getId());
+                    startActivity(myIntent);
                 }
             }
         });

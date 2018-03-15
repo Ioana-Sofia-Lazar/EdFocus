@@ -1,8 +1,10 @@
 package com.ioanap.classbook.teacher;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,8 @@ import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Class;
 import com.ioanap.classbook.utils.UniversalImageLoader;
+
+import java.io.IOException;
 
 public class ClassActivity extends BaseActivity implements View.OnClickListener {
 
@@ -53,8 +57,18 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mScheduleCard.setOnClickListener(this);
         mStudentsCard.setOnClickListener(this);
         mBackButton.setOnClickListener(this);
-/*
-        Typeface font = Typeface.createFromAsset( getAssets(), "fonts/fa-regular-400.ttf" );
+
+        Log.d("~", getAssets().getLocales().toString());
+        final AssetManager assets = getAssets();
+        try {
+            final String[] names = assets.list("");
+            for (String name : names)
+                Log.d("~", name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*
+        Typeface font = Typeface.createFromAsset(getAssets(), "fa.ttf" );
         TextView icon = (TextView) findViewById(R.id.icon);
         icon.setTypeface(font);
 */
