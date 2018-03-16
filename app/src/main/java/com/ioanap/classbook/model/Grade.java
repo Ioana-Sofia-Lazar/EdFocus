@@ -2,32 +2,27 @@ package com.ioanap.classbook.model;
 
 /**
  * Created by ioana on 3/15/2018.
+ * Used to retrieve a grade from database.
  */
 
 public class Grade {
-    private String id;
-    private String name;
-    private String grade;
-    private String courseId;
-    private String studentId;
-    private String date;
-    private String description;
+    private GradeDb gradeDb;
     private String courseName;
 
     public Grade() {
     }
 
-    public Grade(String id, String name, String grade, String courseId, String studentId,
-                 String date, String description, String courseName) {
-
-        this.id = id;
-        this.name = name;
-        this.grade = grade;
-        this.courseId = courseId;
-        this.studentId = studentId;
-        this.date = date;
-        this.description = description;
+    public Grade(GradeDb gradeDb, String courseName) {
+        this.gradeDb = gradeDb;
         this.courseName = courseName;
+    }
+
+    public GradeDb getGradeDb() {
+        return gradeDb;
+    }
+
+    public void setGradeDb(GradeDb gradeDb) {
+        this.gradeDb = gradeDb;
     }
 
     public String getCourseName() {
@@ -38,59 +33,68 @@ public class Grade {
         this.courseName = courseName;
     }
 
+    /* Getters and setters for gradeDb field */
     public String getId() {
-        return id;
+        return gradeDb.getId();
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.gradeDb.setId(id);
     }
 
     public String getName() {
-        return name;
+        return gradeDb.getName();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.gradeDb.setName(name);
     }
 
     public String getGrade() {
-        return grade;
+        return gradeDb.getGrade();
     }
 
     public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
+        this.gradeDb.setGrade(grade);
     }
 
     public String getDate() {
-        return date;
+        return gradeDb.getDate();
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.gradeDb.setDate(date);
     }
 
     public String getDescription() {
-        return description;
+        return gradeDb.getDescription();
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.gradeDb.setDescription(description);
+    }
+
+    public String getClassId() {
+        return gradeDb.getClassId();
+    }
+
+    public void setClassId(String classId) {
+        this.gradeDb.setClassId(classId);
+    }
+
+    public String getCourseId() {
+        return gradeDb.getCourseId();
+    }
+
+    public void setCourseId(String courseId) {
+        this.gradeDb.setCourseId(courseId);
+    }
+
+    public String getStudentId() {
+        return gradeDb.getStudentId();
+    }
+
+    public void setStudentId(String studentId) {
+        this.gradeDb.setStudentId(studentId);
     }
 }

@@ -34,6 +34,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/anim_toolbar"
                 style="@style/Toolbar"
+                android:elevation="0dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 

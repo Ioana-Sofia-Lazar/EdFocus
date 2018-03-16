@@ -94,6 +94,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
                     // not in selection action mode, so redirect to student activity
                     Intent myIntent = new Intent(StudentsActivity.this, StudentActivity.class);
                     myIntent.putExtra("studentId", mStudents.get(position).getId());
+                    myIntent.putExtra("classId", mClassId);
                     startActivity(myIntent);
                 }
             }

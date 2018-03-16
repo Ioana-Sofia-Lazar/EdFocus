@@ -3,15 +3,22 @@ package com.ioanap.classbook.teacher;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.model.Course;
 import com.ioanap.classbook.model.Grade;
+import com.ioanap.classbook.model.GradeDb;
 import com.ioanap.classbook.utils.GradeCell;
 import com.jaychang.srv.SimpleCell;
 import com.jaychang.srv.SimpleRecyclerView;
@@ -36,8 +43,9 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
     // variables
     private int mPageIndex; // can be 0 (Grades Page) or 1(Absences Page)
     private String mClassId, mStudentId;
+    private ArrayList<Grade> mGrades;
 
-    private DatabaseReference mScheduleRef, mClassCoursesRef;
+    private DatabaseReference mStudentGradesRef, mClassCoursesRef;
 
     public static StudentActivityFragment newInstance(int page, String studentId, String classId) {
         Bundle args = new Bundle();
@@ -63,8 +71,10 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
         View view = inflater.inflate(R.layout.fragment_student_activity, container, false);
 
         mGradesRecycler = view.findViewById(R.id.recycler);
-        //this.addRecyclerHeaders();
-        //this.bindData();
+
+        mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
+        mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
+        mGrades = new ArrayList<>();
 
         if (mPageIndex == 0) {
             // display grades
@@ -103,14 +113,15 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
         mGradesRecycler.setSectionHeader(headerProvider);
     }
 
-    // bind data to our RecyclerView
+    // bind data to RecyclerView
     private void bindGrades() {
-        List<Grade> grades = getGrades();
+        getGrades();
+
         // grades are sorted by course
         List<GradeCell> cells = new ArrayList<>();
 
-        // loop through grades instantiating thier cells and adding to cells collection
-        for (Grade grade : grades) {
+        // loop through grades instantiating their cells and adding to cells collection
+        for (Grade grade : mGrades) {
             GradeCell cell = new GradeCell(grade);
             // There are two default cell listeners: OnCellClickListener<CELL, VH, T> and OnCellLongClickListener<CELL, VH, T>
             cell.setOnCellClickListener(new SimpleCell.OnCellClickListener<Grade>() {
@@ -131,27 +142,48 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
     }
 
     // returns a list of grades
-    private ArrayList<Grade> getGrades() {
-        ArrayList<Grade> grades = new ArrayList<>();
+    private void getGrades() {
+        Log.d("~~", mClassId + " " + mStudentId);
+        // retrieve schedule from firebase for the currently selected day, sorted by starting time
+        mStudentGradesRef.child(mClassId).child(mStudentId).orderByChild("courseId").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mGrades.clear();
 
-        grades.add(new Grade("1", "test 1", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("2", "test 2", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("3", "test 3", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
-        grades.add(new Grade("4", "test 4", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
-        grades.add(new Grade("1", "test 1", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("2", "test 2", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("3", "test 3", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
-        grades.add(new Grade("4", "test 4", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
-        grades.add(new Grade("1", "test 1", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("2", "test 2", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("3", "test 3", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
-        grades.add(new Grade("4", "test 4", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
-        grades.add(new Grade("1", "test 1", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("2", "test 2", "F", "c1", "s1", "2017-05-02", "very very gud", "course1"));
-        grades.add(new Grade("3", "test 3", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
-        grades.add(new Grade("4", "test 4", "F", "c2", "s1", "2017-05-02", "very very gud", "course2"));
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    // todo show message no grades for any course
+                    // mNoCoursesLayout.setVisibility(View.GONE);
 
-        return grades;
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        final GradeDb gradeDb = data.getValue(GradeDb.class);
+
+                        // retrieve course info
+                        mClassCoursesRef.child(mClassId).child(gradeDb.getCourseId()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Course course = dataSnapshot.getValue(Course.class);
+
+                                mGrades.add(new Grade(gradeDb, course.getName()));
+                                Log.d("~~", gradeDb.getId());
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

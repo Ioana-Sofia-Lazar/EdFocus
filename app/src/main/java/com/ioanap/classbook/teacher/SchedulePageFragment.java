@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class SchedulePageFragment extends Fragment implements View.OnClickListener {
 
     public static final String ARG_PAGE = "ARG_PAGE";
-    public static final String CLASS_ID = "STUDENT_ID";
+    public static final String CLASS_ID = "CLASS_ID";
     private static final String[] DAYS = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
     // widgets
@@ -51,11 +51,11 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
 
     private DatabaseReference mScheduleRef, mClassCoursesRef;
 
-    public static StudentActivityFragment newInstance(int page, String classId) {
+    public static SchedulePageFragment newInstance(int page, String classId) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
         args.putString(CLASS_ID, classId);
-        StudentActivityFragment fragment = new StudentActivityFragment();
+        SchedulePageFragment fragment = new SchedulePageFragment();
         fragment.setArguments(args);
         return fragment;
     }

@@ -1,5 +1,6 @@
 package com.ioanap.classbook.teacher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,10 @@ public class StudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
+
+        Intent intent = getIntent();
+        mStudentId = intent.getStringExtra("studentId");
+        mClassId = intent.getStringExtra("classId");
 
         // get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = findViewById(R.id.viewpager);
