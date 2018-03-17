@@ -3,7 +3,6 @@ package com.ioanap.classbook.teacher;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +19,18 @@ import com.ioanap.classbook.model.Course;
 import com.ioanap.classbook.model.Grade;
 import com.ioanap.classbook.model.GradeDb;
 import com.ioanap.classbook.utils.GradeCell;
+import com.ioanap.classbook.utils.StudentGradesStickyAdapter;
 import com.jaychang.srv.SimpleCell;
 import com.jaychang.srv.SimpleRecyclerView;
 import com.jaychang.srv.decoration.SectionHeaderProvider;
 import com.jaychang.srv.decoration.SimpleSectionHeaderProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by ioana on 3/15/2018.
@@ -36,15 +40,14 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String STUDENT_ID = "STUDENT_ID";
     public static final String CLASS_ID = "CLASS_ID";
-
+    HashMap<String, Long> mHeaderIds;
+    StudentGradesStickyAdapter mAdapter;
     // widgets
     private SimpleRecyclerView mGradesRecycler;
-
     // variables
     private int mPageIndex; // can be 0 (Grades Page) or 1(Absences Page)
     private String mClassId, mStudentId;
     private ArrayList<Grade> mGrades;
-
     private DatabaseReference mStudentGradesRef, mClassCoursesRef;
 
     public static StudentActivityFragment newInstance(int page, String studentId, String classId) {
@@ -70,23 +73,30 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_activity, container, false);
 
-        mGradesRecycler = view.findViewById(R.id.recycler);
+        //mGradesRecycler = view.findViewById(R.id.recycler);
 
         mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mGrades = new ArrayList<>();
+        mHeaderIds = new HashMap<>();
 
         if (mPageIndex == 0) {
             // display grades
-            // todo get g=from database
-            addRecyclerGradesHeaders();
-            bindGrades();
+            StickyListHeadersListView stickyList = view.findViewById(R.id.list_grades);
+            mAdapter = new StudentGradesStickyAdapter(getContext(),
+                    R.layout.row_grade, mGrades, mHeaderIds);
+            stickyList.setAdapter(mAdapter);
+            getGrades();
         } else {
             // display absences
             // todo
         }
 
         return view;
+    }
+
+    private void displayGrades() {
+
     }
 
     private void addRecyclerGradesHeaders() {
@@ -143,7 +153,6 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
 
     // returns a list of grades
     private void getGrades() {
-        Log.d("~~", mClassId + " " + mStudentId);
         // retrieve schedule from firebase for the currently selected day, sorted by starting time
         mStudentGradesRef.child(mClassId).child(mStudentId).orderByChild("courseId").addValueEventListener(new ValueEventListener() {
             @Override
@@ -164,8 +173,8 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
                                 Course course = dataSnapshot.getValue(Course.class);
 
                                 mGrades.add(new Grade(gradeDb, course.getName()));
-                                Log.d("~~", gradeDb.getId());
-
+                                addToHashMap(course.getId());
+                                mAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -173,6 +182,7 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
 
                             }
                         });
+
 
                     }
                 }
@@ -186,6 +196,24 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
         });
     }
 
+    private void addToHashMap(String courseId) {
+        // if this course id already exists return
+        if (mHeaderIds.containsKey(courseId)) {
+            return;
+        }
+
+        // insert this courseId with value of bigget id + 1
+        // get biggest id
+        long maxId = -1;
+        for (Map.Entry<String, Long> entry : mHeaderIds.entrySet()) {
+            if (entry.getValue() > maxId) {
+                maxId = entry.getValue();
+            }
+        }
+
+        mHeaderIds.put(courseId, maxId + 1);
+
+    }
 
     @Override
     public void onClick(View view) {

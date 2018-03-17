@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.jaychang.srv.SimpleRecyclerView
-        android:id="@+id/recycler"
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/list_grades"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
