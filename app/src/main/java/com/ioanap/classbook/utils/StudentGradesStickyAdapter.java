@@ -25,12 +25,14 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
     HashMap<String, Long> mHeaderIds;
     private ArrayList<Grade> mGrades;
     private Context mContext;
-    private int mResource;
+    private int mResource, mHeaderResource;
 
-    public StudentGradesStickyAdapter(Context context, int resource, ArrayList<Grade> objects,
+    public StudentGradesStickyAdapter(Context context, int resource, int headerResource, ArrayList<Grade> objects,
                                       HashMap<String, Long> headerIds) {
         super(context, resource, objects);
         mContext = context;
+        mResource = resource;
+        mHeaderResource = headerResource;
         mGrades = objects;
         mHeaderIds = headerIds;
     }
@@ -44,7 +46,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.row_grade, parent, false);
+            convertView = inflater.inflate(mResource, parent, false);
             holder = new StudentGradesStickyAdapter.ViewHolder();
             holder.mNameText = convertView.findViewById(R.id.text_name);
             holder.mDateText = convertView.findViewById(R.id.text_date);
@@ -84,7 +86,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
         HeaderViewHolder holder;
         if (convertView == null) {
             holder = new HeaderViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.row_header, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(mHeaderResource, parent, false);
             holder.text = convertView.findViewById(R.id.text_course);
             convertView.setTag(holder);
         } else {

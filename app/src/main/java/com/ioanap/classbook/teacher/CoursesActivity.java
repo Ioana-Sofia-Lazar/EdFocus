@@ -31,7 +31,6 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
     FloatingActionButton mAddCourseFab;
     ListView mCoursesListView;
     RelativeLayout mNoCoursesLayout;
-    ImageView mBackButton;
 
     // variables
     private String mClassId;
@@ -53,14 +52,12 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         mAddCourseFab = findViewById(R.id.fab_add_course);
         mCoursesListView = findViewById(R.id.list_courses);
         mNoCoursesLayout = findViewById(R.id.layout_no_courses);
-        mBackButton = findViewById(R.id.img_back);
 
         mCoursesListAdapter = new CoursesListAdapter(CoursesActivity.this, R.layout.row_course, mCourses, mClassId);
         mCoursesListView.setAdapter(mCoursesListAdapter);
 
         // listeners
         mAddCourseFab.setOnClickListener(this);
-        mBackButton.setOnClickListener(this);
         mCoursesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -196,9 +193,6 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         if (view == mAddCourseFab) {
             showAddDialog();
-        }
-        if (view == mBackButton) {
-            finish();
         }
     }
 }

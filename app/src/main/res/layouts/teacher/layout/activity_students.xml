@@ -27,6 +27,7 @@
                 style="@style/SearchBoxEditText"
                 android:layout_gravity="bottom"
                 android:drawableStart="@drawable/ic_search"
+                android:drawableTint="@color/gray"
                 android:gravity="start|center_vertical"
                 android:hint="Search student"
                 android:maxLines="1" />
@@ -42,10 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/img_back"
-                        style="@style/ToolbarIcon"
-                        android:src="@drawable/ic_back" />
+                    <com.ioanap.classbook.views.CustomIconBack style="@style/ToolbarIcon" />
 
                     <TextView
                         style="@style/ActivityTitle"
@@ -66,14 +64,9 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_contact"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/FabButton"
         android:layout_margin="@dimen/fab_margin"
         android:adjustViewBounds="false"
-        android:clickable="true"
-        android:src="@drawable/ic_plus"
-        app:backgroundTint="@color/coral"
-        app:fabSize="normal"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="bottom|right|end" />
 

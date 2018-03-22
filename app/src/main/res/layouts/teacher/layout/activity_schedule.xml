@@ -13,10 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/img_back"
-                style="@style/ToolbarIcon"
-                android:src="@drawable/ic_back" />
+            <com.ioanap.classbook.views.CustomIconBack style="@style/ToolbarIcon" />
 
             <TextView
                 style="@style/ActivityTitle"

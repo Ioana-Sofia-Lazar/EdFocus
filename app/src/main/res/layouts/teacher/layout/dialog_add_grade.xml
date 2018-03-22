@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingTop="20dp">
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:gravity="center_horizontal"
+                android:text="Choose a course:" />
+
+            <Spinner
+                android:id="@+id/spinner_courses"
+                style="@style/Spinner" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:gravity="center_horizontal"
+                android:text="Grade:" />
+
+            <EditText
+                android:id="@+id/text_grade"
+                style="@style/FormFieldInput"
+                android:hint="E.g 10 or A+" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:gravity="center_horizontal"
+                android:text="Date:" />
+
+            <DatePicker
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:gravity="center_horizontal"
+                android:text="Grade name:" />
+
+            <EditText
+                android:id="@+id/text_name"
+                style="@style/FormFieldInput"
+                android:hint="E.g Homework or Test" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:gravity="center_horizontal"
+                android:text="Description/notes:" />
+
+            <EditText
+                android:id="@+id/text_description"
+                style="@style/FormFieldInput"
+                android:hint="Additional notes" />
+
+            <Button
+                android:id="@+id/btn_create"
+                style="@style/Button"
+                android:text="Add" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/img_cancel"
+        style="@style/Icon"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_x_cancel" />
+
+</RelativeLayout>

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <com.ioanap.classbook.views.CustomIconBack
                 android:id="@+id/image_cancel"
                 style="@style/ToolbarIcon"
                 android:src="@drawable/ic_x_cancel" />
@@ -29,8 +29,8 @@
             <ImageView
                 android:id="@+id/image_save"
                 style="@style/ToolbarIcon"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
                 android:src="@drawable/ic_check"
                 android:tint="@color/lightCoral" />
 

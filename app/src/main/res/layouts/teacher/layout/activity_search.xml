@@ -26,18 +26,16 @@
                 android:maxLines="1"
                 android:padding="15dp" />
 
-            <ImageView
-                android:id="@+id/image_back"
+            <com.ioanap.classbook.views.CustomIconBack
                 style="@style/ToolbarIcon"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_back"
+                android:layout_marginStart="16dp"
                 android:tint="@color/gray" />
 
             <ImageView
                 android:id="@+id/image_clear"
                 style="@style/ToolbarIcon"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_x_cancel"
                 android:tint="@color/gray" />
 

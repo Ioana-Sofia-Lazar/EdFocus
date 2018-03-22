@@ -27,7 +27,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private static final String TAG = "SearchActivity";
 
     // widgets
-    private ImageView mBackButton, mClearText;
+    private ImageView mClearText;
     private ListView mPeopleList;
     private EditText mSearchEditText;
 
@@ -42,12 +42,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         mPeople = new ArrayList<>();
 
-        mBackButton = findViewById(R.id.image_back);
         mClearText = findViewById(R.id.image_clear);
         mPeopleList = findViewById(R.id.list_people);
         mSearchEditText = findViewById(R.id.edit_text_search);
 
-        mBackButton.setOnClickListener(this);
         mClearText.setOnClickListener(this);
 
         setupSearchEditText();
@@ -126,9 +124,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        if (view == mBackButton) {
-            finish();
-        }
         if (view == mClearText) {
             // clear search box text
             mSearchEditText.setText("");

@@ -37,7 +37,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private static final int REQUEST_CODE = 1;
 
     // widgets
-    private ImageView mCancelImageView, mSaveImageView, mEditProfilePhotoImageView;
+    private ImageView mSaveImageView, mEditProfilePhotoImageView;
     private TextView mEditProfilePhotoTextView;
     private EditText mFirstNameEditText, mLastNameEditText, mDescriptionEditText, mLocationEditText, mEmailEditText, mPhoneNumberEditText;
 
@@ -68,21 +68,19 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void setupWidgets() {
         // widgets
-        mEditProfilePhotoImageView = (ImageView) findViewById(R.id.edit_profile_photo);
-        mEditProfilePhotoTextView = (TextView) findViewById(R.id.text_edit_profile_photo);
-        mFirstNameEditText = (EditText) findViewById(R.id.edit_text_first_name);
-        mLastNameEditText = (EditText) findViewById(R.id.edit_text_last_name);
-        mDescriptionEditText = (EditText) findViewById(R.id.edit_text_description);
-        mLocationEditText = (EditText) findViewById(R.id.edit_text_location);
-        mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
-        mPhoneNumberEditText = (EditText) findViewById(R.id.edit_text_phone_number);
+        mEditProfilePhotoImageView = findViewById(R.id.edit_profile_photo);
+        mEditProfilePhotoTextView = findViewById(R.id.text_edit_profile_photo);
+        mFirstNameEditText = findViewById(R.id.edit_text_first_name);
+        mLastNameEditText = findViewById(R.id.edit_text_last_name);
+        mDescriptionEditText = findViewById(R.id.edit_text_description);
+        mLocationEditText = findViewById(R.id.edit_text_location);
+        mEmailEditText = findViewById(R.id.edit_text_email);
+        mPhoneNumberEditText = findViewById(R.id.edit_text_phone_number);
 
         // toolbar buttons
-        mCancelImageView = (ImageView) findViewById(R.id.image_cancel);
-        mSaveImageView = (ImageView) findViewById(R.id.image_save);
+        mSaveImageView = findViewById(R.id.image_save);
 
         // on click listeners for toolbar buttons
-        mCancelImageView.setOnClickListener(this);
         mSaveImageView.setOnClickListener(this);
 
         mEditProfilePhotoTextView.setOnClickListener(this);
@@ -90,9 +88,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        if (view == mCancelImageView) {
-            finish();
-        }
         if (view == mSaveImageView) {
             // save information
             saveProfileSettings();

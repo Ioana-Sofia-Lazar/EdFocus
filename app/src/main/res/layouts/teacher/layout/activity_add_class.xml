@@ -15,13 +15,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/image_back"
+            <com.ioanap.classbook.views.CustomIconBack
+                android:id="@+id/image_cancel"
                 style="@style/ToolbarIcon" />
 
             <TextView
                 style="@style/ActivityTitle"
-                android:layout_toRightOf="@+id/image_cancel"
                 android:text="Add a New Class" />
 
         </RelativeLayout>

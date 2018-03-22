@@ -15,7 +15,7 @@ android {
             manifest.srcFile '/src/main/AndroidManifest.xml'
             java.srcDirs = ['/src/main/java', '.apt_generated']
             aidl.srcDirs = ['/src/main/aidl', 'apt_generated']
-            assets.srcDirs = ['/src/main/assests']
+            assets.srcDirs = ['/src/main/assests', 'src/main/assets', 'src/main/assets/']
             res.srcDirs =
                     [
                             '/src/main/res/layouts',
@@ -61,7 +61,6 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:cardview-v7:26.1.0'
-    compile 'com.jaychang:simplerecyclerview:2.0.0'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     testCompile 'junit:junit:4.12'
 }

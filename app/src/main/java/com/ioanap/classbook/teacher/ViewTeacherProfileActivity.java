@@ -27,7 +27,7 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
 
     // widgets
     private Button mAddContactButton;
-    private ImageView mProfilePhotoImageView, mBackButton;
+    private ImageView mProfilePhotoImageView;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
             mEmailTextView, mLocationTextView;
 
@@ -44,7 +44,6 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
         // widgets
         mProfilePhotoImageView = findViewById(R.id.image_profile_photo);
         mAddContactButton = findViewById(R.id.button_add_contact);
-        mBackButton = findViewById(R.id.image_back);
         mNameTextView = findViewById(R.id.text_name);
         mDescriptionTextView = findViewById(R.id.text_description);
         mContactsTextView = findViewById(R.id.text_contacts);
@@ -55,7 +54,6 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
         showUserInfo();
 
         mAddContactButton.setOnClickListener(this);
-        mBackButton.setOnClickListener(this);
     }
 
     private void showUserInfo() {
@@ -146,9 +144,6 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
 
             // show that request has been sent
             disableButton("request sent");
-        }
-        if (view == mBackButton) {
-            finish();
         }
     }
 

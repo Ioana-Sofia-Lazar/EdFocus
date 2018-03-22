@@ -18,7 +18,7 @@ public class ClassTokenActivity extends AppCompatActivity implements View.OnClic
 
     // widgets
     private TextView mTokenEditText;
-    private ImageView mCopyIcon, mBackButton;
+    private ImageView mCopyIcon;
     private Button mManageBtn;
 
     private String mToken, mClassId;
@@ -29,15 +29,13 @@ public class ClassTokenActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_class_token);
 
         // widgets
-        mTokenEditText = (TextView) findViewById(R.id.txt_token);
-        mCopyIcon = (ImageView) findViewById(R.id.img_copy_icon);
-        mManageBtn = (Button) findViewById(R.id.btn_manage);
-        mBackButton = (ImageView) findViewById(R.id.img_back);
+        mTokenEditText = findViewById(R.id.txt_token);
+        mCopyIcon = findViewById(R.id.img_copy_icon);
+        mManageBtn = findViewById(R.id.btn_manage);
 
         // listeners
         mCopyIcon.setOnClickListener(this);
         mManageBtn.setOnClickListener(this);
-        mBackButton.setOnClickListener(this);
 
         // get token and classId
         Intent myIntent = getIntent();
@@ -66,9 +64,6 @@ public class ClassTokenActivity extends AppCompatActivity implements View.OnClic
             Intent myIntent = new Intent(getApplicationContext(), ClassActivity.class);
             myIntent.putExtra("classId", mClassId);
             getApplicationContext().startActivity(myIntent);
-        }
-        if (view == mBackButton) {
-            finish();
         }
     }
 }

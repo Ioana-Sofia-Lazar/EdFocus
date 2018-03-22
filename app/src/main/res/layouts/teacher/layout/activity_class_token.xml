@@ -8,21 +8,15 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cyan"
-
-        android:minHeight="?attr/actionBarSize"
-        android:navigationIcon="@drawable/back"
-        android:theme="?attr/actionBarTheme"
+        style="@style/Toolbar"
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/img_back"
+            <com.ioanap.classbook.views.CustomIconBack
+                android:id="@+id/image_cancel"
                 style="@style/ToolbarIcon" />
 
             <TextView
@@ -68,8 +62,7 @@
 
             <ImageView
                 android:id="@+id/img_copy_icon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                style="@style/Icon"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:src="@drawable/ic_copy" />

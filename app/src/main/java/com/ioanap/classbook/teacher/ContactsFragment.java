@@ -102,7 +102,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
-                Log.d(TAG, "getcontactdata : " + settings.toString());
 
                 Contact contact = new Contact();
                 contact.setId(id);

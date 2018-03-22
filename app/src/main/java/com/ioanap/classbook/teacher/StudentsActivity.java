@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 public class StudentsActivity extends BaseActivity implements View.OnClickListener {
 
     // widgets
-    ImageView mBackButton;
     ListView mStudentsRecycler;
     EditText mSearchEditText;
 
@@ -49,12 +49,11 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         mStudents = new ArrayList<>();
 
         // widgets
-        mBackButton = findViewById(R.id.img_back);
         mStudentsRecycler = findViewById(R.id.recycler_students);
         mSearchEditText = findViewById(R.id.text_search);
 
         mStudentsListAdapter = new StudentsListAdapter(StudentsActivity.this,
-                R.layout.row_student, mStudents);
+                R.layout.row_student, mStudents, mClassId);
         mStudentsRecycler.setAdapter(mStudentsListAdapter);
 
         setupListeners();
@@ -63,9 +62,6 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
     }
 
     public void setupListeners() {
-        // toolbar back button
-        mBackButton.setOnClickListener(this);
-
         // filter students according to text that teacher enters
         mSearchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,6 +104,10 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
+    public ActionMode getActionMode() {
+        return mActionMode;
+    }
+
     // selecting list item according to the current state of the activity
     private void onListItemSelect(int position) {
         // toggle item selection
@@ -134,24 +134,32 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    /*
-        // Delete selected rows
-        public void deleteRows() {
-            SparseBooleanArray selected = mStudentsListAdapter
-                    .getSelectedIds();//Get selected ids
-            //Loop all selected ids
-            for (int i = (selected.size() - 1); i >= 0; i--) {
-                if (selected.valueAt(i)) {
-                    //If current id is selected remove the item via key
-                    mStudents.remove(selected.keyAt(i));
-                    mStudentsListAdapter.notifyDataSetChanged();//notify adapter
+    public void removeStudents() {
+        SparseBooleanArray selected = mStudentsListAdapter.getSelectedIds();
 
-                }
+        // loop all ids
+        for (int i = (selected.size() - 1); i >= 0; i--) {
+            if (selected.valueAt(i)) {
+                // if current id is selected remove the item via key
+                removeStudentFromDb(mStudents.get(selected.keyAt(i)).getId());
+                mStudentsListAdapter.notifyDataSetChanged();
             }
-            Toast.makeText(getApplicationContext(), selected.size() + " item deleted.", Toast.LENGTH_SHORT).show();//Show Toast
-            mActionMode.finish();//Finish action mode after use
         }
-    */
+
+        Toast.makeText(getApplicationContext(), selected.size() + "Students removed", Toast.LENGTH_SHORT).show();
+
+        mActionMode.finish();
+    }
+
+    private void removeStudentFromDb(String id) {
+        //todo
+        // remove student from classStudents
+
+        // remove from studentGrades
+
+        // remove from studentAbsences
+    }
+
     private void displayStudents() {
         mClassStudentsRef.child(mClassId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -214,8 +222,5 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        if (view == mBackButton) {
-            finish();
-        }
     }
 }

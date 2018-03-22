@@ -51,11 +51,10 @@
 
             <ImageView
                 android:id="@+id/img_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Icon"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_message"
+                android:src="@drawable/ic_delete"
                 android:tint="@color/lightGray" />
 
         </LinearLayout>

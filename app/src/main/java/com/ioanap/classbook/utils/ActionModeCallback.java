@@ -1,8 +1,6 @@
 package com.ioanap.classbook.utils;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,13 +37,7 @@ public class ActionModeCallback implements ActionMode.Callback {
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        // sometimes the menu will not be visible so set the visibility manually
-        // according to SDK levels
-        if (Build.VERSION.SDK_INT < 11) {
-            MenuItemCompat.setShowAsAction(menu.findItem(R.id.option_remove), MenuItemCompat.SHOW_AS_ACTION_NEVER);
-        } else {
-            menu.findItem(R.id.option_remove).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }
+        menu.findItem(R.id.option_remove).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
@@ -53,18 +45,22 @@ public class ActionModeCallback implements ActionMode.Callback {
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.option_remove:
+                ((StudentsActivity) context).removeStudents();
                 break;
-
+            case R.id.option_add_grade:
+                //todo
+                break;
+            case R.id.option_mark_absent:
+                //todo
+                break;
         }
         return false;
     }
-
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         // when action mode is destroyed remove selection and set action mode to null
         mStudentsListAdapter.removeSelection();
-        StudentsActivity listFragment = new StudentsActivity();
         ((StudentsActivity) context).setNullActionMode();
     }
 }

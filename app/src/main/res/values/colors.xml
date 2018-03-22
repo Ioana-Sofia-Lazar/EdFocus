@@ -12,4 +12,6 @@
     <color name="white">#F2F2F2</color>
     <color name="gray">#707070</color>
     <color name="lightGray">#b6b6b6</color>
+
+    <color name="drawerMenuItemColor"></color>
 </resources>

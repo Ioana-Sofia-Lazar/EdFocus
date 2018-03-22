@@ -1,10 +1,8 @@
 package com.ioanap.classbook.teacher;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,8 +15,6 @@ import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Class;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
-import java.io.IOException;
-
 public class ClassActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "ClassActivity";
@@ -29,7 +25,7 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
     // widgets
     private CardView mCoursesCard, mScheduleCard, mStudentsCard;
     private TextView mClassNameText, mSchoolText;
-    private ImageView mBackButton, mClassPhoto;
+    private ImageView mClassPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +42,6 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mStudentsCard = findViewById(R.id.card_students);
         mClassNameText = findViewById(R.id.txt_class_name);
         mSchoolText = findViewById(R.id.txt_school);
-        mBackButton = findViewById(R.id.img_back);
         mClassPhoto = findViewById(R.id.img_class_photo);
 
         // display class info from firebase
@@ -56,22 +51,6 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mCoursesCard.setOnClickListener(this);
         mScheduleCard.setOnClickListener(this);
         mStudentsCard.setOnClickListener(this);
-        mBackButton.setOnClickListener(this);
-
-        Log.d("~", getAssets().getLocales().toString());
-        final AssetManager assets = getAssets();
-        try {
-            final String[] names = assets.list("");
-            for (String name : names)
-                Log.d("~", name);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /*
-        Typeface font = Typeface.createFromAsset(getAssets(), "fa.ttf" );
-        TextView icon = (TextView) findViewById(R.id.icon);
-        icon.setTypeface(font);
-*/
     }
 
     private void displayClassInfo() {
@@ -108,9 +87,6 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
             Intent myIntent = new Intent(getApplicationContext(), StudentsActivity.class);
             myIntent.putExtra("classId", mClassId);
             startActivity(myIntent);
-        }
-        if (view == mBackButton) {
-            finish();
         }
     }
 }

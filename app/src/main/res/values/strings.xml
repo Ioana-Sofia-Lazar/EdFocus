@@ -26,9 +26,6 @@
     <string name="field_phone_number">phoneNumber</string>
     <string name="field_profile_photo">profilePhoto</string>
 
-    <!-- icons -->
-    <string name="ic_caca">\f368</string>
-
     <!---->
     <string name="add_class_info">A unique token will be provided for you after proceeding. Your students will use this token to enroll to your class.</string>
     <string name="class_created_token_info">You will be able to find this token later in the class information.</string>

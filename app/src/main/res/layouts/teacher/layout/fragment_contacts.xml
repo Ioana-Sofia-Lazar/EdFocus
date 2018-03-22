@@ -27,7 +27,8 @@
                 android:id="@+id/edit_text_search_contact"
                 style="@style/SearchBoxEditText"
                 android:layout_gravity="bottom"
-                android:drawableLeft="@drawable/ic_search"
+                android:drawableStart="@drawable/ic_search"
+                android:drawableTint="@color/gray"
                 android:gravity="start|center_vertical"
                 android:hint="Search contact"
                 android:maxLines="1" />
@@ -58,13 +59,6 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_contact"
         style="@style/FabButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        android:src="@drawable/ic_plus"
-        app:backgroundTint="@color/coral"
-        app:fabSize="normal"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="bottom|right|end" />
 

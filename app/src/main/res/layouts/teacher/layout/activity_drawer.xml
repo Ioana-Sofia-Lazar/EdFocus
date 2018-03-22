@@ -24,7 +24,7 @@
         android:background="@color/white"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_drawer"
-        app:itemIconTint="@color/navyBlue"
+        app:itemIconTint="@color/gray"
         app:itemTextColor="@color/gray"
         app:menu="@menu/activity_drawer_drawer" />
 

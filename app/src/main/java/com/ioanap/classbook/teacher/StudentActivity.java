@@ -7,11 +7,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.utils.StudentFragmentPagerAdapter;
 
 public class StudentActivity extends AppCompatActivity {
 
-    private String mStudentId = "abc";
-    private String mClassId = "abc";
+    // variables
+    private String mStudentId;
+    private String mClassId;
+
+    // widgets
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

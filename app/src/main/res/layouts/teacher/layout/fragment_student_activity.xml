@@ -4,6 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/layout_no_grades"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Grades Yet." />
+
+    </RelativeLayout>
+
     <se.emilsjolander.stickylistheaders.StickyListHeadersListView
         android:id="@+id/list_grades"
         android:layout_width="match_parent"

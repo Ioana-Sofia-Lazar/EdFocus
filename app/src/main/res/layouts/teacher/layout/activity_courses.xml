@@ -15,10 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/img_back"
-                style="@style/ToolbarIcon"
-                android:src="@drawable/ic_back" />
+            <com.ioanap.classbook.views.CustomIconBack style="@style/ToolbarIcon" />
 
             <TextView
                 style="@style/ActivityTitle"
@@ -64,7 +61,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_plus"
         app:useCompatPadding="true" />
 
 </RelativeLayout>

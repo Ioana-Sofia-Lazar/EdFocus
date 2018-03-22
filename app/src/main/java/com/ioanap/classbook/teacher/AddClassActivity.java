@@ -68,16 +68,14 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_add_class);
 
         // widgets
-        mBackButton = (ImageView) findViewById(R.id.image_back);
-        mNameText = (EditText) findViewById(R.id.txt_name);
-        mSchoolText = (EditText) findViewById(R.id.txt_school);
-        mDescriptionText = (EditText) findViewById(R.id.txt_description);
-        mAddPhotoText = (TextView) findViewById(R.id.txt_add_photo);
-        mPhoto = (ImageView) findViewById(R.id.img_photo);
-        mCreateButton = (Button) findViewById(R.id.btn_create);
+        mNameText = findViewById(R.id.txt_name);
+        mSchoolText = findViewById(R.id.txt_school);
+        mDescriptionText = findViewById(R.id.txt_description);
+        mAddPhotoText = findViewById(R.id.txt_add_photo);
+        mPhoto = findViewById(R.id.img_photo);
+        mCreateButton = findViewById(R.id.btn_create);
 
         // listeners
-        mBackButton.setOnClickListener(this);
         mAddPhotoText.setOnClickListener(this);
         mCreateButton.setOnClickListener(this);
 
@@ -119,9 +117,6 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        if (view == mBackButton) {
-            finish();
-        }
         if (view == mAddPhotoText) {
             // verify permissions to access camera and storage
             verifyPermissions();

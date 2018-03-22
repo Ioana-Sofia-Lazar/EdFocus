@@ -39,8 +39,7 @@
 
     <ImageView
         android:id="@+id/image_message_contact"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        style="@style/Icon"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_message" />
 

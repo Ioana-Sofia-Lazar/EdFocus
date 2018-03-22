@@ -18,22 +18,12 @@
             android:scaleType="centerCrop"
             android:src="@drawable/photo_placeholder" />
 
-        <ImageView
-            android:id="@+id/img_back"
+        <com.ioanap.classbook.views.CustomIconBack
+            android:id="@+id/icon_back"
             style="@style/ToolbarIcon"
-            android:layout_centerHorizontal="false"
             android:layout_centerVertical="false"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_back"
             android:tint="@color/gray" />
-
-        <TextView
-            android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ic_caca"
-            android:textSize="24sp" />
-
 
         <TextView
             android:id="@+id/txt_class_name"
@@ -74,7 +64,7 @@
 
                 <ImageView
                     style="@style/ClassMenuCardIV"
-                    android:src="@mipmap/ic_contact" />
+                    android:src="@drawable/ic_contact" />
 
                 <TextView
                     style="@style/ClassMenuCardTV"
