@@ -30,6 +30,7 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(ClassActivity.this, false);
         setContentView(R.layout.activity_class);
 
         // get id of class to display

@@ -26,9 +26,13 @@
     <string name="field_phone_number">phoneNumber</string>
     <string name="field_profile_photo">profilePhoto</string>
 
-    <!---->
+    <!-- Class management -->
     <string name="add_class_info">A unique token will be provided for you after proceeding. Your students will use this token to enroll to your class.</string>
     <string name="class_created_token_info">You will be able to find this token later in the class information.</string>
     <string name="class_created_info">The class has been successfully created. Click the button to start managing it!</string>
+
+    <!-- StudentsActivity -->
+    <string name="authorised_absence_info">Check \'Authorised Absence\' if the absence has been for a valid reason.</string>
+    <string name="absent_all_day_info">If you check \'Absent All Day\' an absence will be added for every course of the selected day.</string>
 
 </resources>

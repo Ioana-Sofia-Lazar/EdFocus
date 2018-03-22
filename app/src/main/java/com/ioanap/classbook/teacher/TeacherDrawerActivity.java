@@ -26,13 +26,7 @@ public class TeacherDrawerActivity extends BaseActivity
     private static final String TAG = "TeacherDrawerActivity";
 
     private Context mContext = TeacherDrawerActivity.this;
-    //private FirebaseUtils mFirebaseUtils;
 
-    /**
-     * Displays the fragment in the container.
-     *
-     * @param fragment fragment to display
-     */
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
@@ -44,6 +38,7 @@ public class TeacherDrawerActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(TeacherDrawerActivity.this, true);
         setContentView(R.layout.activity_drawer);
 
         // set initially shown fragment

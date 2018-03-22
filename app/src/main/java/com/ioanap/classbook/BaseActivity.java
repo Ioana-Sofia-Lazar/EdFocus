@@ -1,5 +1,6 @@
 package com.ioanap.classbook;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,15 +9,16 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -57,6 +59,9 @@ import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.teacher.TeacherDrawerActivity;
 import com.ioanap.classbook.utils.ChooseUserTypeDialog;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         ChooseUserTypeDialog.OnUserTypeSelectedListener {
 
@@ -71,7 +76,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
-            mClassTokensRef, mClassCoursesRef, mClassStudentsRef;
+            mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef;
     protected String userID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -96,6 +101,22 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     // ============= Progress Dialog ===============
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setStatusBarGradient(Activity activity, boolean fullscreen) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = activity.getWindow();
+            Drawable background = activity.getResources().getDrawable(R.drawable.gradient_toolbar);
+
+            // for fragments of drawer menu activity
+            if (fullscreen) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            }
+
+            window.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
+            window.setBackgroundDrawable(background);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +132,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mClassTokensRef = mRootRef.child("classTokens");
         mClassCoursesRef = mRootRef.child("classCourses");
         mClassStudentsRef = mRootRef.child("classStudents");
+        mStudentClassesRef = mRootRef.child("studentClasses");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -122,14 +144,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
+    // ====================== Sign Up =========================
+
     public void showProgressDialog(String msg) {
         if (mProgressDialog != null && mProgressDialog.isShowing())
             hideProgressDialog();
 
         mProgressDialog = ProgressDialog.show(this, getResources().getString(R.string.app_name), msg);
     }
-
-    // ====================== Sign Up =========================
 
     public void hideProgressDialog() {
         if (mProgressDialog != null) {
@@ -193,6 +215,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mSettingsRef.child(user.getId()).setValue(settings);
     }
 
+    // =============== Modify/Retrieve User Data =================
+
     /**
      * Sends a verification link to the email address of the currently logged user.
      */
@@ -214,8 +238,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    // =============== Modify/Retrieve User Data =================
-
     /**
      * Saves the current state to SharedPreferences (whether there is or not a logged in user and his type)
      *
@@ -234,12 +256,11 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public UserAccountSettings getUserAccountSettings(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "getting user account settings");
-
         UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
-
         return settings;
     }
+
+    // ====================== Sign In ==========================
 
     /**
      * Update "user_account_settings" node for current user.
@@ -274,8 +295,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    // ====================== Sign In ==========================
-
     /**
      * Receive an image as a byte array, save image to Firebase Storage, get uri(reference) to
      * the image and then call "updateUserAccountSettings" to save reference in Firebase Database.
@@ -306,6 +325,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
+
+    // ====================== Sign Out ==========================
 
     /**
      * Redirects the currently logged in user to his profile according to his type i.e Teacher,
@@ -362,7 +383,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    // ====================== Sign Out ==========================
+    // ================== Google Sign In =====================
 
     public void signIn(String email, String password) {
         showProgressDialog("Signing In...");
@@ -382,8 +403,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                     }
                 });
     }
-
-    // ================== Google Sign In =====================
 
     /**
      * Signs currently logged user out and clears all activities from stack (except from the first
@@ -522,12 +541,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
     }
 
+    // ================== Facebook Sign In ==================
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
-
-    // ================== Facebook Sign In ==================
 
     /**
      * We get the user type chosen by the new user from the dialog and proceed to sign him in.
@@ -657,6 +676,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         return mRect;
     }
 
+    // =================== Handle Activity Result ====================
+
     /**
      * Hide keyboard when tapping outside of it (except from tapping inside an EditText)
      *
@@ -689,16 +710,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         return handleReturn;
     }
 
-    // ====================== Icons =====================
-
-    protected void setScaledDrawableButton(Button button, int id, double scale) {
-        Drawable drawable = ContextCompat.getDrawable(this, id);
-        drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * scale),
-                (int) (drawable.getIntrinsicHeight() * scale));
-        button.setCompoundDrawables(drawable, null, null, null);
-    }
-
-    // =================== Handle Activity Result ====================
+    // ================== Status Bar ===================
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -725,6 +737,22 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    // ==================
+    // ============== Student ===============
+
+    public void removeStudentFromClass(String studentId, String classId) {
+        Map<String, Object> removeMap = new HashMap<>();
+
+        // remove from classStudents
+        removeMap.put("/classStudents/" + classId + "/" + studentId + "/", null);
+
+        // remove from studentAbsences
+        removeMap.put("/studentAbsences/" + classId + "/" + studentId + "/", null);
+
+        // remove from studentGrades
+        removeMap.put("/studentAbsences/" + classId + "/" + studentId + "/", null);
+
+        mRootRef.updateChildren(removeMap);
+
+    }
 
 }

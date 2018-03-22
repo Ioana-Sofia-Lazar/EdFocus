@@ -39,6 +39,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(StudentsActivity.this, false);
         setContentView(R.layout.activity_students);
 
         mActionMode = null;
@@ -141,7 +142,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         for (int i = (selected.size() - 1); i >= 0; i--) {
             if (selected.valueAt(i)) {
                 // if current id is selected remove the item via key
-                removeStudentFromDb(mStudents.get(selected.keyAt(i)).getId());
+                removeStudentFromClass(mStudents.get(selected.keyAt(i)).getId(), mClassId);
                 mStudentsListAdapter.notifyDataSetChanged();
             }
         }
@@ -149,15 +150,6 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         Toast.makeText(getApplicationContext(), selected.size() + "Students removed", Toast.LENGTH_SHORT).show();
 
         mActionMode.finish();
-    }
-
-    private void removeStudentFromDb(String id) {
-        //todo
-        // remove student from classStudents
-
-        // remove from studentGrades
-
-        // remove from studentAbsences
     }
 
     private void displayStudents() {

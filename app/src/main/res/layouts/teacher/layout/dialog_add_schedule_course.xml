@@ -19,7 +19,6 @@
 
             <TextView
                 style="@style/FormFieldTitle"
-                android:gravity="center_horizontal"
                 android:text="Choose a course:" />
 
             <Spinner
@@ -29,7 +28,6 @@
             <TextView
                 style="@style/FormFieldTitle"
                 android:layout_margin="0dp"
-                android:gravity="center_horizontal"
                 android:text="Course starts at:" />
 
             <TimePicker
@@ -39,7 +37,6 @@
             <TextView
                 style="@style/FormFieldTitle"
                 android:layout_margin="0dp"
-                android:gravity="center_horizontal"
                 android:text="Course ends at:" />
 
             <TimePicker

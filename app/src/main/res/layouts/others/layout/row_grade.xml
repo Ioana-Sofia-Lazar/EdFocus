@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp"
-    android:weightSum="6">
+    android:padding="5dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_margin="5dp"
-        android:layout_weight="2"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/text_grade"
         android:orientation="vertical">
 
         <TextView
@@ -30,9 +30,8 @@
         android:id="@+id/text_grade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
-        android:layout_weight="2"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:text="10+"
         android:textColor="@color/colorAccent"
         android:textSize="34sp" />
@@ -40,25 +39,28 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_margin="5dp"
-        android:layout_weight="2"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/text_grade"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_description"
             style="@style/InfoTextSmall"
-            android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
-            android:layout_weight="2"
             android:ellipsize="end"
+            android:gravity="end"
             android:maxLines="1"
-            android:text="bla bla bla bla bla" />
+            android:text="bla bla" />
 
         <ImageView
+            android:id="@+id/icon_edit"
             style="@style/Icon"
+            android:layout_gravity="end"
             android:src="@drawable/ic_edit" />
 
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

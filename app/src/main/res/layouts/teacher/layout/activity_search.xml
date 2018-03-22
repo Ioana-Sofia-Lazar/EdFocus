@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/pureWhite"
+    android:fitsSystemWindows="true"
     tools:context="com.ioanap.classbook.teacher.SearchActivity">
 
     <android.support.v7.widget.Toolbar
@@ -23,8 +25,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="bottom"
                 android:hint="Search people"
-                android:maxLines="1"
-                android:padding="15dp" />
+                android:maxLines="1" />
 
             <com.ioanap.classbook.views.CustomIconBack
                 style="@style/ToolbarIcon"

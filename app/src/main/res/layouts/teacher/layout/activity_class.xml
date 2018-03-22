@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/pureWhite"
     tools:context="com.ioanap.classbook.teacher.ClassActivity">
 
     <RelativeLayout
@@ -83,7 +84,7 @@
 
                 <ImageView
                     style="@style/ClassMenuCardIV"
-                    android:src="@drawable/ic_contact" />
+                    android:src="@drawable/ic_classes" />
 
                 <TextView
                     style="@style/ClassMenuCardTV"
@@ -102,7 +103,7 @@
 
                 <ImageView
                     style="@style/ClassMenuCardIV"
-                    android:src="@drawable/ic_contact" />
+                    android:src="@drawable/ic_schedule" />
 
                 <TextView
                     style="@style/ClassMenuCardTV"
@@ -112,46 +113,52 @@
 
         </android.support.v7.widget.CardView>
 
-        <!--  -->
+        <!-- Events -->
         <android.support.v7.widget.CardView style="@style/ClassMenuCard">
 
             <LinearLayout style="@style/ClassMenuCardLL">
 
                 <ImageView
                     style="@style/ClassMenuCardIV"
-                    android:src="@drawable/ic_contact" />
+                    android:src="@drawable/ic_events" />
 
-                <TextView style="@style/ClassMenuCardTV" />
+                <TextView
+                    style="@style/ClassMenuCardTV"
+                    android:text="Events" />
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
-        <!--  -->
+        <!-- Notifications -->
         <android.support.v7.widget.CardView style="@style/ClassMenuCard">
 
             <LinearLayout style="@style/ClassMenuCardLL">
 
                 <ImageView
                     style="@style/ClassMenuCardIV"
-                    android:src="@drawable/ic_contact" />
+                    android:src="@drawable/ic_notifications" />
 
-                <TextView style="@style/ClassMenuCardTV" />
+                <TextView
+                    style="@style/ClassMenuCardTV"
+                    android:text="Notifications" />
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
-        <!--  -->
+        <!-- Settings -->
         <android.support.v7.widget.CardView style="@style/ClassMenuCard">
 
             <LinearLayout style="@style/ClassMenuCardLL">
 
                 <ImageView
                     style="@style/ClassMenuCardIV"
-                    android:src="@drawable/ic_contact" />
+                    android:src="@drawable/ic_settings" />
 
-                <TextView style="@style/ClassMenuCardTV" />
+                <TextView
+                    style="@style/ClassMenuCardTV"
+                    android:text="Settings" />
 
             </LinearLayout>
 

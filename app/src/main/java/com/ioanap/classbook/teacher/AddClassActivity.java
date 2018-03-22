@@ -65,6 +65,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(AddClassActivity.this, false);
         setContentView(R.layout.activity_add_class);
 
         // widgets

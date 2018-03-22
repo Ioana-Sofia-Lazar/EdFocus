@@ -13,9 +13,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.model.Absence;
+import com.ioanap.classbook.model.AbsenceDb;
 import com.ioanap.classbook.model.Course;
 import com.ioanap.classbook.model.Grade;
 import com.ioanap.classbook.model.GradeDb;
+import com.ioanap.classbook.utils.StudentAbsencesStickyAdapter;
 import com.ioanap.classbook.utils.StudentGradesStickyAdapter;
 
 import java.util.ArrayList;
@@ -33,14 +36,16 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
     public static final String STUDENT_ID = "STUDENT_ID";
     public static final String CLASS_ID = "CLASS_ID";
     HashMap<String, Long> mHeaderIds;
-    StudentGradesStickyAdapter mAdapter;
+    StudentGradesStickyAdapter mGradesAdapter;
+    StudentAbsencesStickyAdapter mAbsencesAdapter;
     // widgets
     private RelativeLayout mNoGradesLayout;
     // variables
     private int mPageIndex; // can be 0 (Grades Page) or 1(Absences Page)
     private String mClassId, mStudentId;
     private ArrayList<Grade> mGrades;
-    private DatabaseReference mStudentGradesRef, mClassCoursesRef;
+    private ArrayList<Absence> mAbsences;
+    private DatabaseReference mStudentGradesRef, mStudentAbsencesRef, mClassCoursesRef;
 
     public static StudentActivityFragment newInstance(int page, String studentId, String classId) {
         Bundle args = new Bundle();
@@ -69,20 +74,26 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
         mNoGradesLayout = view.findViewById(R.id.layout_no_grades);
 
         mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
+        mStudentAbsencesRef = FirebaseDatabase.getInstance().getReference().child("studentAbsences");
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mGrades = new ArrayList<>();
+        mAbsences = new ArrayList<>();
         mHeaderIds = new HashMap<>();
 
         if (mPageIndex == 0) {
             // display grades
             StickyListHeadersListView stickyList = view.findViewById(R.id.list_grades);
-            mAdapter = new StudentGradesStickyAdapter(getContext(),
+            mGradesAdapter = new StudentGradesStickyAdapter(getContext(),
                     R.layout.row_grade, R.layout.row_header, mGrades, mHeaderIds);
-            stickyList.setAdapter(mAdapter);
+            stickyList.setAdapter(mGradesAdapter);
             getGrades();
         } else {
             // display absences
-            // todo
+            StickyListHeadersListView stickyList = view.findViewById(R.id.list_grades);
+            mAbsencesAdapter = new StudentAbsencesStickyAdapter(getContext(),
+                    R.layout.row_absence, R.layout.row_header, mAbsences, mHeaderIds);
+            stickyList.setAdapter(mAbsencesAdapter);
+            getAbsences();
         }
 
         return view;
@@ -90,7 +101,7 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
 
     // returns a list of grades
     private void getGrades() {
-        // retrieve schedule from firebase for the currently selected day, sorted by starting time
+        // get all grades for this class and for this student
         mStudentGradesRef.child(mClassId).child(mStudentId).orderByChild("courseId").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -110,7 +121,7 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
 
                                 mGrades.add(new Grade(gradeDb, course.getName()));
                                 addToHashMap(course.getId());
-                                mAdapter.notifyDataSetChanged();
+                                mGradesAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -119,6 +130,49 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
                             }
                         });
 
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    // returns a list of grades
+    private void getAbsences() {
+        // retrieve absences for current class and current student
+        mStudentAbsencesRef.child(mClassId).child(mStudentId).orderByChild("courseId").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mAbsences.clear();
+
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    mNoGradesLayout.setVisibility(View.GONE);
+
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        final AbsenceDb absenceDb = data.getValue(AbsenceDb.class);
+
+                        // retrieve course info
+                        mClassCoursesRef.child(mClassId).child(absenceDb.getCourseId()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Course course = dataSnapshot.getValue(Course.class);
+
+                                mAbsences.add(new Absence(absenceDb, course.getName()));
+                                addToHashMap(course.getId());
+                                mAbsencesAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
                     }
                 }

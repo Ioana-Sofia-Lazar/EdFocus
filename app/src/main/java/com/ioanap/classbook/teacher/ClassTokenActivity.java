@@ -5,16 +5,16 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 
-public class ClassTokenActivity extends AppCompatActivity implements View.OnClickListener {
+public class ClassTokenActivity extends BaseActivity implements View.OnClickListener {
 
     // widgets
     private TextView mTokenEditText;
@@ -26,6 +26,7 @@ public class ClassTokenActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(ClassTokenActivity.this, false);
         setContentView(R.layout.activity_class_token);
 
         // widgets

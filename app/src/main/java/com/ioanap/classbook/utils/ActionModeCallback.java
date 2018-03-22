@@ -46,15 +46,16 @@ public class ActionModeCallback implements ActionMode.Callback {
         switch (item.getItemId()) {
             case R.id.option_remove:
                 ((StudentsActivity) context).removeStudents();
-                break;
+                return true;
             case R.id.option_add_grade:
                 //todo
-                break;
+                return true;
             case R.id.option_mark_absent:
                 //todo
-                break;
+                return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     @Override

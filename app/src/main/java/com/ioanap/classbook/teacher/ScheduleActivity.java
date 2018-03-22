@@ -17,6 +17,7 @@ public class ScheduleActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(ScheduleActivity.this, false);
         setContentView(R.layout.activity_schedule);
 
         // get class id

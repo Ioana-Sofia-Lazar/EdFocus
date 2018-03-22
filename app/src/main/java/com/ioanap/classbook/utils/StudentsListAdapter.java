@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,16 +26,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.model.AbsenceDb;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.Course;
 import com.ioanap.classbook.model.GradeDb;
+import com.ioanap.classbook.model.ScheduleEntry;
 import com.ioanap.classbook.teacher.StudentsActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupMenu.OnMenuItemClickListener {
 
     private static final String TAG = "StudentsListAdapter";
+
+    private static String[] daysOfWeek = {"", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
     private ArrayList<Contact> mStudents;
     private Context mContext;
@@ -42,8 +51,8 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
     private String mClassId;
     private SparseBooleanArray mSelectedItemsIds;
     private ArrayList<String> mCourseNames, mCourseIds;
-    private DatabaseReference mClassCoursesRef, mStudentGradesRef;
-    private int mPosition;
+    private DatabaseReference mClassCoursesRef, mStudentGradesRef, mStudentAbsencesRef, mScheduleRef;
+    private int mClickedPosition;
 
     public StudentsListAdapter(Context context, int resource, ArrayList<Contact> objects, String classId) {
         super(context, resource, objects);
@@ -54,6 +63,8 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         mClassId = classId;
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
+        mStudentAbsencesRef = FirebaseDatabase.getInstance().getReference().child("studentAbsences");
+        mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
     }
 
     @Override
@@ -85,13 +96,15 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         // create the contact object with student's information
         Contact student = new Contact(id, name, email, profilePhoto, userType);
 
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(mResource, parent, false);
             holder = new ViewHolder();
             holder.mName = convertView.findViewById(R.id.text_name);
+            holder.mGrades = convertView.findViewById(R.id.text_grades);
+            holder.mAbsences = convertView.findViewById(R.id.text_absences);
             holder.mStudentOptions = convertView.findViewById(R.id.ic_student_options);
             holder.mProfilePhoto = convertView.findViewById(R.id.image_profile_photo);
 
@@ -102,10 +115,35 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
 
         holder.mName.setText(student.getName());
         UniversalImageLoader.setImage(student.getProfilePhoto(), holder.mProfilePhoto, null);
+        // display number of grades
+        mStudentGradesRef.child(mClassId).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                holder.mGrades.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        // display number of absences
+        mStudentAbsencesRef.child(mClassId).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                holder.mAbsences.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        // student options menu click
         holder.mStudentOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPosition = position;
+                mClickedPosition = position;
                 showPopupMenu(v);
             }
         });
@@ -145,13 +183,13 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 showAddGradeDialog();
                 return true;
             case R.id.option_mark_absent:
-                //todo
+                showAddAbsenceDialog();
                 return true;
             case R.id.option_view_profile:
                 //todo
                 return true;
             case R.id.option_remove:
-                //todo
+                ((StudentsActivity) mContext).removeStudentFromClass(getItem(mClickedPosition).getId(), mClassId);
                 return true;
             default:
                 return false;
@@ -159,7 +197,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
     }
 
     private void showAddGradeDialog() {
-        final String studentId = getItem(mPosition).getId();
+        final String studentId = getItem(mClickedPosition).getId();
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_add_grade);
 
@@ -210,19 +248,17 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
     }
 
     private void showAddAbsenceDialog() {
-        //todo
-        final String studentId = getItem(mPosition).getId();
+        final String studentId = getItem(mClickedPosition).getId();
         final Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialog_add_grade);
+        dialog.setContentView(R.layout.dialog_add_absence);
 
         // dialog widgets
-        final EditText gradeText = dialog.findViewById(R.id.text_grade);
-        final EditText descriptionText = dialog.findViewById(R.id.text_description);
-        final EditText nameText = dialog.findViewById(R.id.text_name);
         final DatePicker datePicker = dialog.findViewById(R.id.date_picker);
         Button createBtn = dialog.findViewById(R.id.btn_create);
         ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
         final Spinner coursesSpinner = dialog.findViewById(R.id.spinner_courses);
+        final CheckBox absentAllDayCB = dialog.findViewById(R.id.checkbox_absent_all_day);
+        final CheckBox authorisedCB = dialog.findViewById(R.id.checkbox_absent_all_day);
 
         populateSpinner(coursesSpinner);
 
@@ -231,20 +267,28 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
             @Override
             public void onClick(View v) {
                 // get info introduced by user
-                String gradeVal = gradeText.getText().toString();
-                String description = descriptionText.getText().toString();
-                String name = nameText.getText().toString();
+                boolean absentAllDay = absentAllDayCB.isChecked();
+                boolean authorised = authorisedCB.isChecked();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
                 String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
                         + datePicker.getDayOfMonth();
 
-                // get id where to put the new grade in firebase
-                String gradeId = mStudentGradesRef.child(mClassId).child(studentId).push().getKey();
-                GradeDb grade = new GradeDb(gradeId, name, gradeVal, date, description, mClassId,
-                        courseId, studentId);
+                // get an array of the absences that need to be inserted
+                List<AbsenceDb> absences = new ArrayList<>();
+                if (absentAllDay) {
+                    addAbsencesForAllDay(datePicker.getYear(), datePicker.getMonth(),
+                            datePicker.getDayOfMonth(), studentId, date, authorised);
+                } else {
+                    // add single absence for the selected course
+                    AbsenceDb absence = new AbsenceDb(null, date, authorised, mClassId, courseId, studentId);
 
-                // save to firebase
-                mStudentGradesRef.child(mClassId).child(studentId).child(gradeId).setValue(grade);
+                    // get id where to put the new absence in firebase
+                    String absenceId = mStudentAbsencesRef.child(mClassId).child(studentId).push().getKey();
+
+                    // save to firebase
+                    mStudentAbsencesRef.child(mClassId).child(studentId).child(absenceId).setValue(absence);
+                }
+
                 dialog.dismiss();
             }
         });
@@ -258,6 +302,45 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         });
 
         dialog.show();
+
+    }
+
+    private void addAbsencesForAllDay(int year, int month, int day,
+                                      final String studentId, final String date, final boolean authorised) {
+        // find all courses from the day of the week that this date was
+        final ArrayList<AbsenceDb> absences = new ArrayList<>();
+
+        // get what day of the week the date was
+        Date d = new GregorianCalendar(year, month, day).getTime();
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        String dayOfWeek = daysOfWeek[c.get(Calendar.DAY_OF_WEEK)];
+
+        // iterate all courses of this class for this day
+        mScheduleRef.child(mClassId).child(dayOfWeek).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // create absence for each course in the schedule of that day
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            ScheduleEntry entry = snapshot.getValue(ScheduleEntry.class);
+                            String courseId = entry.getCourseId();
+
+                            // get id where to put the new absence in firebase
+                            String absenceId = mStudentAbsencesRef.child(mClassId).child(studentId).push().getKey();
+                            AbsenceDb absence = new AbsenceDb(absenceId, date, authorised, mClassId, courseId, studentId);
+
+                            // save to firebase
+                            mStudentAbsencesRef.child(mClassId).child(studentId).child(absenceId).setValue(absence);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
 
     }
 
@@ -339,7 +422,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
 
     private static class ViewHolder {
         ImageView mProfilePhoto, mStudentOptions;
-        TextView mName;
+        TextView mName, mGrades, mAbsences;
     }
 }
 

@@ -40,6 +40,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(CoursesActivity.this, false);
         setContentView(R.layout.activity_courses);
 
         mCourses = new ArrayList<>();

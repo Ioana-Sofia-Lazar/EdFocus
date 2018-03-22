@@ -38,6 +38,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(SearchActivity.this, false);
         setContentView(R.layout.activity_search);
 
         mPeople = new ArrayList<>();

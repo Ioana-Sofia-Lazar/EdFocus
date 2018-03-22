@@ -73,7 +73,6 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
 
             }
         });
-
     }
 
     private void setProfileWidgets(UserAccountSettings settings) {

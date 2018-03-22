@@ -8,12 +8,15 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@color/pureWhite</item>
         <item name="android:textColor">@color/gray</item>
         <!--  Action mode overlays toolbar -->
         <item name="windowActionModeOverlay">true</item>
         <!--  For Custom Action Mode Background Color/Drawable -->
         <item name="actionModeBackground">@color/colorAccent</item>
+
+        <item name="listPreferredItemHeightSmall">60dp</item>
     </style>
 
     <!-- Icons -->
@@ -28,7 +31,7 @@
     <style name="Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/cyan</item>
+        <item name="android:background">@drawable/gradient_toolbar</item>
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:contentInsetLeft">0dp</item>
         <item name="android:contentInsetStart">0dp</item>
@@ -38,7 +41,7 @@
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetRight">0dp</item>
         <item name="contentInsetEnd">0dp</item>
-        <item name="android:elevation">6dp</item>
+        <item name="android:elevation">@dimen/toolbarElevation</item>
     </style>
 
     <style name="ToolbarIcon">
@@ -67,9 +70,9 @@
         <item name="android:clickable">true</item>
         <item name="fabSize">normal</item>
         <item name="borderWidth">0dp</item>
-        <item name="elevation">7dp</item>
+        <item name="elevation">6dp</item>
         <item name="android:src">@drawable/ic_plus</item>
-        <item name="android:tint">@color/gray</item>
+        <item name="android:tint">@color/pureWhite</item>
     </style>
 
     <!-- Form -->
@@ -97,7 +100,7 @@
     </style>
 
     <style name="Spinner">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">200dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">8dp</item>
     </style>
@@ -183,7 +186,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/pureWhite</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:elevation">2dp</item>
     </style>
 
     <!-- Schedule Tabs -->
@@ -192,7 +196,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="tabIndicatorColor">?attr/colorAccent</item>
         <item name="tabIndicatorHeight">2dp</item>
-        <item name="tabBackground">@color/cyan</item>
+        <item name="android:background">@drawable/gradient_toolbar</item>
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
         <item name="tabSelectedTextColor">@color/coral</item>
         <item name="tabGravity">fill</item>
@@ -209,12 +213,13 @@
     <!-- Search Box -->
     <style name="SearchBoxEditText">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">55dp</item>
         <item name="android:background">@drawable/search_box</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:textColorHint">@color/lightGray</item>
         <item name="android:gravity">center</item>
+        <item name="android:padding">15dp</item>
     </style>
 
     <!-- Drawer Menu -->

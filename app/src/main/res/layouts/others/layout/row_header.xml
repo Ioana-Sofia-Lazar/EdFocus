@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="@color/cyan"
+    android:background="@drawable/gradient_toolbar"
     android:gravity="center_horizontal"
     android:padding="5dp">
 
@@ -12,7 +12,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/cyan"
         android:gravity="center_horizontal"
         android:text="History"
         android:textColor="@color/pureWhite" />

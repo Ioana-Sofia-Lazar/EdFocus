@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_google_signin_btn_text_dark_default"
+    android:background="@color/pureWhite"
+    android:fitsSystemWindows="false"
     tools:context="com.ioanap.classbook.teacher.TeacherProfileFragment">
 
     <android.support.design.widget.AppBarLayout
@@ -15,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="340dp"
-            android:background="@color/common_google_signin_btn_text_dark_default">
+            android:background="@color/pureWhite">
 
             <ImageView
                 android:layout_width="match_parent"
