@@ -92,7 +92,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
             convertView = inflater.inflate(mResource, parent, false);
             holder = new ViewHolder();
             holder.mName = convertView.findViewById(R.id.text_name);
-            holder.mStudentOptions = convertView.findViewById(R.id.text_student_options);
+            holder.mStudentOptions = convertView.findViewById(R.id.ic_student_options);
             holder.mProfilePhoto = convertView.findViewById(R.id.image_profile_photo);
 
             convertView.setTag(holder);
@@ -338,8 +338,8 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
     }
 
     private static class ViewHolder {
-        ImageView mProfilePhoto;
-        TextView mName, mStudentOptions;
+        ImageView mProfilePhoto, mStudentOptions;
+        TextView mName;
     }
 }
 

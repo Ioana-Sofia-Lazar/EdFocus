@@ -7,23 +7,20 @@
         android:icon="@drawable/ic_more"
         android:orderInCategory="101"
         android:title="menu"
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
 
         <menu>
 
             <item
                 android:id="@+id/option_add_grade"
-                android:icon="@drawable/ic_search"
                 android:title="Add Grade"
-                app:showAsAction="always" />
+                app:showAsAction="ifRoom" />
             <item
                 android:id="@+id/option_mark_absent"
-                android:icon="@drawable/ic_search"
                 android:title="Mark absent"
                 app:showAsAction="always" />
             <item
                 android:id="@+id/option_remove"
-                android:icon="@drawable/ic_search"
                 android:title="Remove from Class"
                 app:showAsAction="always" />
 

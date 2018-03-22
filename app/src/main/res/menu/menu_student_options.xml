@@ -3,19 +3,15 @@
 
     <item
         android:id="@+id/option_add_grade"
-        android:icon="@drawable/ic_search"
         android:title="Add Grade" />
     <item
         android:id="@+id/option_mark_absent"
-        android:icon="@drawable/ic_search"
         android:title="Mark absent" />
     <item
         android:id="@+id/option_view_profile"
-        android:icon="@drawable/ic_search"
         android:title="View profile" />
     <item
         android:id="@+id/option_remove"
-        android:icon="@drawable/ic_search"
         android:title="Remove from Class" />
 
 </menu>
