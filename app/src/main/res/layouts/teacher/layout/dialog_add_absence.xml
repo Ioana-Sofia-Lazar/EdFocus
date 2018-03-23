@@ -18,11 +18,13 @@
             android:paddingTop="20dp">
 
             <TextView
+                android:id="@+id/text_title"
                 style="@style/TextBig"
                 android:layout_gravity="center_horizontal"
                 android:text="Add absence" />
 
             <TextView
+                android:id="@+id/text_course"
                 style="@style/FormFieldTitle"
                 android:text="Choose a course:" />
 
@@ -37,6 +39,7 @@
                 android:text="Absent All Day" />
 
             <TextView
+                android:id="@+id/text_info"
                 style="@style/InfoTextSmall"
                 android:text="@string/absent_all_day_info" />
 
@@ -57,10 +60,25 @@
                 style="@style/InfoTextSmall"
                 android:text="@string/authorised_absence_info" />
 
-            <Button
-                android:id="@+id/btn_create"
-                style="@style/Button"
-                android:text="Add" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/btn_delete"
+                    style="@style/Button"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_delete"
+                    android:tint="@color/lightGray" />
+
+                <Button
+                    android:id="@+id/btn_create"
+                    style="@style/Button"
+                    android:layout_centerHorizontal="true"
+                    android:text="Add" />
+
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

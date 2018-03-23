@@ -116,7 +116,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         holder.mName.setText(student.getName());
         UniversalImageLoader.setImage(student.getProfilePhoto(), holder.mProfilePhoto, null);
         // display number of grades
-        mStudentGradesRef.child(mClassId).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mStudentGradesRef.child(mClassId).child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 holder.mGrades.setText(String.valueOf(dataSnapshot.getChildrenCount()));
@@ -128,7 +128,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
             }
         });
         // display number of absences
-        mStudentAbsencesRef.child(mClassId).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mStudentAbsencesRef.child(mClassId).child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 holder.mAbsences.setText(String.valueOf(dataSnapshot.getChildrenCount()));
@@ -207,8 +207,12 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         final EditText nameText = dialog.findViewById(R.id.text_name);
         final DatePicker datePicker = dialog.findViewById(R.id.date_picker);
         Button createBtn = dialog.findViewById(R.id.btn_create);
+        ImageView deleteBtn = dialog.findViewById(R.id.btn_delete);
         ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
         final Spinner coursesSpinner = dialog.findViewById(R.id.spinner_courses);
+
+        // hide delete button (available only in editing mode)
+        deleteBtn.setVisibility(View.GONE);
 
         populateSpinner(coursesSpinner);
 
@@ -258,7 +262,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
         final Spinner coursesSpinner = dialog.findViewById(R.id.spinner_courses);
         final CheckBox absentAllDayCB = dialog.findViewById(R.id.checkbox_absent_all_day);
-        final CheckBox authorisedCB = dialog.findViewById(R.id.checkbox_absent_all_day);
+        final CheckBox authorisedCB = dialog.findViewById(R.id.checkbox_authorised);
 
         populateSpinner(coursesSpinner);
 
@@ -280,10 +284,10 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                             datePicker.getDayOfMonth(), studentId, date, authorised);
                 } else {
                     // add single absence for the selected course
-                    AbsenceDb absence = new AbsenceDb(null, date, authorised, mClassId, courseId, studentId);
 
                     // get id where to put the new absence in firebase
                     String absenceId = mStudentAbsencesRef.child(mClassId).child(studentId).push().getKey();
+                    AbsenceDb absence = new AbsenceDb(absenceId, date, authorised, mClassId, courseId, studentId);
 
                     // save to firebase
                     mStudentAbsencesRef.child(mClassId).child(studentId).child(absenceId).setValue(absence);

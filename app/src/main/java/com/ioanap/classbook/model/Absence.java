@@ -16,6 +16,14 @@ public class Absence {
         this.courseName = courseName;
     }
 
+    @Override
+    public String toString() {
+        return "Absence{" +
+                "absenceDb=" + absenceDb +
+                ", courseName='" + courseName + '\'' +
+                '}';
+    }
+
     public String getId() {
         return absenceDb.getId();
     }
