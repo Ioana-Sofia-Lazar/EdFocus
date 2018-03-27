@@ -76,7 +76,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
-            mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef;
+            mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef, mClassEventsRef;
     protected String userID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -125,7 +125,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = mFirebaseDatabase.getReference();
         mUserRef = mRootRef.child("users");
-        mSettingsRef = mRootRef.child("user_account_settings");
+        mSettingsRef = mRootRef.child("userAccountSettings");
         mContactsRef = mRootRef.child("contacts");
         mRequestsRef = mRootRef.child("requests");
         mClassesRef = mRootRef.child("classes");
@@ -133,6 +133,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mClassCoursesRef = mRootRef.child("classCourses");
         mClassStudentsRef = mRootRef.child("classStudents");
         mStudentClassesRef = mRootRef.child("studentClasses");
+        mClassEventsRef = mRootRef.child("classEvents");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -255,15 +256,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         return userID;
     }
 
-    public UserAccountSettings getUserAccountSettings(DataSnapshot dataSnapshot) {
-        UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
-        return settings;
-    }
-
     // ====================== Sign In ==========================
 
     /**
-     * Update "user_account_settings" node for current user.
+     * Update "userAccountSettings" node for current user.
      *
      * @param lastName
      * @param firstName
@@ -753,6 +749,38 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
         mRootRef.updateChildren(removeMap);
 
+    }
+
+    public void confirmContactRequest(String fromUserId) {
+        // delete request from database
+        mRequestsRef.child(userID).child(fromUserId).removeValue();
+
+        // add each as a contact for the other
+        Map<String, Object> contact = new HashMap<>();
+        contact.put(fromUserId, fromUserId);
+        mContactsRef.child(userID).updateChildren(contact);
+
+        contact = new HashMap<>();
+        contact.put(userID, userID);
+        mContactsRef.child(fromUserId).updateChildren(contact);
+    }
+
+    public void declineContactRequest(String fromUserId) {
+        // delete request from database
+        mRequestsRef.child(userID).child(fromUserId).removeValue();
+    }
+
+    public void addContact(String userId) {
+        // create request in the database
+        Map<String, Object> request = new HashMap<>();
+        request.put("requestType", "contact");
+        mRequestsRef.child(userId).child(userID).updateChildren(request);
+    }
+
+    public void cancelRequestTo(String userId) {
+        Map<String, Object> remove = new HashMap<>();
+        remove.put(userID, null);
+        mRequestsRef.child(userId).updateChildren(remove);
     }
 
 }

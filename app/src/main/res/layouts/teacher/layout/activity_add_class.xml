@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/pureWhite"
     tools:context="com.ioanap.classbook.teacher.SearchActivity">
 
     <android.support.v7.widget.Toolbar
@@ -21,6 +21,7 @@
                 style="@style/ToolbarIcon" />
 
             <TextView
+                android:id="@+id/text_title"
                 style="@style/ActivityTitle"
                 android:text="Add a New Class" />
 
@@ -92,13 +93,55 @@
                 android:inputType="textMultiLine" />
 
             <TextView
-                style="@style/InfoTextSmall"
-                android:text="@string/add_class_info" />
+                style="@style/FormFieldTitle"
+                android:text="Token" />
 
-            <Button
-                android:id="@+id/btn_create"
-                style="@style/Button"
-                android:text="Create" />
+            <LinearLayout
+                android:id="@+id/layout_token"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txt_token"
+                    style="@style/FormFieldInput"
+                    android:focusable="false"
+                    android:text="ABCDEF" />
+
+                <ImageView
+                    android:id="@+id/img_copy_icon"
+                    style="@style/Icon"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/ic_copy" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_info"
+                style="@style/InfoTextSmall"
+                android:text="@string/new_class_token_info" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/btn_delete"
+                    style="@style/Button"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/btn_create"
+                    android:src="@drawable/ic_delete"
+                    android:tint="@color/lightGray" />
+
+                <Button
+                    android:id="@+id/btn_create"
+                    style="@style/Button"
+                    android:layout_centerHorizontal="true"
+                    android:text="Add" />
+
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>

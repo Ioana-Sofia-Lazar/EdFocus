@@ -86,7 +86,7 @@ public class TeacherDrawerActivity extends BaseActivity
         } else if (id == R.id.nav_contacts) {
             displayFragment(new ContactsFragment());
         } else if (id == R.id.nav_messages) {
-
+            displayFragment(new MessagesFragment());
         } else if (id == R.id.nav_classes) {
             displayFragment(new ClassesFragment());
         } else if (id == R.id.nav_settings) {

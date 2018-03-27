@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/layout_date"
+        android:layout_width="45dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_day_number"
+            style="@style/TextVeryBig"
+            android:layout_gravity="center_horizontal"
+            android:text="24"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/text_day_name"
+            style="@style/InfoTextSmall"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="3dp"
+            android:gravity="center_horizontal"
+            android:text="Mon" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/layout_date">
+
+        <View
+            style="@style/VerticalSeparator"
+            android:layout_height="55dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="57dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:src="@drawable/ic_clock" />
+
+            <TextView
+                android:id="@+id/text_time"
+                style="@style/InfoTextSmall"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="12:30" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:src="@drawable/ic_location" />
+
+            <TextView
+                android:id="@+id/text_location"
+                style="@style/InfoTextSmall"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="school" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_name"
+            style="@style/TextBig"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Christmas Party" />
+
+        <TextView
+            android:id="@+id/text_description"
+            style="@style/TextNormal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Christmas Party for receiving presents" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/icon_edit"
+        style="@style/Icon"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_edit" />
+
+</RelativeLayout>

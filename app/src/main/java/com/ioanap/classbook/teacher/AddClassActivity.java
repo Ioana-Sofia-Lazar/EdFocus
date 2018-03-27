@@ -1,6 +1,7 @@
 package com.ioanap.classbook.teacher;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,18 +12,23 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -46,15 +52,17 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
     private static final int REQUEST_CODE = 1;
 
     // widgets
-    private ImageView mBackButton, mPhoto;
+    private ImageView mPhoto, mDeleteButton;
     private Button mCreateButton;
-    private EditText mNameText, mSchoolText, mDescriptionText;
-    private TextView mAddPhotoText;
+    private EditText mNameText, mSchoolText, mDescriptionText, mTokenText;
+    private TextView mAddPhotoText, mTitleText, mInfoText;
+    private LinearLayout mTokenLayout;
 
     // variables
     private Bitmap mSelectedBitmap;
     private Uri mSelectedUri;
-    private String mClassId;
+    private String mClassId, mOldToken, mOldPhoto;
+    private int mMode = 0; // 0 when creating new class, 1 when editing class
 
     public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -68,18 +76,65 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         setStatusBarGradient(AddClassActivity.this, false);
         setContentView(R.layout.activity_add_class);
 
+        // classId will be null if we are creating a new class or the id of the class that the user is editing
+        mClassId = getIntent().getStringExtra("classId");
+
         // widgets
         mNameText = findViewById(R.id.txt_name);
         mSchoolText = findViewById(R.id.txt_school);
         mDescriptionText = findViewById(R.id.txt_description);
+        mTitleText = findViewById(R.id.text_title);
+        mInfoText = findViewById(R.id.text_info);
+        mTokenText = findViewById(R.id.txt_token);
+        mTokenLayout = findViewById(R.id.layout_token);
         mAddPhotoText = findViewById(R.id.txt_add_photo);
         mPhoto = findViewById(R.id.img_photo);
         mCreateButton = findViewById(R.id.btn_create);
+        mDeleteButton = findViewById(R.id.btn_delete);
+
+        // hide widgets according to mode (create or edit)
+        if (mClassId != null) {
+            // edit mode
+            mMode = 1;
+            mInfoText.setText(R.string.class_token_info);
+            mTitleText.setText("Edit Class");
+            mCreateButton.setText("Save");
+            displayClassInfo();
+        } else {
+            // create mode
+            mTokenLayout.setVisibility(View.GONE);
+            mDeleteButton.setVisibility(View.GONE);
+        }
 
         // listeners
         mAddPhotoText.setOnClickListener(this);
         mCreateButton.setOnClickListener(this);
+        mDeleteButton.setOnClickListener(this);
+    }
 
+    private void displayClassInfo() {
+        // load event info and display it in widgets
+        mClassesRef.child(userID).child(mClassId).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Class aClass = dataSnapshot.getValue(Class.class);
+
+                        mNameText.setText(aClass.getName());
+                        mSchoolText.setText(aClass.getSchool());
+                        mDescriptionText.setText(aClass.getDescription());
+                        mTokenText.setText(aClass.getToken());
+                        UniversalImageLoader.setImage(aClass.getPhoto(), mPhoto, null);
+                        mOldToken = aClass.getToken();
+                        mOldPhoto = aClass.getPhoto();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
     /**
@@ -125,6 +180,32 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         if (view == mCreateButton) {
             saveClass();
         }
+        if (view == mDeleteButton) {
+            // show confirmation dialog
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Are you sure you want to delete this class?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            deleteClassFromDb(mClassId, mOldToken);
+                            dialog.dismiss();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            // create and show alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(true);
+            alertDialog.show();
+        }
     }
 
     private void saveClass() {
@@ -132,9 +213,13 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         String school = mSchoolText.getText().toString();
         String description = mDescriptionText.getText().toString();
 
-        // get id where to put the new class in firebase
-        mClassId = mClassesRef.child(userID).push().getKey();
-        Class aClass = new Class(mClassId, name, school, description, null, null);
+        if (mClassId == null) {
+            // creating new class
+            // get id where to put the new class in firebase
+            mClassId = mClassesRef.child(userID).push().getKey();
+        }
+
+        Class aClass = new Class(mClassId, name, school, description, mOldPhoto, mOldToken);
 
         // save to the database
         mClassesRef.child(userID).child(mClassId).setValue(aClass);
@@ -146,7 +231,29 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
             compressThenUploadPhoto(mSelectedUri);
         }
 
-        generateUniqueCode();
+        if (mMode == 0) {
+            generateUniqueCode();
+        } else {
+            finish();
+        }
+    }
+
+    private void deleteClassFromDb(String classId, String token) {
+        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Map deleteMultiple = new HashMap();
+        // delete class from database
+        deleteMultiple.put("classes/" + currentUser + "/" + classId, null);
+        // delete class courses
+        deleteMultiple.put("classCourses/" + classId, null);
+        // delete class schedule
+        deleteMultiple.put("schedule/" + classId, null);
+        // delete class token
+        deleteMultiple.put("classTokens/" + token, null);
+
+        mRootRef.updateChildren(deleteMultiple);
+
     }
 
     /**
@@ -188,7 +295,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         Intent myIntent = new Intent(getApplicationContext(), ClassTokenActivity.class);
         myIntent.putExtra("token", token);
         myIntent.putExtra("classId", mClassId);
-        getApplicationContext().startActivity(myIntent);
+        startActivity(myIntent);
 
         finish();
     }

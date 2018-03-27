@@ -12,14 +12,12 @@ public class UserAccountSettings {
     private String location;
     private String profilePhoto;
     private String phoneNumber;
-    private int noOfContacts;
-    private int noOfClasses;
 
     public UserAccountSettings() {
-        this("", "", "", "", "", "", "", "", "", "", 0, 0);
+        this("", "", "", "", "", "", "", "", "", "");
     }
 
-    public UserAccountSettings(String id, String email, String userType, String firstName, String lastName, String displayName, String description, String location, String profilePhoto, String phoneNumber, int noOfContacts, int noOfClasses) {
+    public UserAccountSettings(String id, String email, String userType, String firstName, String lastName, String displayName, String description, String location, String profilePhoto, String phoneNumber) {
         this.id = id;
         this.email = email;
         this.userType = userType;
@@ -30,8 +28,6 @@ public class UserAccountSettings {
         this.location = location;
         this.profilePhoto = profilePhoto;
         this.phoneNumber = phoneNumber;
-        this.noOfContacts = noOfContacts;
-        this.noOfClasses = noOfClasses;
     }
 
     public String getId() {
@@ -114,19 +110,4 @@ public class UserAccountSettings {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getNoOfContacts() {
-        return noOfContacts;
-    }
-
-    public void setNoOfContacts(int noOfContacts) {
-        this.noOfContacts = noOfContacts;
-    }
-
-    public int getNoOfClasses() {
-        return noOfClasses;
-    }
-
-    public void setNoOfClasses(int noOfClasses) {
-        this.noOfClasses = noOfClasses;
-    }
 }

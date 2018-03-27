@@ -31,7 +31,7 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawableTint="@color/gray"
                 android:gravity="start|center_vertical"
-                android:hint="Search student"
+                android:hint="Search for student.."
                 android:maxLines="1" />
 
             <android.support.v7.widget.Toolbar

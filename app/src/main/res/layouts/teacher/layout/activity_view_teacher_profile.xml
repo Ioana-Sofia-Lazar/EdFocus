@@ -7,212 +7,331 @@
     android:background="@color/common_google_signin_btn_text_dark_default"
     tools:context="com.ioanap.classbook.teacher.TeacherProfileFragment">
 
-    <android.support.design.widget.AppBarLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-        <!-- Top part (image + profile pic + name + description) -->
-        <RelativeLayout
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="340dp"
-            android:background="@color/common_google_signin_btn_text_dark_default">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/back" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <!-- Top part (image + profile pic + name + description) -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true">
+                android:background="@color/common_google_signin_btn_text_dark_default">
 
-                <com.ioanap.classbook.views.CustomIconBack style="@style/ToolbarIcon" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back" />
 
-            </android.support.v7.widget.Toolbar>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true">
+
+                    <com.ioanap.classbook.views.CustomIconBack style="@style/ToolbarIcon" />
+
+                </android.support.v7.widget.Toolbar>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/toolbar"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_profile_photo"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        app:civ_border_color="@android:color/white"
+                        app:civ_border_width="4dp" />
+
+                    <TextView
+                        android:id="@+id/text_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="User Full Name"
+                        android:textColor="@color/cyan"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_user_type"
+                        style="@style/InfoTextSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Teacher" />
+
+                    <TextView
+                        android:id="@+id/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="This will be the user's description, centered text on multiple rows."
+                        android:textColor="@color/gray" />
+
+                    <!-- Widgets that will be shown/hidden according to the status of users -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp">
+
+                        <!-- Not contacts, no existent request from anyone to anyone -->
+                        <Button
+                            android:id="@+id/button_add_contact"
+                            style="@style/Button"
+                            android:layout_width="150dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="Add contact"
+                            android:visibility="gone" />
+
+                        <!-- Not contacts, current user has sent a contact request to this user -->
+                        <LinearLayout
+                            android:id="@+id/layout_request_sent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/InfoTextSmall"
+                                android:layout_width="match_parent"
+                                android:gravity="center_horizontal"
+                                android:text="You have sent a contact request."
+                                android:textColor="@color/lightGray" />
+
+                            <Button
+                                android:id="@+id/button_cancel_request"
+                                style="@style/ButtonCancel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="Cancel Request"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <!-- Not contacts, user has sent request to current user -->
+                        <LinearLayout
+                            android:id="@+id/layout_request_received"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/InfoTextSmall"
+                                android:layout_width="match_parent"
+                                android:gravity="center_horizontal"
+                                android:text="This user has sent you a contact request."
+                                android:textColor="@color/lightGray" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/button_decline_request"
+                                    style="@style/ButtonCancel"
+                                    android:layout_height="40dp"
+                                    android:text="Decline" />
+
+                                <Button
+                                    android:id="@+id/button_accept_request"
+                                    style="@style/Button"
+                                    android:layout_height="40dp"
+                                    android:text="Accept" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/toolbar"
+                android:background="@color/common_google_signin_btn_text_dark_default"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingBottom="10dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/image_profile_photo"
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    app:civ_border_color="@android:color/white"
-                    app:civ_border_width="4dp" />
-
-                <TextView
-                    android:id="@+id/text_name"
+                <!-- Number of Contacts and Classes -->
+                <GridLayout
+                    android:id="@+id/layout_info_numbers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="User Full Name"
-                    android:textColor="@color/cyan"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:columnCount="3"
+                    android:padding="8dp"
+                    android:rowCount="2"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/text_contacts"
+                        android:layout_column="0"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="0"
+                        android:text="300"
+                        android:textColor="@color/coral"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_column="0"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="1"
+                        android:text="Contacts"
+                        android:textColor="@color/coral"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_column="1"
+                        android:layout_row="0"
+                        android:layout_rowSpan="2"
+                        android:layout_rowWeight="1"
+                        android:background="@color/coral" />
+
+                    <TextView
+                        android:id="@+id/text_classes"
+                        android:layout_column="2"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="0"
+                        android:text="3"
+                        android:textColor="@color/coral"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_column="2"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_row="1"
+                        android:text="Classes"
+                        android:textColor="@color/coral"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </GridLayout>
+
+            </LinearLayout>
+
+            <!-- Additional info -->
+            <LinearLayout
+                android:id="@+id/layout_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        style="@style/IconInline"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_email_envelope" />
+
+                    <TextView
+                        android:id="@+id/text_email"
+                        android:layout_width="278dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="fill_vertical"
+                        android:text="address@something.com"
+                        android:textColor="@color/gray"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        style="@style/IconInline"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_location" />
+
+                    <TextView
+                        android:id="@+id/text_location"
+                        android:layout_width="278dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="fill_vertical"
+                        android:text="Hawaii"
+                        android:textColor="@color/gray"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Private information -->
+            <LinearLayout
+                android:id="@+id/layout_private"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <ImageView
+                    style="@style/Icon"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/ic_lock" />
 
                 <TextView
-                    android:id="@+id/text_user_type"
+                    style="@style/TextBig"
+                    android:layout_width="match_parent"
+                    android:gravity="center_horizontal"
+                    android:text="This information is private"
+                    android:textColor="@color/gray" />
+
+                <TextView
                     style="@style/InfoTextSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Teacher" />
-
-                <Button
-                    android:id="@+id/button_add_contact"
-                    android:layout_width="150dp"
-                    android:layout_height="35dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/cyan"
-                    android:text="Add contact"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:text="This will be the user's description, centered text on multiple rows."
+                    android:layout_width="match_parent"
+                    android:gravity="center_horizontal"
+                    android:text="Add this person as a contact to see additional information."
                     android:textColor="@color/gray" />
 
             </LinearLayout>
 
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/common_google_signin_btn_text_dark_default"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="10dp">
-
-            <!-- Number of Contacts and Classes -->
-            <GridLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:columnCount="3"
-                android:padding="8dp"
-                android:rowCount="2">
-
-                <TextView
-                    android:id="@+id/text_contacts"
-                    android:layout_column="0"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_row="0"
-                    android:text="300"
-                    android:textColor="@color/coral"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_column="0"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_row="1"
-                    android:text="Contacts"
-                    android:textColor="@color/coral"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_column="1"
-                    android:layout_row="0"
-                    android:layout_rowSpan="2"
-                    android:layout_rowWeight="1"
-                    android:background="@color/coral" />
-
-                <TextView
-                    android:id="@+id/text_classes"
-                    android:layout_column="2"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_row="0"
-                    android:text="3"
-                    android:textColor="@color/coral"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_column="2"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_row="1"
-                    android:text="Classes"
-                    android:textColor="@color/coral"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-            </GridLayout>
-
-        </LinearLayout>
-
-        <!-- Additional info -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#EEEEEE"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    style="@style/Icon"
-                    android:src="@drawable/ic_email_envelope" />
-
-                <TextView
-                    android:id="@+id/text_email"
-                    android:layout_width="278dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="fill_vertical"
-                    android:text="address@something.com"
-                    android:textColor="@color/gray"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    style="@style/Icon"
-                    android:src="@drawable/ic_location" />
-
-                <TextView
-                    android:id="@+id/text_location"
-                    android:layout_width="278dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="fill_vertical"
-                    android:text="Hawaii"
-                    android:textColor="@color/gray"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.AppBarLayout>
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

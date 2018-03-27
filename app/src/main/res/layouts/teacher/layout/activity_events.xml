@@ -17,7 +17,10 @@
 
             <TextView
                 style="@style/ActivityTitle"
-                android:text="Your Classes" />
+                android:text="Events" />
+
+            <com.ioanap.classbook.views.CustomIconBack style="@style/ToolbarIcon" />
+
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -28,32 +31,34 @@
         android:layout_below="@+id/toolbar">
 
         <RelativeLayout
-            android:id="@+id/layout_no_classes"
+            android:id="@+id/layout_no_events"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Classes Yet." />
+                android:layout_centerHorizontal="true"
+                android:text="No Events Yet." />
 
         </RelativeLayout>
 
-        <ListView
-            android:id="@+id/list_classes"
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/list_events"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_no_classes"
+            android:layout_below="@+id/layout_no_events"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
             android:divider="@android:color/transparent"
-            android:dividerHeight="6dp"
+            android:dividerHeight="2dp"
             android:scrollbars="none" />
 
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_class"
+        android:id="@+id/fab_add_event"
         style="@style/FabButton"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"

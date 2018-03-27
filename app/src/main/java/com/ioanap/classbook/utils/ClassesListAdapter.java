@@ -71,6 +71,8 @@ public class ClassesListAdapter extends ArrayAdapter<Class> {
         holder.mDescription.setText(aClass.getDescription());
         UniversalImageLoader.setImage(aClass.getPhoto(), holder.mPhoto, null);
 
+        // class wil be deleted from class settings
+        holder.mDelete.setVisibility(View.GONE);
         // delete icon click
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override

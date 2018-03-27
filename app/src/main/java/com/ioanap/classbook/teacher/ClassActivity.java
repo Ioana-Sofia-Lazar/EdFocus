@@ -21,9 +21,10 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
 
     // variables
     private String mClassId;
+    private ValueEventListener mClassInfoListener;
 
     // widgets
-    private CardView mCoursesCard, mScheduleCard, mStudentsCard;
+    private CardView mCoursesCard, mScheduleCard, mStudentsCard, mEventsCard, mSettingsCard;
     private TextView mClassNameText, mSchoolText;
     private ImageView mClassPhoto;
 
@@ -41,6 +42,8 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mCoursesCard = findViewById(R.id.card_courses);
         mScheduleCard = findViewById(R.id.card_schedule);
         mStudentsCard = findViewById(R.id.card_students);
+        mEventsCard = findViewById(R.id.card_events);
+        mSettingsCard = findViewById(R.id.card_settings);
         mClassNameText = findViewById(R.id.txt_class_name);
         mSchoolText = findViewById(R.id.txt_school);
         mClassPhoto = findViewById(R.id.img_class_photo);
@@ -52,13 +55,20 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mCoursesCard.setOnClickListener(this);
         mScheduleCard.setOnClickListener(this);
         mStudentsCard.setOnClickListener(this);
+        mEventsCard.setOnClickListener(this);
+        mSettingsCard.setOnClickListener(this);
     }
 
     private void displayClassInfo() {
-        mClassesRef.child(userID).child(mClassId).addValueEventListener(new ValueEventListener() {
+        mClassInfoListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Class aClass = dataSnapshot.getValue(Class.class);
+
+                if (aClass == null) {
+                    ClassActivity.this.finish();
+                    return;
+                }
 
                 mClassNameText.setText(aClass.getName());
                 mSchoolText.setText(aClass.getSchool());
@@ -69,7 +79,8 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        mClassesRef.child(userID).child(mClassId).addValueEventListener(mClassInfoListener);
     }
 
     @Override
@@ -89,5 +100,21 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
             myIntent.putExtra("classId", mClassId);
             startActivity(myIntent);
         }
+        if (view == mEventsCard) {
+            Intent myIntent = new Intent(getApplicationContext(), EventsActivity.class);
+            myIntent.putExtra("classId", mClassId);
+            startActivity(myIntent);
+        }
+        if (view == mSettingsCard) {
+            Intent myIntent = new Intent(getApplicationContext(), AddClassActivity.class);
+            myIntent.putExtra("classId", mClassId);
+            startActivity(myIntent);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mClassesRef.child(userID).child(mClassId).removeEventListener(mClassInfoListener);
     }
 }

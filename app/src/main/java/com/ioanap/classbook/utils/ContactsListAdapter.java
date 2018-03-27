@@ -13,14 +13,13 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.RequestInfo;
 import com.ioanap.classbook.teacher.ViewTeacherProfileActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Lst adapter for the Recycler View that will contain Contacts and Requests.
@@ -201,9 +200,9 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public ContactViewHolder(View itemView) {
             super(itemView);
 
-            mContactName = (TextView) itemView.findViewById(R.id.text_contact_name);
-            mContactEmail = (TextView) itemView.findViewById(R.id.text_contact_email);
-            mContactProfilePhoto = (ImageView) itemView.findViewById(R.id.image_contact_profile_photo);
+            mContactName = itemView.findViewById(R.id.text_contact_name);
+            mContactEmail = itemView.findViewById(R.id.text_contact_email);
+            mContactProfilePhoto = itemView.findViewById(R.id.image_contact_profile_photo);
         }
 
         public void populate(Contact contact){
@@ -219,7 +218,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public RequestsTitleViewHolder(View itemView) {
             super(itemView);
 
-            mTitle = (TextView) itemView.findViewById(R.id.text_title);
+            mTitle = itemView.findViewById(R.id.text_title);
         }
 
         public void setTitle(String title){
@@ -249,11 +248,11 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public RequestViewHolder(View itemView) {
             super(itemView);
 
-            mRequestName = (TextView) itemView.findViewById(R.id.text_request_name);
-            mRequestText = (TextView) itemView.findViewById(R.id.text_request);
-            mRequestProfilePhoto = (ImageView) itemView.findViewById(R.id.image_request_profile_photo);
-            mConfirmButton = (Button) itemView.findViewById(R.id.btn_confirm_request);
-            mDeclineButton = (Button) itemView.findViewById(R.id.btn_delete_request);
+            mRequestName = itemView.findViewById(R.id.text_request_name);
+            mRequestText = itemView.findViewById(R.id.text_request);
+            mRequestProfilePhoto = itemView.findViewById(R.id.image_request_profile_photo);
+            mConfirmButton = itemView.findViewById(R.id.btn_confirm_request);
+            mDeclineButton = itemView.findViewById(R.id.btn_delete_request);
 
             final String currendUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -261,17 +260,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mConfirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // delete request from database
-                    mRequestsRef.child(currendUserId).child(mRequest.getPersonId()).removeValue();
-
-                    // add each as a contact for the other
-                    Map<String, Object> contact = new HashMap<>();
-                    contact.put(mRequest.getPersonId(), mRequest.getPersonId());
-                    mContactsRef.child(currendUserId).updateChildren(contact);
-
-                    contact = new HashMap<>();
-                    contact.put(currendUserId, currendUserId);
-                    mContactsRef.child(mRequest.getPersonId()).updateChildren(contact);
+                    ((BaseActivity) mContext).confirmContactRequest(mRequest.getPersonId());
                 }
             });
 
@@ -279,9 +268,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mDeclineButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // delete request from database
-                    String currendUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    mRequestsRef.child(currendUserId).child(mRequest.getPersonId()).removeValue();
+                    ((BaseActivity) mContext).declineContactRequest(mRequest.getPersonId());
                 }
             });
         }

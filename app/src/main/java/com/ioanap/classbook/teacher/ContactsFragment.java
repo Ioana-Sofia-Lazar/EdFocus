@@ -59,7 +59,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
         mContactsRef = FirebaseDatabase.getInstance().getReference().child("contacts");
         mRequestsRef = FirebaseDatabase.getInstance().getReference().child("requests");
-        mSettingsRef = FirebaseDatabase.getInstance().getReference().child("user_account_settings");
+        mSettingsRef = FirebaseDatabase.getInstance().getReference().child("userAccountSettings");
     }
 
     /**

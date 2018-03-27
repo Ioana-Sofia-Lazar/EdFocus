@@ -25,6 +25,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="bottom"
                 android:hint="Search people"
+                android:inputType="text"
                 android:maxLines="1" />
 
             <com.ioanap.classbook.views.CustomIconBack

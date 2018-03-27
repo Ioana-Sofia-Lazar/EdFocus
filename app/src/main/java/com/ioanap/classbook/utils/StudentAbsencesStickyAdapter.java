@@ -37,11 +37,9 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implements StickyListHeadersAdapter {
     // StickyListHeadersAdapter needs header id's as long, so map course id to a long value.
     HashMap<String, Long> mHeaderIds;
-    ArrayAdapter<String> mSpinnerAdapter;
     private ArrayList<Absence> mAbsences;
     private Context mContext;
     private int mResource, mHeaderResource;
-    private ArrayList<String> mCourseNames, mCourseIds;
     private String mClassId, mStudentId;
     private DatabaseReference mClassCoursesRef, mStudentAbsencesRef;
 

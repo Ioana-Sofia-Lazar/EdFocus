@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/text_title"
+                style="@style/TextBig"
+                android:text="Add event" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:text="Event name:" />
+
+            <EditText
+                android:id="@+id/text_name"
+                style="@style/FormFieldInput" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:text="Date:" />
+
+            <DatePicker
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:text="Time:" />
+
+            <TimePicker
+                android:id="@+id/time_picker"
+                style="@style/TimePicker" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:text="Event location:" />
+
+            <EditText
+                android:id="@+id/text_location"
+                style="@style/FormFieldInput" />
+
+            <TextView
+                style="@style/FormFieldTitle"
+                android:layout_margin="0dp"
+                android:text="Event description:" />
+
+            <EditText
+                android:id="@+id/text_description"
+                style="@style/FormFieldInput" />
+
+            <TextView
+                android:id="@+id/text_info"
+                style="@style/InfoTextSmall"
+                android:text="@string/add_event_info" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/btn_delete"
+                    style="@style/Button"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_delete"
+                    android:tint="@color/lightGray" />
+
+                <Button
+                    android:id="@+id/btn_create"
+                    style="@style/Button"
+                    android:layout_centerHorizontal="true"
+                    android:text="Add" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/img_cancel"
+        style="@style/Icon"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_x_cancel" />
+
+</RelativeLayout>

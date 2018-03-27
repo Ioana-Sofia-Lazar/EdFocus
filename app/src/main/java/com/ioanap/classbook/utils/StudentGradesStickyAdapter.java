@@ -37,11 +37,9 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements StickyListHeadersAdapter {
     // StickyListHeadersAdapter needs header id's as long, so map course id to a long value.
     HashMap<String, Long> mHeaderIds;
-    ArrayAdapter<String> mSpinnerAdapter;
     private ArrayList<Grade> mGrades;
     private Context mContext;
     private int mResource, mHeaderResource;
-    private ArrayList<String> mCourseNames, mCourseIds;
     private String mClassId, mStudentId;
     private DatabaseReference mClassCoursesRef, mStudentGradesRef;
 
@@ -57,8 +55,6 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
         mStudentId = studentId;
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
-        mCourseNames = new ArrayList<>();
-        mCourseIds = new ArrayList<>();
     }
 
     @NonNull

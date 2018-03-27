@@ -43,7 +43,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
 
     private static final String TAG = "StudentsListAdapter";
 
-    private static String[] daysOfWeek = {"", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    private static String[] DAYS = {"", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
     private ArrayList<Contact> mStudents;
     private Context mContext;
@@ -318,7 +318,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         Date d = new GregorianCalendar(year, month, day).getTime();
         Calendar c = Calendar.getInstance();
         c.setTime(d);
-        String dayOfWeek = daysOfWeek[c.get(Calendar.DAY_OF_WEEK)];
+        String dayOfWeek = DAYS[c.get(Calendar.DAY_OF_WEEK)];
 
         // iterate all courses of this class for this day
         mScheduleRef.child(mClassId).child(dayOfWeek).addListenerForSingleValueEvent(

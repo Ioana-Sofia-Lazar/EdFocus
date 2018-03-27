@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.utils.UniversalImageLoader;
@@ -29,19 +27,17 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     private static final String TAG = "TeacherProfileFragment";
 
     private OnFragmentInteractionListener mListener;
-    private BaseActivity mBaseActivity;
 
-    //widgets
-    private Button mEditProfileButton;
-    private ImageView mProfilePhotoImageView;
+    // widgets
+    private ImageView mProfilePhotoImageView, mEditProfileButton;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
         mEmailTextView, mLocationTextView;
 
-    // firebase
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mRootRef, mSettingsRef;
+    // variables
+    private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef;
     private Context mContext;
+    private String mCurrentUserId;
+    private ValueEventListener mUserSettingsListener;
 
     public TeacherProfileFragment() {
         // Required empty public constructor
@@ -52,14 +48,14 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
         super.onViewCreated(view, savedInstanceState);
 
         // widgets
-        mProfilePhotoImageView = (ImageView) view.findViewById(R.id.image_profile_photo);
-        mEditProfileButton = (Button) view.findViewById(R.id.button_edit_profile);
-        mNameTextView = (TextView) view.findViewById(R.id.text_name);
-        mDescriptionTextView = (TextView) view.findViewById(R.id.text_description);
-        mContactsTextView = (TextView) view.findViewById(R.id.text_contacts);
-        mClassesTextView = (TextView) view.findViewById(R.id.text_classes);
-        mEmailTextView = (TextView) view.findViewById(R.id.text_email);
-        mLocationTextView = (TextView) view.findViewById(R.id.text_location);
+        mProfilePhotoImageView = view.findViewById(R.id.image_profile_photo);
+        mEditProfileButton = view.findViewById(R.id.button_edit_profile);
+        mNameTextView = view.findViewById(R.id.text_name);
+        mDescriptionTextView = view.findViewById(R.id.text_description);
+        mContactsTextView = view.findViewById(R.id.text_contacts);
+        mClassesTextView = view.findViewById(R.id.text_classes);
+        mEmailTextView = view.findViewById(R.id.text_email);
+        mLocationTextView = view.findViewById(R.id.text_location);
 
         mEditProfileButton.setOnClickListener(this);
     }
@@ -68,6 +64,7 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
         mContext = getContext();
         setupFirebase();
 
@@ -76,19 +73,18 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     private void setupFirebase() {
         Log.d(TAG, "setupFirebase");
 
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mRootRef = mFirebaseDatabase.getReference();
-        mSettingsRef = mRootRef.child("user_account_settings").child(mBaseActivity.getCurrentUserId());
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mSettingsRef = mRootRef.child("userAccountSettings");
+        mClassesRef = mRootRef.child("classes");
+        mContactsRef = mRootRef.child("contacts");
+        mCurrentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // add listener for the settings of the currently logged user
-        mSettingsRef.addValueEventListener(new ValueEventListener() {
+        mUserSettingsListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
-                Log.d(TAG, "setupfirebase - datasnapshot : " + dataSnapshot);
-                UserAccountSettings settings = mBaseActivity.getUserAccountSettings(dataSnapshot);
-                Log.d(TAG, "settings from db changed: " + settings);
+                UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
 
                 // setup widgets to display user info from the database
                 setProfileWidgets(settings);
@@ -98,7 +94,9 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+
+        mSettingsRef.child(mCurrentUserId).addValueEventListener(mUserSettingsListener);
 
     }
 
@@ -110,8 +108,33 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     private void setProfileWidgets(UserAccountSettings settings) {
         mNameTextView.setText(settings.getFirstName() + " " + settings.getLastName());
         mDescriptionTextView.setText(settings.getDescription());
-        mContactsTextView.setText(String.valueOf(settings.getNoOfContacts()));
-        mClassesTextView.setText(String.valueOf(settings.getNoOfClasses()));
+
+        // set number of contacts
+        mContactsRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mContactsTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        // set number of classes
+        mClassesRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mClassesTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         mEmailTextView.setText(settings.getEmail());
         mLocationTextView.setText(settings.getLocation());
 
@@ -128,7 +151,6 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mBaseActivity = (BaseActivity) getActivity();
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -145,6 +167,13 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mSettingsRef.child(mCurrentUserId).removeEventListener(mUserSettingsListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSettingsRef.child(mCurrentUserId).removeEventListener(mUserSettingsListener);
     }
 
     @Override

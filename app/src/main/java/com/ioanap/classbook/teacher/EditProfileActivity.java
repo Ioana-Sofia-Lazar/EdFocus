@@ -57,6 +57,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarGradient(EditProfileActivity.this, false);
         setContentView(R.layout.activity_edit_profile);
 
         mContext = EditProfileActivity.this;
@@ -166,7 +167,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
-                UserAccountSettings settings = getUserAccountSettings(dataSnapshot);
+                UserAccountSettings settings = settings = dataSnapshot.getValue(UserAccountSettings.class);
 
                 // setup widgets to display user info from the database
                 setEditProfileWidgets(settings);

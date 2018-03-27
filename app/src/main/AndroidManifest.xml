@@ -63,7 +63,8 @@
         <activity
             android:name=".teacher.StudentsActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".teacher.StudentActivity"></activity>
+        <activity android:name=".teacher.StudentActivity" />
+        <activity android:name=".teacher.EventsActivity"></activity>
     </application>
 
 </manifest>
