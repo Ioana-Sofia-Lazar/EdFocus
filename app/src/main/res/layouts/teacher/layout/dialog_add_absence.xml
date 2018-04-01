@@ -21,7 +21,8 @@
                 android:id="@+id/text_title"
                 style="@style/TextBig"
                 android:layout_gravity="center_horizontal"
-                android:text="Add absence" />
+                android:text="Add absence"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/text_course"
@@ -57,6 +58,7 @@
                 android:text="Authorised Absence" />
 
             <TextView
+                android:id="@+id/text_authorised_info"
                 style="@style/InfoTextSmall"
                 android:text="@string/authorised_absence_info" />
 

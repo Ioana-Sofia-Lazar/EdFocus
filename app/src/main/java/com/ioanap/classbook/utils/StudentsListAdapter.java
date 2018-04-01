@@ -46,7 +46,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
 
     private static final String TAG = "StudentsListAdapter";
 
-    private static String[] DAYS = {"", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    public static String[] DAYS = {"", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
     private ArrayList<Contact> mStudents;
     private Context mContext;
@@ -161,7 +161,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         // change style of the selected items in list view
         convertView
                 .setBackgroundColor(mSelectedItemsIds.get(position) ?
-                        mContext.getResources().getColor(R.color.colorAccent) : Color.TRANSPARENT);
+                        mContext.getResources().getColor(R.color.lightCyan) : Color.TRANSPARENT);
 
         return convertView;
     }
@@ -280,8 +280,8 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 boolean absentAllDay = absentAllDayCB.isChecked();
                 boolean authorised = authorisedCB.isChecked();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
-                        + datePicker.getDayOfMonth();
+                String date = ((BaseActivity) mContext).getDateString(datePicker.getYear(),
+                        datePicker.getMonth() + 1, datePicker.getDayOfMonth());
 
                 // get an array of the absences that need to be inserted
                 List<AbsenceDb> absences = new ArrayList<>();

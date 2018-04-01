@@ -117,7 +117,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         if (hasSelectedItems && mActionMode == null) {
             // an item has just been selected, start the actionMode
             mActionMode = this.startSupportActionMode(new ActionModeCallback
-                    (StudentsActivity.this, mStudentsListAdapter, mStudents));
+                    (StudentsActivity.this, mStudentsListAdapter, mStudents, mClassId));
         } else if (!hasSelectedItems && mActionMode != null) {
             // there are no selected items anymore, exit the action mode
             mActionMode.finish();

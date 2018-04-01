@@ -14,9 +14,15 @@
         <!--  Action mode overlays toolbar -->
         <item name="windowActionModeOverlay">true</item>
         <!--  For Custom Action Mode Background Color/Drawable -->
-        <item name="actionModeBackground">@color/colorAccent</item>
+        <item name="actionModeBackground">@color/lightCyan</item>
+        <item name="android:actionModeStyle">@style/ActionBar</item>
 
         <item name="listPreferredItemHeightSmall">60dp</item>
+    </style>
+
+    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/ActivityTitle</item>
+        <item name="android:actionOverflowButtonStyle">@style/ToolbarIcon</item>
     </style>
 
     <!-- Icons -->
