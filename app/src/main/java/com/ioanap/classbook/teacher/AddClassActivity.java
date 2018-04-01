@@ -114,7 +114,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
     private void displayClassInfo() {
         // load event info and display it in widgets
-        mClassesRef.child(userID).child(mClassId).addListenerForSingleValueEvent(
+        mClassesRef.child(mClassId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -216,13 +216,14 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         if (mClassId == null) {
             // creating new class
             // get id where to put the new class in firebase
-            mClassId = mClassesRef.child(userID).push().getKey();
+            mClassId = mClassesRef.push().getKey();
         }
 
-        Class aClass = new Class(mClassId, name, school, description, mOldPhoto, mOldToken);
+        Class aClass = new Class(mClassId, name, school, description, mOldPhoto, mOldToken, userID);
 
         // save to the database
-        mClassesRef.child(userID).child(mClassId).setValue(aClass);
+        mClassesRef.child(mClassId).setValue(aClass);
+        mUserClassesRef.child(userID).child(mClassId).setValue(mClassId);
 
         // compress and save class photo to database
         if (mSelectedBitmap != null && mSelectedUri == null) {
@@ -238,19 +239,47 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void deleteClassFromDb(String classId, String token) {
+    private void deleteClassFromDb(final String classId, String token) {
         DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        Map deleteMultiple = new HashMap();
-        // delete class from database
-        deleteMultiple.put("classes/" + currentUser + "/" + classId, null);
+        // delete class from all students of the class
+        mClassStudentsRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) { // for each student of the class
+                    // delete from user classes
+                    mUserClassesRef.child(data.getKey()).child(classId).removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        Map<String, Object> deleteMultiple = new HashMap<>();
+        // delete class information
+        deleteMultiple.put("classes/" + classId, null);
+        // delete class from this user (teacher)
+        deleteMultiple.put("userClasses/" + currentUser + "/" + classId, null);
         // delete class courses
         deleteMultiple.put("classCourses/" + classId, null);
         // delete class schedule
         deleteMultiple.put("schedule/" + classId, null);
         // delete class token
         deleteMultiple.put("classTokens/" + token, null);
+        // delete class events
+        deleteMultiple.put("classEvents/" + classId, null);
+        // delete class files
+        deleteMultiple.put("classFiles/" + classId, null);
+        // delete class students
+        deleteMultiple.put("classStudents/" + classId, null);
+        // delete student grades for this class
+        deleteMultiple.put("studentGrades/" + classId, null);
+        // delete student absences for this class
+        deleteMultiple.put("studentAbsences/" + classId, null);
 
         mRootRef.updateChildren(deleteMultiple);
 
@@ -276,7 +305,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
                     mClassTokensRef.updateChildren(node);
 
                     // add to classes ref
-                    mClassesRef.child(userID).child(mClassId).child("token").setValue(token);
+                    mClassesRef.child(mClassId).child("token").setValue(token);
 
                     redirectToActivity(token);
                 }
@@ -342,7 +371,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
                 Uri firebaseUri = taskSnapshot.getDownloadUrl();
 
                 // save image url to firebase database
-                mClassesRef.child(userID).child(mClassId).child("photo").setValue(firebaseUri.toString());
+                mClassesRef.child(mClassId).child("photo").setValue(firebaseUri.toString());
 
             }
         }).addOnFailureListener(new OnFailureListener() {

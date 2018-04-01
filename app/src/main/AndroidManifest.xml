@@ -54,17 +54,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".teacher.SearchActivity" />
-        <activity android:name=".teacher.ViewTeacherProfileActivity" />
+        <activity android:name=".shared.ViewProfileActivity" />
         <activity android:name=".teacher.ClassActivity" />
         <activity android:name=".teacher.AddClassActivity" />
         <activity android:name=".teacher.ClassTokenActivity" />
         <activity android:name=".teacher.CoursesActivity" />
+        <activity android:name=".teacher.FilesActivity" />
         <activity android:name=".teacher.ScheduleActivity" />
         <activity
             android:name=".teacher.StudentsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".teacher.StudentActivity" />
-        <activity android:name=".teacher.EventsActivity"></activity>
+        <activity android:name=".teacher.EventsActivity" />
+        <activity android:name=".teacher.AddMultipleGradesActivity"></activity>
     </application>
 
 </manifest>

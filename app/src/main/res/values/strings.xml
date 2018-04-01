@@ -39,4 +39,9 @@
     <!-- Events -->
     <string name="add_event_info">Students will receive notifications when the event is created and 2 hours before the event.</string>
 
+    <!-- No Courses -->
+    <string name="schedule_no_courses_error">Before adding Courses to the Schedule, you need to create at least one Course from the Courses Page.</string>
+    <string name="grades_no_courses_error">Before adding Grades for Students, you need to create at least one Course from the Courses Page.</string>
+    <string name="default_no_courses_error">You need to create at least one Course in the Courses Page before being able to perform this action.</string>
+
 </resources>

@@ -11,13 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.RequestInfo;
-import com.ioanap.classbook.teacher.ViewTeacherProfileActivity;
+import com.ioanap.classbook.shared.ViewProfileActivity;
 
 import java.util.ArrayList;
 
@@ -33,8 +31,6 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     final int VIEW_TYPE_NO_CONTACTS = 3;
     final int VIEW_TYPE_NO_REQUESTS = 4;
 
-    private DatabaseReference mRequestsRef, mContactsRef;
-
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<RequestInfo> mRequests = new ArrayList<>();
     private Context mContext;
@@ -48,8 +44,6 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        mRequestsRef = FirebaseDatabase.getInstance().getReference().child("requests");
-        mContactsRef = FirebaseDatabase.getInstance().getReference().child("contacts");
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout and return a new holder instance
@@ -188,7 +182,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void showProfile(String tappedUserId) {
         // display tapped person's profile
-        Intent myIntent = new Intent(mContext, ViewTeacherProfileActivity.class);
+        Intent myIntent = new Intent(mContext, ViewProfileActivity.class);
         myIntent.putExtra("userId", tappedUserId);
         mContext.startActivity(myIntent);
     }

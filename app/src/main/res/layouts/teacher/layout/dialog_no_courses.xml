@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+
+    <ImageView
+        android:id="@+id/img_cancel"
+        style="@style/Icon"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_x_cancel" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingTop="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                style="@style/Icon"
+                android:layout_toStartOf="@+id/text_title"
+                android:src="@drawable/ic_error"
+                android:tint="@color/errorRed" />
+
+            <TextView
+                android:id="@+id/text_title"
+                style="@style/TextBig"
+                android:layout_centerHorizontal="true"
+                android:text="No Courses"
+                android:textColor="@color/errorRed" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_message"
+            style="@style/FormFieldTitle"
+            android:layout_margin="10dp"
+            android:text="@string/default_no_courses_error"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/btn_manage_courses"
+            style="@style/Button"
+            android:text="Manage Courses" />
+    </LinearLayout>
+
+</RelativeLayout>

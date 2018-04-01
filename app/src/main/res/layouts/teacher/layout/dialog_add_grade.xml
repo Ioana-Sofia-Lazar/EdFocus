@@ -35,7 +35,6 @@
             <TextView
                 style="@style/FormFieldTitle"
                 android:layout_margin="0dp"
-                android:gravity="center_horizontal"
                 android:text="Grade:" />
 
             <EditText
@@ -46,7 +45,6 @@
             <TextView
                 style="@style/FormFieldTitle"
                 android:layout_margin="0dp"
-                android:gravity="center_horizontal"
                 android:text="Date:" />
 
             <DatePicker
@@ -59,7 +57,6 @@
             <TextView
                 style="@style/FormFieldTitle"
                 android:layout_margin="0dp"
-                android:gravity="center_horizontal"
                 android:text="Grade name:" />
 
             <EditText
@@ -70,7 +67,6 @@
             <TextView
                 style="@style/FormFieldTitle"
                 android:layout_margin="0dp"
-                android:gravity="center_horizontal"
                 android:text="Description/notes:" />
 
             <EditText

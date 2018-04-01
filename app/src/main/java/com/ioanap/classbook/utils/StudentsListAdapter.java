@@ -2,6 +2,7 @@ package com.ioanap.classbook.utils;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,12 +26,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.AbsenceDb;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.Course;
 import com.ioanap.classbook.model.GradeDb;
 import com.ioanap.classbook.model.ScheduleEntry;
+import com.ioanap.classbook.shared.ViewProfileActivity;
 import com.ioanap.classbook.teacher.StudentsActivity;
 
 import java.util.ArrayList;
@@ -186,7 +189,10 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 showAddAbsenceDialog();
                 return true;
             case R.id.option_view_profile:
-                //todo
+                // redirect to student profile
+                Intent intent = new Intent(mContext, ViewProfileActivity.class);
+                intent.putExtra("userId", getItem(mClickedPosition).getId());
+                mContext.startActivity(intent);
                 return true;
             case R.id.option_remove:
                 ((StudentsActivity) mContext).removeStudentFromClass(getItem(mClickedPosition).getId(), mClassId);
@@ -225,8 +231,8 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 String description = descriptionText.getText().toString();
                 String name = nameText.getText().toString();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
-                        + datePicker.getDayOfMonth();
+                String date = ((BaseActivity) mContext).getDateString(datePicker.getYear(),
+                        datePicker.getMonth() + 1, datePicker.getDayOfMonth());
 
                 // get id where to put the new grade in firebase
                 String gradeId = mStudentGradesRef.child(mClassId).child(studentId).push().getKey();

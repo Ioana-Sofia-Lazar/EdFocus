@@ -18,6 +18,7 @@ import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Person;
 import com.ioanap.classbook.model.UserAccountSettings;
+import com.ioanap.classbook.shared.ViewProfileActivity;
 import com.ioanap.classbook.utils.PeopleListAdapter;
 
 import java.util.ArrayList;
@@ -116,7 +117,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 String tappedUserId = mPeople.get(position).getId();
 
                 // display tapped person's profile
-                Intent myIntent = new Intent(getApplicationContext(), ViewTeacherProfileActivity.class);
+                Intent myIntent = new Intent(getApplicationContext(), ViewProfileActivity.class);
                 myIntent.putExtra("userId", tappedUserId);
                 startActivity(myIntent);
             }

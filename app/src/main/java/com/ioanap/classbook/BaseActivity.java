@@ -76,7 +76,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
-            mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef, mClassEventsRef;
+            mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
+            mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef;
     protected String userID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -129,11 +130,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mContactsRef = mRootRef.child("contacts");
         mRequestsRef = mRootRef.child("requests");
         mClassesRef = mRootRef.child("classes");
+        mUserClassesRef = mRootRef.child("userClasses");
         mClassTokensRef = mRootRef.child("classTokens");
         mClassCoursesRef = mRootRef.child("classCourses");
         mClassStudentsRef = mRootRef.child("classStudents");
         mStudentClassesRef = mRootRef.child("studentClasses");
         mClassEventsRef = mRootRef.child("classEvents");
+        mStudentGradesRef = mRootRef.child("studentGrades");
+        mStudentAbsencesRef = mRootRef.child("studentAbsences");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -747,6 +751,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         // remove from studentGrades
         removeMap.put("/studentAbsences/" + classId + "/" + studentId + "/", null);
 
+        // remove from userClasses
+        removeMap.put("/userClasses/" + studentId + "/" + classId + "/", null);
+
         mRootRef.updateChildren(removeMap);
 
     }
@@ -781,6 +788,24 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         Map<String, Object> remove = new HashMap<>();
         remove.put(userID, null);
         mRequestsRef.child(userId).updateChildren(remove);
+    }
+
+    /**
+     * If year is 2018, month is 3, day is 21 returns 2018-03-21
+     */
+    public String getDateString(int year, int month, int day) {
+        String date = "";
+        date += year + "-";
+
+        if (month < 10) date += "0" + month;
+        else date += month;
+
+        date += "-";
+
+        if (day < 10) date += "0" + day;
+        else date += day;
+
+        return date;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
-public class ViewTeacherProfileActivity extends BaseActivity implements View.OnClickListener {
+public class ViewProfileActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "ViewTeacherProfileFragm";
 
@@ -35,7 +35,7 @@ public class ViewTeacherProfileActivity extends BaseActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatusBarGradient(ViewTeacherProfileActivity.this, false);
+        setStatusBarGradient(ViewProfileActivity.this, false);
         setContentView(R.layout.activity_view_teacher_profile);
 
         // get user whose profile was tapped

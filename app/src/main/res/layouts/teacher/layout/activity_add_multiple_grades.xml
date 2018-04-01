@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pureWhite"
+    tools:context="com.ioanap.classbook.teacher.EditProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Toolbar"
+        tools:layout_editor_absoluteY="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ioanap.classbook.views.CustomIconBack style="@style/ToolbarIcon" />
+
+            <ImageView
+                android:id="@+id/img_save"
+                style="@style/ToolbarIcon"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_check" />
+
+            <TextView
+                style="@style/ActivityTitle"
+                android:text="Add Grades" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_course"
+                    style="@style/FormFieldTitle"
+                    android:text="Choose a course:" />
+
+                <Spinner
+                    android:id="@+id/spinner_courses"
+                    style="@style/Spinner" />
+
+                <TextView
+                    style="@style/FormFieldTitle"
+                    android:layout_margin="0dp"
+                    android:text="Date:" />
+
+                <DatePicker
+                    android:id="@+id/date_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner" />
+
+                <TextView
+                    style="@style/FormFieldTitle"
+                    android:layout_margin="0dp"
+                    android:text="Grade name:" />
+
+                <EditText
+                    android:id="@+id/text_name"
+                    style="@style/FormFieldInput"
+                    android:hint="E.g Homework or Test" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_grades"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:divider="@color/lightGray"
+                android:dividerHeight="1dp"
+                android:scrollbars="none" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

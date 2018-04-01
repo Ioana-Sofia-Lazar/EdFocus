@@ -1,5 +1,6 @@
 package com.ioanap.classbook.teacher;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -24,7 +25,7 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
     private ValueEventListener mClassInfoListener;
 
     // widgets
-    private CardView mCoursesCard, mScheduleCard, mStudentsCard, mEventsCard, mSettingsCard;
+    private CardView mCoursesCard, mScheduleCard, mStudentsCard, mEventsCard, mSettingsCard, mFilesCard;
     private TextView mClassNameText, mSchoolText;
     private ImageView mClassPhoto;
 
@@ -44,7 +45,8 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mStudentsCard = findViewById(R.id.card_students);
         mEventsCard = findViewById(R.id.card_events);
         mSettingsCard = findViewById(R.id.card_settings);
-        mClassNameText = findViewById(R.id.txt_class_name);
+        mFilesCard = findViewById(R.id.card_files);
+        mClassNameText = findViewById(R.id.text_class_name);
         mSchoolText = findViewById(R.id.txt_school);
         mClassPhoto = findViewById(R.id.img_class_photo);
 
@@ -57,6 +59,8 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mStudentsCard.setOnClickListener(this);
         mEventsCard.setOnClickListener(this);
         mSettingsCard.setOnClickListener(this);
+        mFilesCard.setOnClickListener(this);
+        mClassNameText.setOnClickListener(this);
     }
 
     private void displayClassInfo() {
@@ -80,7 +84,7 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
 
             }
         };
-        mClassesRef.child(userID).child(mClassId).addValueEventListener(mClassInfoListener);
+        mClassesRef.child(mClassId).addValueEventListener(mClassInfoListener);
     }
 
     @Override
@@ -110,11 +114,58 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
             myIntent.putExtra("classId", mClassId);
             startActivity(myIntent);
         }
+        if (view == mFilesCard) {
+            Intent myIntent = new Intent(getApplicationContext(), FilesActivity.class);
+            myIntent.putExtra("classId", mClassId);
+            startActivity(myIntent);
+        }
+        if (view == mClassNameText) {
+            showInfoDialog();
+        }
+    }
+
+    private void showInfoDialog() {
+        final Dialog dialog = new Dialog(ClassActivity.this);
+        dialog.setContentView(R.layout.dialog_class_info);
+
+        // dialog widgets
+        ImageView mTeacherPhoto = dialog.findViewById(R.id.img_teacher_photo);
+        final ImageView mClassPhoto = dialog.findViewById(R.id.img_class_photo);
+        final TextView mClassName = dialog.findViewById(R.id.text_class_name);
+        final TextView mSchool = dialog.findViewById(R.id.text_school);
+        TextView mTeacherName = dialog.findViewById(R.id.text_teacher_name);
+        final TextView mDescription = dialog.findViewById(R.id.text_description);
+        final TextView mToken = dialog.findViewById(R.id.text_token);
+
+        mClassesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Class aClass = dataSnapshot.getValue(Class.class);
+
+                mClassName.setText(aClass.getName());
+                mSchool.setText(aClass.getSchool());
+                mDescription.setText(aClass.getDescription());
+                mToken.setText(aClass.getToken());
+                UniversalImageLoader.setImage(aClass.getPhoto(), mClassPhoto, null);
+
+                // todo get teacher info
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        // todo click on teacher's name redirects to his profile
+
+        dialog.show();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mClassesRef.child(userID).child(mClassId).removeEventListener(mClassInfoListener);
+        mClassesRef.child(mClassId).removeEventListener(mClassInfoListener);
     }
 }

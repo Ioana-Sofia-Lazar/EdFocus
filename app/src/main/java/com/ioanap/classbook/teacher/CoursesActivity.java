@@ -82,10 +82,12 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Course course = data.getValue(Course.class);
                         mCourses.add(course);
-
-                        mCoursesListAdapter.notifyDataSetChanged();
                     }
+                } else {
+                    mNoCoursesLayout.setVisibility(View.VISIBLE);
                 }
+
+                mCoursesListAdapter.notifyDataSetChanged();
 
             }
 

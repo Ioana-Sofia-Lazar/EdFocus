@@ -24,6 +24,7 @@ import com.ioanap.classbook.model.Course;
 import com.ioanap.classbook.model.ScheduleEntry;
 import com.ioanap.classbook.model.ScheduleEntryAndCourse;
 import com.ioanap.classbook.utils.ScheduleListAdapter;
+import com.ioanap.classbook.views.NoCoursesDialog;
 
 import java.util.ArrayList;
 
@@ -109,7 +110,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
                         final ScheduleEntry entry = data.getValue(ScheduleEntry.class);
 
                         // retrieve course info
-                        mClassCoursesRef.child(mClassId).child(entry.getCourseId()).addValueEventListener(new ValueEventListener() {
+                        mClassCoursesRef.child(mClassId).child(entry.getCourseId()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Course course = dataSnapshot.getValue(Course.class);
@@ -123,9 +124,12 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
 
                             }
                         });
-
                     }
+                } else {
+                    mNoCoursesLayout.setVisibility(View.VISIBLE);
                 }
+
+                mScheduleListAdapter.notifyDataSetChanged();
 
             }
 
@@ -157,8 +161,8 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 // get info introduced by user
-                String startsAt = startTimePicker.getCurrentHour() + ":" + startTimePicker.getCurrentMinute();
-                String endsAt = endTimePicker.getCurrentHour() + ":" + endTimePicker.getCurrentMinute();
+                String startsAt = getTimeString(startTimePicker.getCurrentHour(), startTimePicker.getCurrentMinute());
+                String endsAt = getTimeString(endTimePicker.getCurrentHour(), endTimePicker.getCurrentMinute());
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
 
                 // get id where to put the new entry for schedule in firebase
@@ -182,6 +186,23 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
 
         dialog.show();
 
+    }
+
+    /**
+     * If hour is 2 and minute 21 returns "02:21"
+     */
+    private String getTimeString(int hour, int minute) {
+        String time = "";
+
+        if (hour < 10) time += "0" + hour;
+        else time += hour;
+
+        time += ":";
+
+        if (minute < 10) time += "0" + minute;
+        else time += minute;
+
+        return time;
     }
 
     /**
@@ -223,7 +244,6 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
                         dataAdapter.notifyDataSetChanged();
                     }
                 }
-
             }
 
             @Override
@@ -236,7 +256,23 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         if (view == mAddCourseButton) {
-            showAddDialog();
+            // if there are no courses for this class show error
+            // otherwise show dialog to add a course to the schedule
+            mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getChildrenCount() == 0) {
+                        NoCoursesDialog dialog = new NoCoursesDialog((ScheduleActivity) getContext(),
+                                mClassId, R.string.schedule_no_courses_error);
+                        dialog.show();
+                    } else showAddDialog();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 }

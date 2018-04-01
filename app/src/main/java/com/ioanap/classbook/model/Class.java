@@ -11,17 +11,28 @@ public class Class {
     private String description;
     private String photo;
     private String token;
+    private String teacherId;
 
     public Class() {
     }
 
-    public Class(String id, String name, String school, String description, String photo, String token) {
+    public Class(String id, String name, String school, String description, String photo, String token, String teacherId) {
         this.id = id;
         this.name = name;
         this.school = school;
         this.description = description;
         this.photo = photo;
         this.token = token;
+        this.teacherId = teacherId;
+
+    }
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
     }
 
     public String getToken() {

@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,14 +40,15 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout mNoClassesLayout;
     private FloatingActionButton mAddClassFab;
 
-    // db reference
-    private DatabaseReference mClassesRef;
+    // db references
+    private DatabaseReference mClassesRef, mUserClassesRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mClassesRef = FirebaseDatabase.getInstance().getReference().child("classes");
+        mUserClassesRef = FirebaseDatabase.getInstance().getReference().child("userClasses");
     }
 
     @Nullable
@@ -64,9 +64,9 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
         mClasses = new ArrayList<>();
 
         // widgets
-        mClassesListView = (ListView) view.findViewById(R.id.list_classes);
-        mNoClassesLayout = (RelativeLayout) view.findViewById(R.id.layout_no_classes);
-        mAddClassFab = (FloatingActionButton) view.findViewById(R.id.fab_add_class);
+        mClassesListView = view.findViewById(R.id.list_classes);
+        mNoClassesLayout = view.findViewById(R.id.layout_no_classes);
+        mAddClassFab = view.findViewById(R.id.fab_add_class);
 
         mClassesListAdapter = new ClassesListAdapter(getContext(), R.layout.row_class, mClasses);
         mClassesListView.setAdapter(mClassesListAdapter);
@@ -89,9 +89,9 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
     }
 
     private void displayClasses() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        mClassesRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        mUserClassesRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mClasses.clear();
@@ -99,14 +99,27 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
                 if (dataSnapshot.getChildrenCount() > 0) {
                     mNoClassesLayout.setVisibility(View.GONE);
 
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        Class aClass = data.getValue(Class.class);
-                        mClasses.add(aClass);
+                    for (DataSnapshot data : dataSnapshot.getChildren()) { // each class of this user
+                        String classId = data.getKey();
 
-                        mClassesListAdapter.notifyDataSetChanged();
+                        mClassesRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Class aClass = dataSnapshot.getValue(Class.class);
+                                mClasses.add(aClass);
+
+                                mClassesListAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+
+                        });
+
                     }
                 }
-
             }
 
             @Override

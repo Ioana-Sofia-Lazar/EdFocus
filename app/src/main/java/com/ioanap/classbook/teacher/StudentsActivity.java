@@ -189,7 +189,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void showStudentData(final String id) {
-        mSettingsRef.child(id).addValueEventListener(new ValueEventListener() {
+        mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
@@ -210,6 +210,25 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
 
             }
         });
+    }
+
+    public ArrayList<String> getSelectedItemsIdsStrings() {
+        SparseBooleanArray selected = mStudentsListAdapter.getSelectedItemsIds();
+        ArrayList<String> selectedIds = new ArrayList<>();
+
+        // loop all ids
+        for (int i = (selected.size() - 1); i >= 0; i--) {
+            if (selected.valueAt(i)) {
+                // if current id is selected add student id to list
+                selectedIds.add(mStudents.get(selected.keyAt(i)).getId());
+            }
+        }
+
+        return selectedIds;
+    }
+
+    public String getClassId() {
+        return mClassId;
     }
 
     @Override

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|center_horizontal">
+
+            <ImageView
+                android:id="@+id/img_class_photo"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:alpha="0.3"
+                android:scaleType="centerCrop"
+                android:src="@drawable/photo_placeholder" />
+
+            <TextView
+                android:id="@+id/text_class_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="45dp"
+                android:text="Class Name"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/text_school"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_class_name"
+                android:layout_centerHorizontal="true"
+                android:text="School Name"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <TextView
+            style="@style/InfoTextSmall"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:text="Main Teacher"
+            android:textColor="@color/lightGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_teacher_photo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/profile_photo_placeholder" />
+
+            <TextView
+                android:id="@+id/text_teacher_name"
+                style="@style/TextBig"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_margin="4dp"
+                android:text="Mr Teacher" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/InfoTextSmall"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:text="Description"
+            android:textColor="@color/lightGray" />
+
+        <TextView
+            android:id="@+id/text_description"
+            style="@style/TextNormal"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Very very long description about this very very interesting class" />
+
+        <TextView
+            style="@style/InfoTextSmall"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:text="Token"
+            android:textColor="@color/lightGray" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/text_token"
+                style="@style/FormFieldInput"
+                android:focusable="false"
+                android:text="ABCDEF" />
+
+            <ImageView
+                android:id="@+id/img_copy_icon"
+                style="@style/Icon"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_copy" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

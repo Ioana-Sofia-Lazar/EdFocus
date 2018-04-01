@@ -47,19 +47,11 @@
                 android:id="@+id/txt_description"
                 style="@style/InfoTextSmall"
                 android:layout_marginTop="8dp"
-                android:maxLines="3"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="Description" />
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/img_delete"
-            style="@style/Icon"
-            android:layout_alignBottom="@+id/layout_info"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:tint="@color/lightGray"
-            app:srcCompat="@drawable/ic_delete" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

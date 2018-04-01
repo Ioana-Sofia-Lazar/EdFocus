@@ -2,6 +2,7 @@ package com.ioanap.classbook.teacher;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,7 +12,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -179,6 +182,39 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             }
         });
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // when pressing back button show dialog to confirm exiting without saving
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditProfileActivity.this);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("You are about to go back without saving the changes.")
+                    .setCancelable(true)
+                    .setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            finish();
+                        }
+                    });
+
+            // create and show alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(true);
+            alertDialog.show();
+
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
