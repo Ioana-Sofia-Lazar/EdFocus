@@ -40,11 +40,12 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
     private ArrayList<Grade> mGrades;
     private Context mContext;
     private int mResource, mHeaderResource;
-    private String mClassId, mStudentId;
+    private String mClassId, mStudentId, mUserType;
     private DatabaseReference mClassCoursesRef, mStudentGradesRef;
 
     public StudentGradesStickyAdapter(Context context, int resource, int headerResource, ArrayList<Grade> objects,
-                                      HashMap<String, Long> headerIds, String classId, String studentId) {
+                                      HashMap<String, Long> headerIds, String classId, String studentId,
+                                      String userType) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
@@ -53,6 +54,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
         mHeaderIds = headerIds;
         mClassId = classId;
         mStudentId = studentId;
+        mUserType = userType;
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
     }
@@ -78,6 +80,8 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
         } else {
             holder = (StudentGradesStickyAdapter.ViewHolder) convertView.getTag();
         }
+
+        if (mUserType.equals("teacher")) holder.mEditIcon.setVisibility(View.VISIBLE);
 
         holder.mNameText.setText(grade.getName());
         holder.mDateText.setText(grade.getDate());

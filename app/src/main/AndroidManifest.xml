@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".parent.ParentProfileActivity" />
-        <activity android:name=".child.ChildProfileActivity" />
+        <activity android:name=".student.ChildProfileActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".shared.DrawerActivity"
@@ -56,6 +56,7 @@
         <activity android:name=".teacher.SearchActivity" />
         <activity android:name=".shared.ViewProfileActivity" />
         <activity android:name=".teacher.ClassActivity" />
+        <activity android:name=".student.ClassActivity_s" />
         <activity android:name=".teacher.AddClassActivity" />
         <activity android:name=".teacher.ClassTokenActivity" />
         <activity android:name=".shared.CoursesActivity" />

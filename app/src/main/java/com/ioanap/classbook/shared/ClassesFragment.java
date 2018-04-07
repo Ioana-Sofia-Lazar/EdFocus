@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Class;
+import com.ioanap.classbook.student.ClassActivity_s;
 import com.ioanap.classbook.teacher.AddClassActivity;
 import com.ioanap.classbook.teacher.ClassActivity;
 import com.ioanap.classbook.utils.ClassesListAdapter;
@@ -52,7 +53,7 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
     private String mUserType, mUserId;
 
     // db references
-    private DatabaseReference mClassesRef, mUserClassesRef, mClassTokensRef;
+    private DatabaseReference mClassesRef, mUserClassesRef, mClassTokensRef, mClassStudentsRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
         mClassesRef = FirebaseDatabase.getInstance().getReference().child("classes");
         mUserClassesRef = FirebaseDatabase.getInstance().getReference().child("userClasses");
         mClassTokensRef = FirebaseDatabase.getInstance().getReference().child("classTokens");
+        mClassStudentsRef = FirebaseDatabase.getInstance().getReference().child("classStudents");
 
         mUserType = ((DrawerActivity) getContext()).getCurrentUserType();
         mUserId = ((DrawerActivity) getContext()).getCurrentUserId();
@@ -105,7 +107,12 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
                 // go to page of class that was tapped
                 String classId = mClasses.get(position).getId();
 
-                Intent myIntent = new Intent(getContext(), ClassActivity.class);
+                // according to user type
+                String userType = ((DrawerActivity) getContext()).getCurrentUserType();
+                Intent myIntent = new Intent(getContext(), ClassActivity_s.class);
+                if (userType.equals("teacher"))
+                    myIntent = new Intent(getContext(), ClassActivity.class);
+
                 myIntent.putExtra("classId", classId);
                 startActivity(myIntent);
             }
@@ -185,9 +192,15 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
                             String classId = dataSnapshot.child("classId").getValue().toString();
 
                             // enroll student to class
+                            // add to userClasses
                             Map<String, Object> node = new HashMap<>();
                             node.put(classId, classId);
                             mUserClassesRef.child(mUserId).updateChildren(node);
+
+                            // add to classStudents
+                            node = new HashMap<>();
+                            node.put(mUserId, mUserId);
+                            mClassStudentsRef.child(classId).updateChildren(node);
 
                             dialog.dismiss();
 

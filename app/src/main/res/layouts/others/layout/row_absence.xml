@@ -27,6 +27,7 @@
         style="@style/Icon"
         android:layout_width="wrap_content"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_edit" />
+        android:src="@drawable/ic_edit"
+        android:visibility="gone" />
 
 </RelativeLayout>

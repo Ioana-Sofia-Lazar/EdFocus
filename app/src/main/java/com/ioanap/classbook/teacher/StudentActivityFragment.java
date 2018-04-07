@@ -80,18 +80,20 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
         mAbsences = new ArrayList<>();
         mHeaderIds = new HashMap<>();
 
+        String userType = ((StudentActivity) getContext()).getCurrentUserType();
+
         if (mPageIndex == 0) {
             // display grades
             StickyListHeadersListView stickyList = view.findViewById(R.id.list_grades);
-            mGradesAdapter = new StudentGradesStickyAdapter(getContext(),
-                    R.layout.row_grade, R.layout.row_header, mGrades, mHeaderIds, mClassId, mStudentId);
+            mGradesAdapter = new StudentGradesStickyAdapter(getContext(), R.layout.row_grade,
+                    R.layout.row_header, mGrades, mHeaderIds, mClassId, mStudentId, userType);
             stickyList.setAdapter(mGradesAdapter);
             getGrades();
         } else {
             // display absences
             StickyListHeadersListView stickyList = view.findViewById(R.id.list_grades);
-            mAbsencesAdapter = new StudentAbsencesStickyAdapter(getContext(),
-                    R.layout.row_absence, R.layout.row_header, mAbsences, mHeaderIds, mClassId, mStudentId);
+            mAbsencesAdapter = new StudentAbsencesStickyAdapter(getContext(), R.layout.row_absence,
+                    R.layout.row_header, mAbsences, mHeaderIds, mClassId, mStudentId, userType);
             stickyList.setAdapter(mAbsencesAdapter);
             getAbsences();
         }

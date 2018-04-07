@@ -40,11 +40,12 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
     private ArrayList<Absence> mAbsences;
     private Context mContext;
     private int mResource, mHeaderResource;
-    private String mClassId, mStudentId;
+    private String mClassId, mStudentId, mUserType;
     private DatabaseReference mClassCoursesRef, mStudentAbsencesRef;
 
     public StudentAbsencesStickyAdapter(Context context, int resource, int headerResource, ArrayList<Absence> objects,
-                                        HashMap<String, Long> headerIds, String classId, String studentId) {
+                                        HashMap<String, Long> headerIds, String classId, String studentId,
+                                        String userType) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
@@ -53,6 +54,7 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
         mHeaderIds = headerIds;
         mClassId = classId;
         mStudentId = studentId;
+        mUserType = userType;
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mStudentAbsencesRef = FirebaseDatabase.getInstance().getReference().child("studentAbsences");
     }
@@ -76,6 +78,8 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
         } else {
             holder = (StudentAbsencesStickyAdapter.ViewHolder) convertView.getTag();
         }
+
+        if (mUserType.equals("teacher")) holder.mEditIcon.setVisibility(View.VISIBLE);
 
         holder.mDateText.setText(absence.getDate());
         if (absence.isAuthorised()) {

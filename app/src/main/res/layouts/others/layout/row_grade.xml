@@ -58,7 +58,8 @@
             android:id="@+id/icon_edit"
             style="@style/Icon"
             android:layout_gravity="end"
-            android:src="@drawable/ic_edit" />
+            android:src="@drawable/ic_edit"
+            android:visibility="gone" />
 
     </LinearLayout>
 
