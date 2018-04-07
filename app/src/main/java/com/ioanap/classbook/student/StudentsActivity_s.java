@@ -3,15 +3,12 @@ package com.ioanap.classbook.student;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.view.ActionMode;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,9 +17,8 @@ import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.teacher.StudentActivity;
-import com.ioanap.classbook.utils.ActionModeCallback;
-import com.ioanap.classbook.utils.StudentsListAdapter;
+import com.ioanap.classbook.shared.ViewProfileActivity;
+import com.ioanap.classbook.utils.StudentsListAdapter_s;
 
 import java.util.ArrayList;
 
@@ -35,9 +31,8 @@ public class StudentsActivity_s extends BaseActivity implements View.OnClickList
 
     // variables
     private ArrayList<Contact> mStudents;
-    private StudentsListAdapter mStudentsListAdapter;
+    private StudentsListAdapter_s mStudentsListAdapter;
     private String mClassId;
-    private ActionMode mActionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +50,13 @@ public class StudentsActivity_s extends BaseActivity implements View.OnClickList
         mSearchEditText = findViewById(R.id.text_search);
         mAddStudentFab = findViewById(R.id.fab_add_student);
 
-        mStudentsListAdapter = new StudentsListAdapter(StudentsActivity_s.this,
-                R.layout.row_student, mStudents, mClassId);
+        mStudentsListAdapter = new StudentsListAdapter_s(StudentsActivity_s.this,
+                R.layout.row_student_s, mStudents, mClassId);
         mStudentsRecycler.setAdapter(mStudentsListAdapter);
 
-        setupListeners();
-
         displayStudents();
+
+        setupListeners();
     }
 
     public void setupListeners() {
@@ -86,73 +81,12 @@ public class StudentsActivity_s extends BaseActivity implements View.OnClickList
         mStudentsRecycler.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // clicking item in select mode
-                if (mActionMode != null) {
-                    onListItemSelect(position);
-                } else {
-                    // not in selection action mode, so redirect to student activity
-                    Intent myIntent = new Intent(StudentsActivity_s.this, StudentActivity.class);
-                    myIntent.putExtra("studentId", mStudents.get(position).getId());
-                    myIntent.putExtra("classId", mClassId);
-                    startActivity(myIntent);
-                }
+                // clicking a student row redirects to his profile
+                Intent myIntent = new Intent(StudentsActivity_s.this, ViewProfileActivity.class);
+                myIntent.putExtra("userId", mStudents.get(position).getId());
+                startActivity(myIntent);
             }
         });
-        mStudentsRecycler.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                onListItemSelect(position);
-                return true;
-            }
-        });
-    }
-
-    public ActionMode getActionMode() {
-        return mActionMode;
-    }
-
-    // selecting list item according to the current state of the activity
-    private void onListItemSelect(int position) {
-        // toggle item selection
-        mStudentsListAdapter.toggleSelection(position);
-        boolean hasSelectedItems = mStudentsListAdapter.getSelectedCount() > 0;
-        if (hasSelectedItems && mActionMode == null) {
-            // an item has just been selected, start the actionMode
-            mActionMode = this.startSupportActionMode(new ActionModeCallback
-                    (StudentsActivity_s.this, mStudentsListAdapter, mStudents, mClassId));
-        } else if (!hasSelectedItems && mActionMode != null) {
-            // there are no selected items anymore, exit the action mode
-            mActionMode.finish();
-        }
-        // set action mode title
-        if (mActionMode != null) {
-            int selected = mStudentsListAdapter.getSelectedCount();
-            mActionMode.setTitle(selected > 1 ? selected + " students selected" : selected +
-                    " student selected");
-        }
-    }
-
-    public void setNullActionMode() {
-        if (mActionMode != null) {
-            mActionMode = null;
-        }
-    }
-
-    public void removeStudents() {
-        SparseBooleanArray selected = mStudentsListAdapter.getSelectedIds();
-
-        // loop all ids
-        for (int i = (selected.size() - 1); i >= 0; i--) {
-            if (selected.valueAt(i)) {
-                // if current id is selected remove the item via key
-                removeStudentFromClass(mStudents.get(selected.keyAt(i)).getId(), mClassId);
-                mStudentsListAdapter.notifyDataSetChanged();
-            }
-        }
-
-        Toast.makeText(getApplicationContext(), selected.size() + "Students removed", Toast.LENGTH_SHORT).show();
-
-        mActionMode.finish();
     }
 
     private void displayStudents() {
@@ -213,21 +147,6 @@ public class StudentsActivity_s extends BaseActivity implements View.OnClickList
 
             }
         });
-    }
-
-    public ArrayList<String> getSelectedItemsIdsStrings() {
-        SparseBooleanArray selected = mStudentsListAdapter.getSelectedItemsIds();
-        ArrayList<String> selectedIds = new ArrayList<>();
-
-        // loop all ids
-        for (int i = (selected.size() - 1); i >= 0; i--) {
-            if (selected.valueAt(i)) {
-                // if current id is selected add student id to list
-                selectedIds.add(mStudents.get(selected.keyAt(i)).getId());
-            }
-        }
-
-        return selectedIds;
     }
 
     public String getClassId() {

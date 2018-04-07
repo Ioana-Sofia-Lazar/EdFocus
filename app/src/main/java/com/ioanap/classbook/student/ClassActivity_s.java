@@ -25,7 +25,6 @@ import com.ioanap.classbook.shared.ViewProfileActivity;
 import com.ioanap.classbook.teacher.FilesActivity;
 import com.ioanap.classbook.teacher.ScheduleActivity;
 import com.ioanap.classbook.teacher.StudentActivity;
-import com.ioanap.classbook.teacher.StudentsActivity;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
 public class ClassActivity_s extends BaseActivity implements View.OnClickListener {
@@ -112,8 +111,7 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
             startActivity(myIntent);
         }
         if (view == mStudentsCard) {
-            // todo
-            Intent myIntent = new Intent(getApplicationContext(), StudentsActivity.class);
+            Intent myIntent = new Intent(getApplicationContext(), StudentsActivity_s.class);
             myIntent.putExtra("classId", mClassId);
             startActivity(myIntent);
         }
