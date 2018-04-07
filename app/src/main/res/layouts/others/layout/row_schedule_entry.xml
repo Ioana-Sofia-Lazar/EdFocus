@@ -57,6 +57,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="15dp"
         android:src="@drawable/ic_delete"
-        android:tint="@color/lightGray" />
+        android:tint="@color/lightGray"
+        android:visibility="gone" />
 
 </RelativeLayout>

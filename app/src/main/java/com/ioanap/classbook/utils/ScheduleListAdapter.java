@@ -2,7 +2,6 @@ package com.ioanap.classbook.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +27,19 @@ public class ScheduleListAdapter extends ArrayAdapter<ScheduleEntryAndCourse> {
 
     private Context mContext;
     private int mResource;
-    private String mClassId, mDay;
+    private String mClassId, mDay, mUserType;
 
     // firebase
     private DatabaseReference mScheduleRef;
 
-    public ScheduleListAdapter(Context context, int resource, ArrayList<ScheduleEntryAndCourse> objects, String classId, String day) {
+    public ScheduleListAdapter(Context context, int resource, ArrayList<ScheduleEntryAndCourse> objects,
+                               String classId, String day, String userType) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
         mClassId = classId;
         mDay = day;
+        mUserType = userType;
         mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
     }
 
@@ -54,24 +55,28 @@ public class ScheduleListAdapter extends ArrayAdapter<ScheduleEntryAndCourse> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(mResource, parent, false);
             holder = new ViewHolder();
-            holder.mPeriod = (TextView) convertView.findViewById(R.id.text_period);
-            holder.mCourseName = (TextView) convertView.findViewById(R.id.text_name);
-            holder.mCourseTeacher = (TextView) convertView.findViewById(R.id.text_teacher);
-            holder.mDeleteIcon = (ImageView) convertView.findViewById(R.id.img_delete);
+            holder.mPeriod = convertView.findViewById(R.id.text_period);
+            holder.mCourseName = convertView.findViewById(R.id.text_name);
+            holder.mCourseTeacher = convertView.findViewById(R.id.text_teacher);
+            holder.mDeleteIcon = convertView.findViewById(R.id.img_delete);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.mPeriod.setText(entry.getEntry().getStartsAt() + " - " + entry.getEntry().getEndsAt());
+        // only teacher can delete courses from schedule
+        if (mUserType.equals("teacher")) {
+            holder.mDeleteIcon.setVisibility(View.VISIBLE);
+        }
+
+        holder.mPeriod.setText(String.format("%s - %s", entry.getEntry().getStartsAt(), entry.getEntry().getEndsAt()));
         holder.mCourseName.setText(entry.getCourse().getName());
         holder.mCourseTeacher.setText(entry.getCourse().getTeacher());
         holder.mDeleteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // delete entry
-                Log.d("classid  day  entryid", mClassId + " " + mDay + " " + entry.getEntry().getId());
                 mScheduleRef.child(mClassId).child(mDay).child(entry.getEntry().getId()).removeValue();
             }
         });

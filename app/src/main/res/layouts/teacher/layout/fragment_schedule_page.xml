@@ -28,6 +28,7 @@
         android:id="@+id/btn_add_course"
         style="@style/Button"
         android:layout_below="@id/list_schedule"
-        android:text="Add Course" />
+        android:text="Add Course"
+        android:visibility="gone" />
 
 </RelativeLayout>

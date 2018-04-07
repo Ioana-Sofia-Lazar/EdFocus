@@ -84,9 +84,16 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         mNoCoursesLayout = view.findViewById(R.id.layout_no_courses);
         mAddCourseButton = view.findViewById(R.id.btn_add_course);
 
+        // only teacher can add courses to schedule
+        String userType = ((ScheduleActivity) getContext()).getCurrentUserType();
+        if (userType.equals("teacher")) {
+            mAddCourseButton.setVisibility(View.VISIBLE);
+        }
+
         mAddCourseButton.setOnClickListener(this);
 
-        mScheduleListAdapter = new ScheduleListAdapter(getContext(), R.layout.row_schedule_entry, mEntries, mClassId, DAYS[mDayIndex]);
+        mScheduleListAdapter = new ScheduleListAdapter(getContext(), R.layout.row_schedule_entry,
+                mEntries, mClassId, DAYS[mDayIndex], userType);
         mScheduleListView.setAdapter(mScheduleListAdapter);
 
         displaySchedule();
