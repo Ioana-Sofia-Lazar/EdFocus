@@ -29,16 +29,18 @@ public class CoursesListAdapter extends ArrayAdapter<Course> {
     // variables
     private Context mContext;
     private int mResource;
-    private String mClassId;
+    private String mClassId, mUserType;
 
     // firebase
     private DatabaseReference mClassCoursesRef, mScheduleRef;
 
-    public CoursesListAdapter(Context context, int resource, ArrayList<Course> objects, String classId) {
+    public CoursesListAdapter(Context context, int resource, ArrayList<Course> objects, String classId,
+                              String userType) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
         mClassId = classId;
+        mUserType = userType;
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
     }
@@ -74,6 +76,11 @@ public class CoursesListAdapter extends ArrayAdapter<Course> {
         holder.mName.setText(course.getName());
         holder.mTeacher.setText(course.getTeacher());
         holder.mDescription.setText(course.getDescription());
+
+        // only teacher can delete a course
+        if (mUserType.equals("teacher")) {
+            holder.mDelete.setVisibility(View.VISIBLE);
+        }
 
         // delete icon click
         holder.mDelete.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+
+    <ImageView
+        android:id="@+id/img_cancel"
+        style="@style/Icon"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_x_cancel" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:id="@+id/text_title"
+            style="@style/TextBig"
+            android:layout_gravity="center_horizontal"
+            android:text="Enroll to a Class" />
+
+        <TextView
+            android:id="@+id/text_message"
+            style="@style/FormFieldTitle"
+            android:layout_margin="10dp"
+            android:text="@string/student_enroll_info"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/txt_token"
+            style="@style/FormFieldInput"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:minWidth="50dp" />
+
+        <TextView
+            android:id="@+id/txt_error"
+            style="@style/InfoTextSmall"
+            android:layout_margin="10dp"
+            android:text="Please enter a valid token!"
+            android:textAlignment="center"
+            android:textColor="@color/errorRed"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_enroll"
+            style="@style/Button"
+            android:layout_marginTop="15dp"
+            android:text="Enroll" />
+
+    </LinearLayout>
+
+</RelativeLayout>

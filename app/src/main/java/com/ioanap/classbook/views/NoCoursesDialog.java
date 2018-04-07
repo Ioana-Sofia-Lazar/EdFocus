@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ioanap.classbook.R;
-import com.ioanap.classbook.teacher.CoursesActivity;
+import com.ioanap.classbook.shared.CoursesActivity;
 
 /**
  * Created by Ioana Pascu on 4/1/2018.

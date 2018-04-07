@@ -36,7 +36,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStatusBarGradient(ViewProfileActivity.this, false);
-        setContentView(R.layout.activity_view_teacher_profile);
+        setContentView(R.layout.activity_view_profile);
 
         // get user whose profile was tapped
         Intent myIntent = getIntent();
@@ -133,7 +133,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void checkRequestSent() {
         // see if the user whose profile is being viewed has a request from the current user already
-        mRequestsRef.child(mUserId).child(userID).addValueEventListener(new ValueEventListener() {
+        mRequestsRef.child(mUserId).child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -151,7 +151,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void checkRequestReceived() {
         // see if the current user has a request from the user whose profile is being viewed
-        mRequestsRef.child(userID).child(mUserId).addValueEventListener(new ValueEventListener() {
+        mRequestsRef.child(CURRENT_USER_ID).child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -169,7 +169,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void checkAlreadyContact() {
         // see if the user whose profile is being viewed is already a contact for the current user
-        mContactsRef.child(mUserId).child(userID).addValueEventListener(new ValueEventListener() {
+        mContactsRef.child(mUserId).child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

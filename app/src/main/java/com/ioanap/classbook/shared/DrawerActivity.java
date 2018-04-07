@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,16 +16,18 @@ import android.view.MenuItem;
 
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.teacher.ContactsFragment;
+import com.ioanap.classbook.teacher.MessagesFragment;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class TeacherDrawerActivity extends BaseActivity
+public class DrawerActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        TeacherProfileFragment.OnFragmentInteractionListener {
+        UserProfileFragment.OnFragmentInteractionListener {
 
-    private static final String TAG = "TeacherDrawerActivity";
+    private static final String TAG = "DrawerActivity";
 
-    private Context mContext = TeacherDrawerActivity.this;
+    private Context mContext = DrawerActivity.this;
 
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction =
@@ -38,11 +40,11 @@ public class TeacherDrawerActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatusBarGradient(TeacherDrawerActivity.this, true);
+        setStatusBarGradient(DrawerActivity.this, true);
         setContentView(R.layout.activity_drawer);
 
         // set initially shown fragment
-        displayFragment(new TeacherProfileFragment());
+        displayFragment(new UserProfileFragment());
 
         // initialize image loader
         initImageLoader();
@@ -82,7 +84,7 @@ public class TeacherDrawerActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            displayFragment(new TeacherProfileFragment());
+            displayFragment(new UserProfileFragment());
         } else if (id == R.id.nav_contacts) {
             displayFragment(new ContactsFragment());
         } else if (id == R.id.nav_messages) {

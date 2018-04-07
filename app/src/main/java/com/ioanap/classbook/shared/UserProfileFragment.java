@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,25 +21,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
+import com.ioanap.classbook.teacher.EditProfileActivity;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
-public class TeacherProfileFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = "TeacherProfileFragment";
+public class UserProfileFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = "UserProfileFragment";
 
     private OnFragmentInteractionListener mListener;
 
     // widgets
     private ImageView mProfilePhotoImageView, mEditProfileButton;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
-        mEmailTextView, mLocationTextView;
+            mEmailTextView, mLocationTextView, mUserTypeTextView;
 
     // variables
     private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef;
-    private Context mContext;
     private String mCurrentUserId;
     private ValueEventListener mUserSettingsListener;
 
-    public TeacherProfileFragment() {
+    public UserProfileFragment() {
         // Required empty public constructor
     }
 
@@ -54,6 +54,7 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
         mDescriptionTextView = view.findViewById(R.id.text_description);
         mContactsTextView = view.findViewById(R.id.text_contacts);
         mClassesTextView = view.findViewById(R.id.text_classes);
+        mUserTypeTextView = view.findViewById(R.id.text_user_type);
         mEmailTextView = view.findViewById(R.id.text_email);
         mLocationTextView = view.findViewById(R.id.text_location);
 
@@ -65,7 +66,6 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-        mContext = getContext();
         setupFirebase();
 
     }
@@ -109,6 +109,10 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
         mNameTextView.setText(settings.getFirstName() + " " + settings.getLastName());
         mDescriptionTextView.setText(settings.getDescription());
 
+        String capitalizedString = settings.getUserType().substring(0, 1).toUpperCase() +
+                settings.getUserType().substring(1);
+        mUserTypeTextView.setText(capitalizedString);
+
         // set number of contacts
         mContactsRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -145,7 +149,7 @@ public class TeacherProfileFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_teacher_profile, container, false);
+        return inflater.inflate(R.layout.fragment_user_profile, container, false);
     }
 
     @Override

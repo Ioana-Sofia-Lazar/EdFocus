@@ -2,6 +2,7 @@ package com.ioanap.classbook.teacher;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.view.ActionMode;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,8 +28,9 @@ import java.util.ArrayList;
 public class StudentsActivity extends BaseActivity implements View.OnClickListener {
 
     // widgets
-    ListView mStudentsRecycler;
-    EditText mSearchEditText;
+    private ListView mStudentsRecycler;
+    private EditText mSearchEditText;
+    private FloatingActionButton mAddStudentFab;
 
     // variables
     private ArrayList<Contact> mStudents;
@@ -42,8 +44,6 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         setStatusBarGradient(StudentsActivity.this, false);
         setContentView(R.layout.activity_students);
 
-        mActionMode = null;
-
         // get class id
         mClassId = getIntent().getStringExtra("classId");
 
@@ -52,6 +52,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         // widgets
         mStudentsRecycler = findViewById(R.id.recycler_students);
         mSearchEditText = findViewById(R.id.text_search);
+        mAddStudentFab = findViewById(R.id.fab_add_student);
 
         mStudentsListAdapter = new StudentsListAdapter(StudentsActivity.this,
                 R.layout.row_student, mStudents, mClassId);
@@ -124,8 +125,9 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         }
         // set action mode title
         if (mActionMode != null) {
-            mActionMode.setTitle(String.valueOf(mStudentsListAdapter.getSelectedCount())
-                    + " students selected");
+            int selected = mStudentsListAdapter.getSelectedCount();
+            mActionMode.setTitle(selected > 1 ? selected + " students selected" : selected +
+                    " student selected");
         }
     }
 

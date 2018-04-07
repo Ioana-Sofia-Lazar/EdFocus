@@ -1,6 +1,9 @@
 package com.ioanap.classbook.teacher;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -52,7 +55,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
     private static final int REQUEST_CODE = 1;
 
     // widgets
-    private ImageView mPhoto, mDeleteButton;
+    private ImageView mPhoto, mDeleteButton, mCopyIcon;
     private Button mCreateButton;
     private EditText mNameText, mSchoolText, mDescriptionText, mTokenText;
     private TextView mAddPhotoText, mTitleText, mInfoText;
@@ -91,6 +94,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         mPhoto = findViewById(R.id.img_photo);
         mCreateButton = findViewById(R.id.btn_create);
         mDeleteButton = findViewById(R.id.btn_delete);
+        mCopyIcon = findViewById(R.id.img_copy_icon);
 
         // hide widgets according to mode (create or edit)
         if (mClassId != null) {
@@ -110,6 +114,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         mAddPhotoText.setOnClickListener(this);
         mCreateButton.setOnClickListener(this);
         mDeleteButton.setOnClickListener(this);
+        mCopyIcon.setOnClickListener(this);
     }
 
     private void displayClassInfo() {
@@ -173,6 +178,18 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        if (view == mCopyIcon) {
+            // copy token to clipboard
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("classToken", mTokenText.getText());
+            if (clipboard != null) {
+                clipboard.setPrimaryClip(clip);
+            }
+
+            // show message toast
+            Toast.makeText(AddClassActivity.this, "Token copied to Clipboard!",
+                    Toast.LENGTH_LONG).show();
+        }
         if (view == mAddPhotoText) {
             // verify permissions to access camera and storage
             verifyPermissions();
@@ -219,11 +236,11 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
             mClassId = mClassesRef.push().getKey();
         }
 
-        Class aClass = new Class(mClassId, name, school, description, mOldPhoto, mOldToken, userID);
+        Class aClass = new Class(mClassId, name, school, description, mOldPhoto, mOldToken, CURRENT_USER_ID);
 
         // save to the database
         mClassesRef.child(mClassId).setValue(aClass);
-        mUserClassesRef.child(userID).child(mClassId).setValue(mClassId);
+        mUserClassesRef.child(CURRENT_USER_ID).child(mClassId).setValue(mClassId);
 
         // compress and save class photo to database
         if (mSelectedBitmap != null && mSelectedUri == null) {
@@ -301,8 +318,8 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
                 } else {
                     // otherwise add token to db - class tokens
                     Map<String, Object> node = new HashMap<>();
-                    node.put(token, token);
-                    mClassTokensRef.updateChildren(node);
+                    node.put("classId", mClassId);
+                    mClassTokensRef.child(token).updateChildren(node);
 
                     // add to classes ref
                     mClassesRef.child(mClassId).child("token").setValue(token);
@@ -362,7 +379,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
     private void uploadClassPhoto(byte[] bytes) {
         // add photo to directory in firebase storage
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                .child("photos/" + userID + "/classes/" + mClassId + "/classPhoto");
+                .child("photos/" + CURRENT_USER_ID + "/classes/" + mClassId + "/classPhoto");
         UploadTask uploadTask = storageReference.putBytes(bytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

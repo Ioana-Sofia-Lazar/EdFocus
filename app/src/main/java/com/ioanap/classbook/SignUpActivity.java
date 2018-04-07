@@ -22,9 +22,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private final float ALPHA = (float) 0.2; // opacity of user types that are not selected
     // choose user type included layout
     View mChooseUserTypeView;
-    LinearLayout mChooseTeacherLayout, mChoosePupilLayout, mChooseParentLayout;
-    ImageView mChooseTeacherImg, mChoosePupilImg, mChooseParentImg;
-    TextView mChooseTeacherText, mChoosePupilText, mChooseParentText;
+    LinearLayout mChooseTeacherLayout, mChooseStudentLayout, mChooseParentLayout;
+    ImageView mChooseTeacherImg, mChooseStudentImg, mChooseParentImg;
+    TextView mChooseTeacherText, mChooseStudentText, mChooseParentText;
     // widgets
     private Context mContext;
     private Button mSignUpButton;
@@ -91,9 +91,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         mChooseTeacherImg = mChooseUserTypeView.findViewById(R.id.img_choose_teacher);
         mChooseTeacherText = mChooseUserTypeView.findViewById(R.id.text_choose_teacher);
 
-        mChoosePupilLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_pupil);
-        mChoosePupilImg = mChooseUserTypeView.findViewById(R.id.img_choose_pupil);
-        mChoosePupilText = mChooseUserTypeView.findViewById(R.id.text_choose_pupil);
+        mChooseStudentLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_pupil);
+        mChooseStudentImg = mChooseUserTypeView.findViewById(R.id.img_choose_pupil);
+        mChooseStudentText = mChooseUserTypeView.findViewById(R.id.text_choose_pupil);
 
         mChooseParentLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_parent);
         mChooseParentImg = mChooseUserTypeView.findViewById(R.id.img_choose_parent);
@@ -103,7 +103,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         mSignUpButton.setOnClickListener(this);
         mSwitchToSignInTextView.setOnClickListener(this);
         mChooseTeacherLayout.setOnClickListener(this);
-        mChoosePupilLayout.setOnClickListener(this);
+        mChooseStudentLayout.setOnClickListener(this);
         mChooseParentLayout.setOnClickListener(this);
         mSeePasswordImg.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -149,10 +149,10 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
             setAlphasUserTypes((float) 1, ALPHA, ALPHA);
             mSelectedUserType = "teacher";
         }
-        if (view == mChoosePupilLayout) {
-            // user chose Pupil type
+        if (view == mChooseStudentLayout) {
+            // user chose Student type
             setAlphasUserTypes(ALPHA, (float) 1, ALPHA);
-            mSelectedUserType = "child";
+            mSelectedUserType = "student";
         }
         if (view == mChooseParentLayout) {
             // user chose Parent type
@@ -167,14 +167,14 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
      * options will become less visible)
      *
      * @param teacher
-     * @param pupil
+     * @param student
      * @param parent
      */
-    private void setAlphasUserTypes(float teacher, float pupil, float parent) {
+    private void setAlphasUserTypes(float teacher, float student, float parent) {
         mChooseTeacherImg.setAlpha(teacher);
         mChooseTeacherText.setAlpha(teacher);
-        mChoosePupilImg.setAlpha(pupil);
-        mChoosePupilText.setAlpha(pupil);
+        mChooseStudentImg.setAlpha(student);
+        mChooseStudentText.setAlpha(student);
         mChooseParentImg.setAlpha(parent);
         mChooseParentText.setAlpha(parent);
     }

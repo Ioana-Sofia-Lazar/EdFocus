@@ -52,11 +52,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ioanap.classbook.child.ChildProfileActivity;
 import com.ioanap.classbook.model.User;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.parent.ParentProfileActivity;
-import com.ioanap.classbook.teacher.TeacherDrawerActivity;
+import com.ioanap.classbook.shared.DrawerActivity;
 import com.ioanap.classbook.utils.ChooseUserTypeDialog;
 
 import java.util.HashMap;
@@ -65,28 +64,32 @@ import java.util.Map;
 public class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         ChooseUserTypeDialog.OnUserTypeSelectedListener {
 
-    private static final String TAG = "Base Activity";
+    private static final String TAG = "BaseActivity";
     // request code for google sign in
     private static final int RC_GOOGLE_SIGN_IN = 2;
     // request code for facebook sign in
     private static final int RC_FACEBOOK_SIGN_IN = CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode();
     // signing in mode : facebook | google | email
     private static String MODE = "email";
+
     // firebase
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef;
-    protected String userID;
+    protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
+
     // Facebook
     protected CallbackManager mCallbackManager;
     protected AccessToken mFacebookAccessToken;
+
     // Google sign in
     GoogleSignInAccount mGoogleAccount;
     String mUserType; // for users signing in with Google account
+
     private Context mContext;
 
     public static void hideKeyboard(Activity activity) {
@@ -99,8 +102,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-
-    // ============= Progress Dialog ===============
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setStatusBarGradient(Activity activity, boolean fullscreen) {
@@ -142,14 +143,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mProgressDialog = new ProgressDialog(mContext);
 
         if(mAuth.getCurrentUser() != null){
-            userID = mAuth.getCurrentUser().getUid();
+            CURRENT_USER_ID = mAuth.getCurrentUser().getUid();
         }
 
         setupGoogleSignIn();
 
     }
-
-    // ====================== Sign Up =========================
 
     public void showProgressDialog(String msg) {
         if (mProgressDialog != null && mProgressDialog.isShowing())
@@ -220,8 +219,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mSettingsRef.child(user.getId()).setValue(settings);
     }
 
-    // =============== Modify/Retrieve User Data =================
-
     /**
      * Sends a verification link to the email address of the currently logged user.
      */
@@ -250,17 +247,19 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * @param userType  type of the logged in user
      */
     public void saveToSharedPreferences(Boolean logged, String userType) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences("LoginInfo", MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences("LoginInfo", MODE_PRIVATE).edit();
         editor.putBoolean("logged", logged);
         editor.putString("userType", userType);
         editor.apply();
     }
 
     public String getCurrentUserId() {
-        return userID;
+        return CURRENT_USER_ID;
     }
 
-    // ====================== Sign In ==========================
+    public String getCurrentUserType() {
+        return getSharedPreferences("LoginInfo", 0).getString("userType", "none");
+    }
 
     /**
      * Update "userAccountSettings" node for current user.
@@ -272,7 +271,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * @param phoneNumber
      */
     public void updateUserAccountSettings(String lastName, String firstName, String description, String location, String phoneNumber, String profilePhoto) {
-        DatabaseReference ref = mSettingsRef.child(userID);
+        DatabaseReference ref = mSettingsRef.child(CURRENT_USER_ID);
 
         if (lastName != null) {
             ref.child(mContext.getString(R.string.field_last_name)).setValue(lastName);
@@ -304,7 +303,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     public void uploadProfilePhoto(byte[] bytes) {
         // add photo to directory in firebase storage
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                .child("photos/" + userID + "/profilePhoto");
+                .child("photos/" + CURRENT_USER_ID + "/profilePhoto");
         UploadTask uploadTask = storageReference.putBytes(bytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -325,8 +324,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
-
-    // ====================== Sign Out ==========================
 
     /**
      * Redirects the currently logged in user to his profile according to his type i.e Teacher,
@@ -355,7 +352,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         // activities from stack
                         Intent intent;
                         if (userType.equals("teacher")) {
-                            intent = new Intent(mContext, TeacherDrawerActivity.class);
+                            intent = new Intent(mContext, DrawerActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
@@ -365,7 +362,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
                         } else {
-                            intent = new Intent(mContext, ChildProfileActivity.class);
+                            intent = new Intent(mContext, DrawerActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
@@ -382,8 +379,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
 
     }
-
-    // ================== Google Sign In =====================
 
     public void signIn(String email, String password) {
         showProgressDialog("Signing In...");
@@ -423,6 +418,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
                     }
                 });
+
+        getSharedPreferences("LoginInfo", 0).edit().clear().apply();
 
         // jump to Sign In activity
         Intent intent = new Intent(mContext, SignInActivity.class);
@@ -541,8 +538,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
     }
 
-    // ================== Facebook Sign In ==================
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
@@ -550,12 +545,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     /**
      * We get the user type chosen by the new user from the dialog and proceed to sign him in.
-     *
-     * @param type
      */
     @Override
-    public void getUserType(String type) {
-        Log.d(TAG, "getUserType: " + type);
+    public void getChosenUserType(String type) {
+        Log.d(TAG, "getChosenUserType: " + type);
 
         if (type.equals("none")) {
             // action cancelled
@@ -620,8 +613,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
     }
 
-    // ========================= Keyboard ===========================
-
     /**
      * Checks if email is already in the database
      * If YES, then proceed to sign him in as he has been signed in before
@@ -676,8 +667,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         return mRect;
     }
 
-    // =================== Handle Activity Result ====================
-
     /**
      * Hide keyboard when tapping outside of it (except from tapping inside an EditText)
      *
@@ -710,8 +699,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         return handleReturn;
     }
 
-    // ================== Status Bar ===================
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -737,8 +724,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    // ============== Student ===============
-
     public void removeStudentFromClass(String studentId, String classId) {
         Map<String, Object> removeMap = new HashMap<>();
 
@@ -760,33 +745,33 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void confirmContactRequest(String fromUserId) {
         // delete request from database
-        mRequestsRef.child(userID).child(fromUserId).removeValue();
+        mRequestsRef.child(CURRENT_USER_ID).child(fromUserId).removeValue();
 
         // add each as a contact for the other
         Map<String, Object> contact = new HashMap<>();
         contact.put(fromUserId, fromUserId);
-        mContactsRef.child(userID).updateChildren(contact);
+        mContactsRef.child(CURRENT_USER_ID).updateChildren(contact);
 
         contact = new HashMap<>();
-        contact.put(userID, userID);
+        contact.put(CURRENT_USER_ID, CURRENT_USER_ID);
         mContactsRef.child(fromUserId).updateChildren(contact);
     }
 
     public void declineContactRequest(String fromUserId) {
         // delete request from database
-        mRequestsRef.child(userID).child(fromUserId).removeValue();
+        mRequestsRef.child(CURRENT_USER_ID).child(fromUserId).removeValue();
     }
 
     public void addContact(String userId) {
         // create request in the database
         Map<String, Object> request = new HashMap<>();
         request.put("requestType", "contact");
-        mRequestsRef.child(userId).child(userID).updateChildren(request);
+        mRequestsRef.child(userId).child(CURRENT_USER_ID).updateChildren(request);
     }
 
     public void cancelRequestTo(String userId) {
         Map<String, Object> remove = new HashMap<>();
-        remove.put(userID, null);
+        remove.put(CURRENT_USER_ID, null);
         mRequestsRef.child(userId).updateChildren(remove);
     }
 

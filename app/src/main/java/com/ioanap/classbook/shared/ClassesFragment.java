@@ -1,5 +1,6 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,8 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +27,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Class;
+import com.ioanap.classbook.teacher.AddClassActivity;
+import com.ioanap.classbook.teacher.ClassActivity;
 import com.ioanap.classbook.utils.ClassesListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ioana on 2/23/2018.
@@ -39,9 +49,10 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
     private ClassesListAdapter mClassesListAdapter;
     private RelativeLayout mNoClassesLayout;
     private FloatingActionButton mAddClassFab;
+    private String mUserType, mUserId;
 
     // db references
-    private DatabaseReference mClassesRef, mUserClassesRef;
+    private DatabaseReference mClassesRef, mUserClassesRef, mClassTokensRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +60,20 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
 
         mClassesRef = FirebaseDatabase.getInstance().getReference().child("classes");
         mUserClassesRef = FirebaseDatabase.getInstance().getReference().child("userClasses");
+        mClassTokensRef = FirebaseDatabase.getInstance().getReference().child("classTokens");
+
+        mUserType = ((DrawerActivity) getContext()).getCurrentUserType();
+        mUserId = ((DrawerActivity) getContext()).getCurrentUserId();
+    }
+
+    /**
+     * Hide and show widgets according to current user type
+     */
+    private void hideShowWidgets() {
+        // only teacher can create a new class
+        if (mUserType.equals("teacher")) {
+
+        }
     }
 
     @Nullable
@@ -67,6 +92,8 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
         mClassesListView = view.findViewById(R.id.list_classes);
         mNoClassesLayout = view.findViewById(R.id.layout_no_classes);
         mAddClassFab = view.findViewById(R.id.fab_add_class);
+
+        hideShowWidgets();
 
         mClassesListAdapter = new ClassesListAdapter(getContext(), R.layout.row_class, mClasses);
         mClassesListView.setAdapter(mClassesListAdapter);
@@ -129,10 +156,80 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    private void showEnrollToClassDialog() {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setTitle("Add Course");
+        dialog.setContentView(R.layout.dialog_enroll_to_class);
+
+        // dialog widgets
+        final EditText tokenText = dialog.findViewById(R.id.txt_token);
+        Button enrollBtn = dialog.findViewById(R.id.btn_enroll);
+        final TextView errorText = dialog.findViewById(R.id.txt_error);
+        ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
+
+        // enroll button click
+        enrollBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get token introduced by user
+                String token = tokenText.getText().toString();
+
+                // check if token exists in firebase
+                mClassTokensRef.child(token).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            errorText.setVisibility(View.GONE);
+
+                            // get classId associated with this token
+                            String classId = dataSnapshot.child("classId").getValue().toString();
+
+                            // enroll student to class
+                            Map<String, Object> node = new HashMap<>();
+                            node.put(classId, classId);
+                            mUserClassesRef.child(mUserId).updateChildren(node);
+
+                            dialog.dismiss();
+
+                            Toast.makeText(getActivity(), "You have been successfully enrolled to the Class",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            // token is not valid, show error message
+                            errorText.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        // x button click (cancel)
+        cancelImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
+
     @Override
     public void onClick(View view) {
         if (view == mAddClassFab) {
-            startActivity(new Intent(getContext(), AddClassActivity.class));
+            if (mUserType.equals("teacher")) {
+                // teacher can add a new class
+                startActivity(new Intent(getContext(), AddClassActivity.class));
+            } else if (mUserType.equals("student")) {
+                // student can enroll to a class
+                showEnrollToClassDialog();
+            }
+
         }
     }
 }

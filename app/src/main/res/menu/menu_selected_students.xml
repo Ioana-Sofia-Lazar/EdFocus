@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/empty"
-        android:icon="@drawable/ic_more"
+        android:icon="@drawable/ic_more_white"
         android:orderInCategory="101"
         android:title="menu"
         app:showAsAction="ifRoom">

@@ -162,6 +162,9 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         convertView
                 .setBackgroundColor(mSelectedItemsIds.get(position) ?
                         mContext.getResources().getColor(R.color.lightCyan) : Color.TRANSPARENT);
+        holder.mName.setTextColor(mSelectedItemsIds.get(position) ?
+                mContext.getResources().getColor(R.color.colorPrimaryDark) :
+                mContext.getResources().getColor(R.color.cyan));
 
         return convertView;
     }

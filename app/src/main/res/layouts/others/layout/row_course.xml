@@ -55,7 +55,8 @@
                 android:layout_gravity="bottom"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/ic_delete"
-                android:tint="@color/lightGray" />
+                android:tint="@color/lightGray"
+                android:visibility="gone" />
 
         </LinearLayout>
 

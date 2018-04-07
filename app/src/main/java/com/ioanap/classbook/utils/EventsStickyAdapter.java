@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Event;
-import com.ioanap.classbook.teacher.EventsActivity;
+import com.ioanap.classbook.shared.EventsActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;

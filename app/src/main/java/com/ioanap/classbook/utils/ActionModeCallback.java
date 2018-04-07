@@ -65,6 +65,8 @@ public class ActionModeCallback implements ActionMode.Callback {
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         // inflate menu
         mode.getMenuInflater().inflate(R.menu.menu_selected_students, menu);
+        ((StudentsActivity) mContext).getWindow().setStatusBarColor(mContext.getResources().getColor(R.color.cyan));
+
         return true;
     }
 
@@ -283,6 +285,7 @@ public class ActionModeCallback implements ActionMode.Callback {
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
+        BaseActivity.setStatusBarGradient((StudentsActivity) mContext, false);
         // when action mode is destroyed remove selection and set action mode to null
         mStudentsListAdapter.removeSelection();
         ((StudentsActivity) mContext).setNullActionMode();

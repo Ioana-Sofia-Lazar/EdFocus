@@ -65,10 +65,11 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_contact"
+        android:id="@+id/fab_add_student"
         style="@style/FabButton"
         android:layout_margin="@dimen/fab_margin"
         android:adjustViewBounds="false"
+        android:visibility="gone"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="bottom|right|end" />
 

@@ -22,29 +22,22 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
 
     // variables
     private final float ALPHA = (float) 0.2; // opacity of user types that are not selected
-    private String mSelectedUserType;
-
     // widgets
     Button mContinueButton;
-
     // choose user type included layout
     View mChooseUserTypeView;
     LinearLayout mChooseTeacherLayout, mChoosePupilLayout, mChooseParentLayout;
     ImageView mChooseTeacherImg, mChoosePupilImg, mChooseParentImg;
     TextView mChooseTeacherText, mChoosePupilText, mChooseParentText;
+    private String mSelectedUserType;
+    private OnUserTypeSelectedListener mListener;
 
     @Override
     public void onCancel(DialogInterface dialog) {
         // send no user type to fragment and dismiss dialog
         Log.d(TAG, "onCancel");
-        mListener.getUserType("none");
+        mListener.getChosenUserType("none");
     }
-
-    public interface OnUserTypeSelectedListener {
-        void getUserType(String type);
-    }
-
-    private OnUserTypeSelectedListener mListener;
 
     @Nullable
     @Override
@@ -52,22 +45,22 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
         View view = inflater.inflate(R.layout.dialog_choose_user_type, container, false);
 
         // widgets
-        mContinueButton = (Button) view.findViewById(R.id.btn_continue);
+        mContinueButton = view.findViewById(R.id.btn_continue);
 
         // included layout
         mChooseUserTypeView = view.findViewById(R.id.choose_user_type);
 
-        mChooseTeacherLayout = (LinearLayout) mChooseUserTypeView.findViewById(R.id.linear_layout_choose_teacher);
-        mChooseTeacherImg = (ImageView) mChooseUserTypeView.findViewById(R.id.img_choose_teacher);
-        mChooseTeacherText = (TextView) mChooseUserTypeView.findViewById(R.id.text_choose_teacher);
+        mChooseTeacherLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_teacher);
+        mChooseTeacherImg = mChooseUserTypeView.findViewById(R.id.img_choose_teacher);
+        mChooseTeacherText = mChooseUserTypeView.findViewById(R.id.text_choose_teacher);
 
-        mChoosePupilLayout = (LinearLayout) mChooseUserTypeView.findViewById(R.id.linear_layout_choose_pupil);
-        mChoosePupilImg = (ImageView) mChooseUserTypeView.findViewById(R.id.img_choose_pupil);
-        mChoosePupilText = (TextView) mChooseUserTypeView.findViewById(R.id.text_choose_pupil);
+        mChoosePupilLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_pupil);
+        mChoosePupilImg = mChooseUserTypeView.findViewById(R.id.img_choose_pupil);
+        mChoosePupilText = mChooseUserTypeView.findViewById(R.id.text_choose_pupil);
 
-        mChooseParentLayout = (LinearLayout) mChooseUserTypeView.findViewById(R.id.linear_layout_choose_parent);
-        mChooseParentImg = (ImageView) mChooseUserTypeView.findViewById(R.id.img_choose_parent);
-        mChooseParentText = (TextView) mChooseUserTypeView.findViewById(R.id.text_choose_parent);
+        mChooseParentLayout = mChooseUserTypeView.findViewById(R.id.linear_layout_choose_parent);
+        mChooseParentImg = mChooseUserTypeView.findViewById(R.id.img_choose_parent);
+        mChooseParentText = mChooseUserTypeView.findViewById(R.id.text_choose_parent);
 
         // listeners
         mContinueButton.setOnClickListener(this);
@@ -98,7 +91,7 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
     public void onClick(View view) {
         if (view == mContinueButton) {
             // send selected user type to fragment and dismiss dialog
-            mListener.getUserType(mSelectedUserType);
+            mListener.getChosenUserType(mSelectedUserType);
             getDialog().dismiss();
         }
         if (view == mChooseTeacherLayout) {
@@ -109,7 +102,7 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
         if (view == mChoosePupilLayout) {
             // user chose Pupil type
             setAlphasUserTypes(ALPHA, (float) 1, ALPHA);
-            mSelectedUserType = "child";
+            mSelectedUserType = "";
         }
         if (view == mChooseParentLayout) {
             // user chose Parent type
@@ -133,6 +126,10 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
         mChoosePupilText.setAlpha(pupil);
         mChooseParentImg.setAlpha(parent);
         mChooseParentText.setAlpha(parent);
+    }
+
+    public interface OnUserTypeSelectedListener {
+        void getChosenUserType(String type);
     }
 
 

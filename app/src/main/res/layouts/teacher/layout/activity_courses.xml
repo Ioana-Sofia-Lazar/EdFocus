@@ -52,7 +52,7 @@
             android:layout_margin="20dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="6dp"
-            android:scrollbars="none"></ListView>
+            android:scrollbars="none" />
 
     </RelativeLayout>
 
@@ -62,6 +62,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
+        android:visibility="gone"
         app:useCompatPadding="true" />
 
 </RelativeLayout>

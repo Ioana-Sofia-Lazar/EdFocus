@@ -53,7 +53,9 @@ public class ClassTokenActivity extends BaseActivity implements View.OnClickList
             // copy token to clipboard
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("classToken", mToken);
-            clipboard.setPrimaryClip(clip);
+            if (clipboard != null) {
+                clipboard.setPrimaryClip(clip);
+            }
 
             // show message toast
             Toast.makeText(ClassTokenActivity.this, "Token copied to Clipboard!",

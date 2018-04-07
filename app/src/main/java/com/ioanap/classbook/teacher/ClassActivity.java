@@ -1,12 +1,16 @@
 package com.ioanap.classbook.teacher;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,6 +18,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Class;
+import com.ioanap.classbook.model.UserAccountSettings;
+import com.ioanap.classbook.shared.CoursesActivity;
+import com.ioanap.classbook.shared.EventsActivity;
+import com.ioanap.classbook.shared.ViewProfileActivity;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
 public class ClassActivity extends BaseActivity implements View.OnClickListener {
@@ -129,18 +137,19 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         dialog.setContentView(R.layout.dialog_class_info);
 
         // dialog widgets
-        ImageView mTeacherPhoto = dialog.findViewById(R.id.img_teacher_photo);
+        final ImageView mTeacherPhoto = dialog.findViewById(R.id.img_teacher_photo);
         final ImageView mClassPhoto = dialog.findViewById(R.id.img_class_photo);
         final TextView mClassName = dialog.findViewById(R.id.text_class_name);
         final TextView mSchool = dialog.findViewById(R.id.text_school);
-        TextView mTeacherName = dialog.findViewById(R.id.text_teacher_name);
+        final TextView mTeacherName = dialog.findViewById(R.id.text_teacher_name);
         final TextView mDescription = dialog.findViewById(R.id.text_description);
         final TextView mToken = dialog.findViewById(R.id.text_token);
+        final ImageView mCopyIcon = dialog.findViewById(R.id.img_copy_icon);
 
         mClassesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Class aClass = dataSnapshot.getValue(Class.class);
+                final Class aClass = dataSnapshot.getValue(Class.class);
 
                 mClassName.setText(aClass.getName());
                 mSchool.setText(aClass.getSchool());
@@ -148,7 +157,34 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
                 mToken.setText(aClass.getToken());
                 UniversalImageLoader.setImage(aClass.getPhoto(), mClassPhoto, null);
 
-                // todo get teacher info
+                // get teacher info
+                mSettingsRef.child(aClass.getTeacherId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
+
+                        mTeacherName.setText(String.format("%s %s", settings.getFirstName(),
+                                settings.getLastName()));
+                        UniversalImageLoader.setImage(settings.getProfilePhoto(), mTeacherPhoto, null);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                // click on teacher's name or photo redirects to his profile
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ClassActivity.this, ViewProfileActivity.class);
+                        intent.putExtra("userId", aClass.getTeacherId());
+                        startActivity(intent);
+                    }
+                };
+                mTeacherName.setOnClickListener(listener);
+                mTeacherPhoto.setOnClickListener(listener);
             }
 
             @Override
@@ -157,7 +193,20 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
             }
         });
 
-        // todo click on teacher's name redirects to his profile
+        mCopyIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // copy token to clipboard
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("classToken", mToken.getText());
+                if (clipboard != null) {
+                    clipboard.setPrimaryClip(clip);
+                }
+
+                // show message toast
+                Toast.makeText(ClassActivity.this, "Token copied to Clipboard!", Toast.LENGTH_LONG).show();
+            }
+        });
 
         dialog.show();
 

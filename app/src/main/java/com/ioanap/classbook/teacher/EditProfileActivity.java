@@ -166,7 +166,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
      */
     private void setupFirebase() {
         // add listener for the settings of the currently logged user
-        mSettingsRef.child(userID).addValueEventListener(new ValueEventListener() {
+        mSettingsRef.child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info

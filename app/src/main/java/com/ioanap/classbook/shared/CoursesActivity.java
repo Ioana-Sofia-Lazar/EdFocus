@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -33,7 +33,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
     RelativeLayout mNoCoursesLayout;
 
     // variables
-    private String mClassId;
+    private String mClassId, mUserType;
     private ArrayList<Course> mCourses;
     private CoursesListAdapter mCoursesListAdapter;
 
@@ -44,6 +44,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_courses);
 
         mCourses = new ArrayList<>();
+        mUserType = getCurrentUserType();
 
         // get id of class to display courses for
         Intent myIntent = getIntent();
@@ -54,18 +55,24 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         mCoursesListView = findViewById(R.id.list_courses);
         mNoCoursesLayout = findViewById(R.id.layout_no_courses);
 
-        mCoursesListAdapter = new CoursesListAdapter(CoursesActivity.this, R.layout.row_course, mCourses, mClassId);
+        mCoursesListAdapter = new CoursesListAdapter(CoursesActivity.this, R.layout.row_course,
+                mCourses, mClassId, mUserType);
         mCoursesListView.setAdapter(mCoursesListAdapter);
 
         // listeners
         mAddCourseFab.setOnClickListener(this);
-        mCoursesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // clicking on a course opens dialog for editing it
-                showEditDialog(position);
-            }
-        });
+
+        // only teacher can add and edit courses
+        if (mUserType.equals("teacher")) {
+            mCoursesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // clicking on a course opens dialog for editing it
+                    showEditDialog(position);
+                }
+            });
+            mAddCourseFab.setVisibility(View.VISIBLE);
+        }
 
         displayCourses();
     }
@@ -171,7 +178,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
                 String description = descriptionText.getText().toString();
 
                 // get id where to put the new course in firebase
-                String courseId = mClassCoursesRef.child(userID).push().getKey();
+                String courseId = mClassCoursesRef.child(CURRENT_USER_ID).push().getKey();
                 Course course = new Course(courseId, name, teacher, description);
 
                 // save to firebase

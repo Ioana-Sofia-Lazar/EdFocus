@@ -13,16 +13,21 @@
         <item name="android:textColor">@color/gray</item>
         <!--  Action mode overlays toolbar -->
         <item name="windowActionModeOverlay">true</item>
-        <!--  For Custom Action Mode Background Color/Drawable -->
-        <item name="actionModeBackground">@color/lightCyan</item>
-        <item name="android:actionModeStyle">@style/ActionBar</item>
+        <!--  Custom Action Mode Background Color/Drawable -->
+        <item name="android:actionModeStyle">@style/ActionMode</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_x_cancel_white</item>
+        <item name="android:actionModeBackground">@color/lightCyan</item>
 
         <item name="listPreferredItemHeightSmall">60dp</item>
     </style>
 
-    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:titleTextStyle">@style/ActivityTitle</item>
-        <item name="android:actionOverflowButtonStyle">@style/ToolbarIcon</item>
+    <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+        <item name="actionOverflowButtonStyle">@style/ToolbarIcon</item>
+    </style>
+
+    <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <!-- Icons -->
