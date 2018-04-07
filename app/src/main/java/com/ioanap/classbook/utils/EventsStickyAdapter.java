@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Event;
 import com.ioanap.classbook.shared.EventsActivity;
@@ -34,18 +32,16 @@ public class EventsStickyAdapter extends ArrayAdapter<Event> implements StickyLi
     private ArrayList<Event> mEvents;
     private Context mContext;
     private int mResource, mHeaderResource;
-    private String mClassId;
-    private DatabaseReference mClassEventsRef, mClassCoursesRef, mStudentAbsencesRef;
+    private String mUserType;
 
     public EventsStickyAdapter(Context context, int resource, int headerResource, ArrayList<Event> objects,
-                               String classId) {
+                               String userType) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
         mHeaderResource = headerResource;
         mEvents = objects;
-        mClassId = classId;
-        mClassEventsRef = FirebaseDatabase.getInstance().getReference().child("classEvents");
+        mUserType = userType;
     }
 
     @NonNull
@@ -71,6 +67,9 @@ public class EventsStickyAdapter extends ArrayAdapter<Event> implements StickyLi
         } else {
             holder = (EventsStickyAdapter.ViewHolder) convertView.getTag();
         }
+
+        // only teacher can edit events
+        if (mUserType.equals("teacher")) holder.mEditIcon.setVisibility(View.VISIBLE);
 
         holder.mDayNumber.setText(event.getDate().split("-")[2]);
         holder.mDayName.setText(getDayName(event.getDate()));
@@ -98,9 +97,8 @@ public class EventsStickyAdapter extends ArrayAdapter<Event> implements StickyLi
         Date d = new GregorianCalendar(year, month, day).getTime();
         Calendar c = Calendar.getInstance();
         c.setTime(d);
-        String dayOfWeek = DAYS[c.get(Calendar.DAY_OF_WEEK)];
 
-        return dayOfWeek;
+        return DAYS[c.get(Calendar.DAY_OF_WEEK)];
     }
 
     @Override

@@ -64,6 +64,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:src="@drawable/ic_plus"
+        android:visibility="gone"
         app:useCompatPadding="true" />
 
 </RelativeLayout>

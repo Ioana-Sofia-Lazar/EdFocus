@@ -54,6 +54,10 @@ public class EventsActivity extends BaseActivity {
         mNoEventsLayout = findViewById(R.id.layout_no_events);
         mAddEventFab = findViewById(R.id.fab_add_event);
 
+        // only teacher can add events
+        String userType = getCurrentUserType();
+        if (userType.equals("teacher")) mAddEventFab.setVisibility(View.VISIBLE);
+
         mAddEventFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +68,7 @@ public class EventsActivity extends BaseActivity {
         // events list
         StickyListHeadersListView stickyList = findViewById(R.id.list_events);
         mEventsAdapter = new EventsStickyAdapter(this, R.layout.row_event,
-                R.layout.row_event_header, mEvents, mClassId);
+                R.layout.row_event_header, mEvents, userType);
         stickyList.setAdapter(mEventsAdapter);
 
         displayEvents();
