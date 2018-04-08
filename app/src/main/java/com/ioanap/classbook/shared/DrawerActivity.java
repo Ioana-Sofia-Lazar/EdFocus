@@ -16,7 +16,6 @@ import android.view.MenuItem;
 
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
-import com.ioanap.classbook.teacher.ContactsFragment;
 import com.ioanap.classbook.teacher.MessagesFragment;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;

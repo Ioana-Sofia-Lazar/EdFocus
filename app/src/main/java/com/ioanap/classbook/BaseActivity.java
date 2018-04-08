@@ -54,7 +54,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ioanap.classbook.model.User;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.shared.DrawerActivity;
 import com.ioanap.classbook.utils.ChooseUserTypeDialog;
 
@@ -77,7 +76,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
-            mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef;
+            mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -139,6 +138,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mClassEventsRef = mRootRef.child("classEvents");
         mStudentGradesRef = mRootRef.child("studentGrades");
         mStudentAbsencesRef = mRootRef.child("studentAbsences");
+        mUserParentsRef = mRootRef.child("userParents");
+        mUserChildrenRef = mRootRef.child("userChildren");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -270,7 +271,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * @param location
      * @param phoneNumber
      */
-    public void updateUserAccountSettings(String lastName, String firstName, String description, String location, String phoneNumber, String profilePhoto) {
+    public void updateUserAccountSettings(String lastName, String firstName, String description,
+                                          String location, String phoneNumber, String profilePhoto,
+                                          String displayName) {
         DatabaseReference ref = mSettingsRef.child(CURRENT_USER_ID);
 
         if (lastName != null) {
@@ -314,7 +317,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 Log.d(TAG, "success - firebase download url: " + firebaseUri.toString());
 
                 // save image url to firebase database
-                updateUserAccountSettings(null, null, null, null, null, firebaseUri.toString());
+                updateUserAccountSettings(null, null, null, null, null, firebaseUri.toString(), null);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -357,7 +360,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
                         } else if (userType.equals("parent")) {
-                            intent = new Intent(mContext, ParentProfileActivity.class);
+                            intent = new Intent(mContext, DrawerActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             mContext.startActivity(intent);
@@ -743,7 +746,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    public void confirmContactRequest(String fromUserId) {
+    public void confirmContactRequest(String fromUserId, String requestType) {
         // delete request from database
         mRequestsRef.child(CURRENT_USER_ID).child(fromUserId).removeValue();
 
@@ -755,18 +758,33 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         contact = new HashMap<>();
         contact.put(CURRENT_USER_ID, CURRENT_USER_ID);
         mContactsRef.child(fromUserId).updateChildren(contact);
+
+        // if parent wants to add current user as child
+        if (requestType.equals("child")) {
+            contact = new HashMap<>();
+            contact.put(fromUserId, fromUserId);
+            mUserParentsRef.child(CURRENT_USER_ID).updateChildren(contact);
+
+            contact = new HashMap<>();
+            contact.put(CURRENT_USER_ID, CURRENT_USER_ID);
+            mUserChildrenRef.child(fromUserId).updateChildren(contact);
+        }
+
+        // if parent wants to add current user as parent
+        if (requestType.equals("parent")) {
+            contact = new HashMap<>();
+            contact.put(fromUserId, fromUserId);
+            mUserChildrenRef.child(CURRENT_USER_ID).updateChildren(contact);
+
+            contact = new HashMap<>();
+            contact.put(CURRENT_USER_ID, CURRENT_USER_ID);
+            mUserParentsRef.child(fromUserId).updateChildren(contact);
+        }
     }
 
     public void declineContactRequest(String fromUserId) {
         // delete request from database
         mRequestsRef.child(CURRENT_USER_ID).child(fromUserId).removeValue();
-    }
-
-    public void addContact(String userId) {
-        // create request in the database
-        Map<String, Object> request = new HashMap<>();
-        request.put("requestType", "contact");
-        mRequestsRef.child(userId).child(CURRENT_USER_ID).updateChildren(request);
     }
 
     public void cancelRequestTo(String userId) {

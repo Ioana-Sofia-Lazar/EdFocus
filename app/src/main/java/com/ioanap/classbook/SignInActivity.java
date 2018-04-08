@@ -27,7 +27,6 @@ import com.facebook.login.LoginResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.ioanap.classbook.parent.ParentProfileActivity;
 import com.ioanap.classbook.shared.DrawerActivity;
 
 import org.json.JSONException;
@@ -86,7 +85,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             intent = new Intent(mContext, DrawerActivity.class);
             mContext.startActivity(intent);
         } else if (userType.equals("parent")) {
-            intent = new Intent(mContext, ParentProfileActivity.class);
+            intent = new Intent(mContext, DrawerActivity.class);
             mContext.startActivity(intent);
         } else {
             intent = new Intent(mContext, DrawerActivity.class);

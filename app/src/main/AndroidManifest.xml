@@ -28,7 +28,7 @@
             android:name=".shared.DrawerActivity"
             android:label="" />
         <activity
-            android:name=".teacher.EditProfileActivity"
+            android:name=".shared.EditProfileActivity"
             android:label="Edit your profile" />
         <activity android:name=".BaseActivity" />
 

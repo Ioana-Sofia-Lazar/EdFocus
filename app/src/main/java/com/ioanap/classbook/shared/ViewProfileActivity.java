@@ -1,5 +1,6 @@
 package com.ioanap.classbook.shared;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,11 +19,14 @@ import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ViewProfileActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "ViewTeacherProfileFragm";
 
-    private String mUserId;
+    private String mUserId, mUserType;
 
     // widgets
     private Button mAddContactButton, mAcceptRequestButton, mDeclineRequestButton, mCancelRequestButton;
@@ -78,6 +82,8 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
                 // retrieve user info
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
 
+                mUserType = settings.getUserType();
+
                 // setup widgets to display user info from the database
                 setProfileWidgets(settings);
             }
@@ -90,7 +96,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setProfileWidgets(UserAccountSettings settings) {
-        mNameTextView.setText(settings.getFirstName() + " " + settings.getLastName());
+        mNameTextView.setText(String.format("%s %s", settings.getFirstName(), settings.getLastName()));
         mDescriptionTextView.setText(settings.getDescription());
         mUserTypeTextView.setText(settings.getUserType());
 
@@ -108,7 +114,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         });
 
         // set number of classes
-        mClassesRef.child(mUserId).addValueEventListener(new ValueEventListener() {
+        mUserClassesRef.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mClassesTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));
@@ -119,6 +125,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
             }
         });
+
         mEmailTextView.setText(settings.getEmail());
         mLocationTextView.setText(settings.getLocation());
 
@@ -187,10 +194,10 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view == mAddContactButton) {
-            addContact(mUserId);
+            addContactPossibilities();
             hideWidgets(1);
         } else if (view == mAcceptRequestButton) {
-            confirmContactRequest(mUserId);
+            confirmContactRequest(mUserId, mUserType);
             hideWidgets(3);
         } else if (view == mDeclineRequestButton) {
             declineContactRequest(mUserId);
@@ -199,6 +206,96 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
             cancelRequestTo(mUserId);
             hideWidgets(0);
         }
+    }
+
+    public void addContactPossibilities() {
+        if (getCurrentUserType().equals("teacher") && mUserType.equals("teacher")) addContact();
+        if (getCurrentUserType().equals("teacher") && mUserType.equals("parent")) addContact();
+        if (getCurrentUserType().equals("teacher") && mUserType.equals("student")) addContact();
+        if (getCurrentUserType().equals("parent") && mUserType.equals("teacher")) addContact();
+        if (getCurrentUserType().equals("parent") && mUserType.equals("parent")) addContact();
+        if (getCurrentUserType().equals("parent") && mUserType.equals("student"))
+            showParentAddStudentDialog();
+        if (getCurrentUserType().equals("student") && mUserType.equals("teacher")) addContact();
+        if (getCurrentUserType().equals("student") && mUserType.equals("parent"))
+            showStudentAddParentDialog();
+        if (getCurrentUserType().equals("student") && mUserType.equals("student")) addContact();
+    }
+
+    private void showStudentAddParentDialog() {
+        final Dialog dialog = new Dialog(ViewProfileActivity.this);
+        dialog.setContentView(R.layout.dialog_student_add_parent);
+
+        // dialog widgets
+        final TextView mAddParent = dialog.findViewById(R.id.text_add_parent);
+        final TextView mAddContact = dialog.findViewById(R.id.text_add_conteact);
+
+        // add this user as parent
+        mAddParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addContact("parent");
+
+                dialog.dismiss();
+            }
+        });
+
+        // add this user as simple contact
+        mAddContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addContact();
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showParentAddStudentDialog() {
+        final Dialog dialog = new Dialog(ViewProfileActivity.this);
+        dialog.setContentView(R.layout.dialog_parent_add_student);
+
+        // dialog widgets
+        final TextView mAddChild = dialog.findViewById(R.id.text_add_child);
+        final TextView mAddContact = dialog.findViewById(R.id.text_add_conteact);
+
+        // add this user as child
+        mAddChild.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addContact("child");
+
+                dialog.dismiss();
+            }
+        });
+
+        // add this user as simple contact
+        mAddContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addContact();
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void addContact(String requestType) {
+        // create request in the database
+        Map<String, Object> request = new HashMap<>();
+        request.put("requestType", requestType);
+        mRequestsRef.child(mUserId).child(CURRENT_USER_ID).updateChildren(request);
+    }
+
+    private void addContact() {
+        // create request in the database
+        Map<String, Object> request = new HashMap<>();
+        request.put("requestType", "contact");
+        mRequestsRef.child(mUserId).child(CURRENT_USER_ID).updateChildren(request);
     }
 
     /**

@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
@@ -25,11 +24,11 @@ import java.util.ArrayList;
 
 public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    final int VIEW_TYPE_CONTACT = 0;
-    final int VIEW_TYPE_REQUEST = 1;
-    final int VIEW_TYPE_REQUESTS_TITLE = 2;
-    final int VIEW_TYPE_NO_CONTACTS = 3;
-    final int VIEW_TYPE_NO_REQUESTS = 4;
+    private final int VIEW_TYPE_CONTACT = 0;
+    private final int VIEW_TYPE_REQUEST = 1;
+    private final int VIEW_TYPE_REQUESTS_TITLE = 2;
+    private final int VIEW_TYPE_NO_CONTACTS = 3;
+    private final int VIEW_TYPE_NO_REQUESTS = 4;
 
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<RequestInfo> mRequests = new ArrayList<>();
@@ -248,13 +247,11 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mConfirmButton = itemView.findViewById(R.id.btn_confirm_request);
             mDeclineButton = itemView.findViewById(R.id.btn_delete_request);
 
-            final String currendUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
             // request is confirmed
             mConfirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((BaseActivity) mContext).confirmContactRequest(mRequest.getPersonId());
+                    ((BaseActivity) mContext).confirmContactRequest(mRequest.getPersonId(), mRequest.getRequestType());
                 }
             });
 
@@ -270,7 +267,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void populate(RequestInfo request) {
             mRequest = request;
             mRequestName.setText(request.getName());
-            mRequestText.setText("Wants to add you as " + request.getRequestType());
+            mRequestText.setText("Wants to add you as their " + request.getRequestType());
             UniversalImageLoader.setImage(request.getProfilePhoto(), mRequestProfilePhoto, null);
         }
     }

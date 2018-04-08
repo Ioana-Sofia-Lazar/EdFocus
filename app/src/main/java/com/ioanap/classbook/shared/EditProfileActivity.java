@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.Manifest;
 import android.content.Context;
@@ -114,20 +114,21 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         String location = mLocationEditText.getText().toString();
         String phoneNumber = mPhoneNumberEditText.getText().toString();
 
+        updateUserAccountSettings(null, null, null, null, null, null, firstName + " " + lastName);
         if (!mSettings.getLastName().equals(lastName)) {
-            updateUserAccountSettings(lastName, null, null, null, null, null);
+            updateUserAccountSettings(lastName, null, null, null, null, null, null);
         }
         if (!mSettings.getFirstName().equals(firstName)) {
-            updateUserAccountSettings(null, firstName, null, null, null, null);
+            updateUserAccountSettings(null, firstName, null, null, null, null, null);
         }
         if (!mSettings.getDescription().equals(description)) {
-            updateUserAccountSettings(null, null, description, null, null, null);
+            updateUserAccountSettings(null, null, description, null, null, null, null);
         }
         if (!mSettings.getLocation().equals(location)) {
-            updateUserAccountSettings(null, null, null, location, null, null);
+            updateUserAccountSettings(null, null, null, location, null, null, null);
         }
         if (!mSettings.getPhoneNumber().equals(phoneNumber)) {
-            updateUserAccountSettings(null, null, null, null, phoneNumber, null);
+            updateUserAccountSettings(null, null, null, null, phoneNumber, null, null);
         }
 
         if (mSelectedBitmap != null && mSelectedUri == null) {

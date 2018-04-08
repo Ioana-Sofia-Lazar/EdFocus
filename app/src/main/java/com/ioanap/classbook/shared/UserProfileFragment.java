@@ -21,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.teacher.EditProfileActivity;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
 public class UserProfileFragment extends Fragment implements View.OnClickListener {

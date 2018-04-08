@@ -91,7 +91,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                     Person person = new Person(settings.getId(), settings.getDisplayName(),
                             settings.getUserType(), settings.getProfilePhoto());
-                    mPeople.add(person);
+
+                    // current user can't be a result of search
+                    if (!settings.getId().equals(CURRENT_USER_ID)) mPeople.add(person);
                 }
 
                 // update people list view

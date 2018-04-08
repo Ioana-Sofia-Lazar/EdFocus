@@ -6,7 +6,7 @@ public class RequestInfo {
     private String personId; // ID of person who sent the request
     private String name;
     private String profilePhoto;
-    private String requestType; // can request someone to add you as a simple Contacts, as their Teacher etc.
+    private String requestType; // can request someone to add you as a simple Contact, as their Teacher etc.
     private String userType;
 
     public RequestInfo(String requestId, String personId, String name, String profilePhoto, String requestType, String userType) {

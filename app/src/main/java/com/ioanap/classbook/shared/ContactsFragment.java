@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +27,7 @@ import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.RequestInfo;
 import com.ioanap.classbook.model.UserAccountSettings;
+import com.ioanap.classbook.teacher.SearchActivity;
 import com.ioanap.classbook.utils.ContactsListAdapter;
 
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
                 Contact contact = new Contact();
                 contact.setId(id);
-                contact.setName(settings.getDisplayName());
+                contact.setName(settings.getFirstName() + " " + settings.getLastName());
                 contact.setEmail(settings.getEmail());
                 contact.setProfilePhoto(settings.getProfilePhoto());
                 contact.setUserType(settings.getUserType());

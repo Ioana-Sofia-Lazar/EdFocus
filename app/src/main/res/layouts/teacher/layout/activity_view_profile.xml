@@ -112,7 +112,7 @@
                                 style="@style/InfoTextSmall"
                                 android:layout_width="match_parent"
                                 android:gravity="center_horizontal"
-                                android:text="You have sent a contact request."
+                                android:text="You have sent a request."
                                 android:textColor="@color/lightGray" />
 
                             <Button
@@ -137,7 +137,7 @@
                                 style="@style/InfoTextSmall"
                                 android:layout_width="match_parent"
                                 android:gravity="center_horizontal"
-                                android:text="This user has sent you a contact request."
+                                android:text="This user has sent you a request."
                                 android:textColor="@color/lightGray" />
 
                             <LinearLayout
