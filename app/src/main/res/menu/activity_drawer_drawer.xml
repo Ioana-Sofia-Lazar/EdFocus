@@ -23,7 +23,14 @@
             android:id="@+id/nav_classes"
             android:enabled="true"
             android:icon="@drawable/ic_classes"
-            android:title="My Classes" />
+            android:title="My Classes"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_children"
+            android:enabled="true"
+            android:icon="@drawable/ic_face"
+            android:title="My Children"
+            android:visible="false" />
     </group>
 
     <group
