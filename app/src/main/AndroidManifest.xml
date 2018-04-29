@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ioanap.classbook">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -68,7 +70,8 @@
         <activity android:name=".teacher.StudentActivity" />
         <activity android:name=".shared.EventsActivity" />
         <activity android:name=".teacher.AddMultipleGradesActivity" />
-        <activity android:name=".student.StudentsActivity_s"></activity>
+        <activity android:name=".student.StudentsActivity_s" />
+        <activity android:name=".shared.NoInternetActivity"></activity>
     </application>
 
 </manifest>

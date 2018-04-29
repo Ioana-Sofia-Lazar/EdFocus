@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pureWhite"
-    tools:context="com.ioanap.classbook.shared.DrawerActivity">
+    android:background="@color/pureWhite">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,7 +15,7 @@
 
             <TextView
                 style="@style/ActivityTitle"
-                android:text="Your Classes" />
+                android:text="Your Children" />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -28,7 +26,7 @@
         android:layout_below="@+id/toolbar">
 
         <RelativeLayout
-            android:id="@+id/layout_no_classes"
+            android:id="@+id/layout_no_children"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -37,16 +35,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="false"
                 android:layout_margin="5dp"
-                android:text="No Classes Yet."
+                android:text="No Users marked as your Children."
                 android:textAlignment="center" />
 
         </RelativeLayout>
 
         <ListView
-            android:id="@+id/list_classes"
+            android:id="@+id/list_children"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_no_classes"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_no_children"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:divider="@android:color/transparent"
@@ -62,6 +60,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:src="@drawable/ic_plus"
+        android:visibility="gone"
         app:useCompatPadding="true" />
 
 </RelativeLayout>

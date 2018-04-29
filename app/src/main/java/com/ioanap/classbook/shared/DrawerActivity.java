@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.parent.ChildrenFragment;
 import com.ioanap.classbook.teacher.MessagesFragment;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -90,15 +91,22 @@ public class DrawerActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
+            checkInternetConnection();
             displayFragment(new UserProfileFragment());
         } else if (id == R.id.nav_contacts) {
+            checkInternetConnection();
             displayFragment(new ContactsFragment());
         } else if (id == R.id.nav_messages) {
+            checkInternetConnection();
             displayFragment(new MessagesFragment());
         } else if (id == R.id.nav_classes) {
+            checkInternetConnection();
             displayFragment(new ClassesFragment());
         } else if (id == R.id.nav_settings) {
 
+        } else if (id == R.id.nav_children) {
+            checkInternetConnection();
+            displayFragment(new ChildrenFragment());
         } else if (id == R.id.nav_logout) {
             // sign user out
             signOut();

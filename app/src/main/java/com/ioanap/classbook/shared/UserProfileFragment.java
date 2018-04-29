@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -39,11 +40,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private ValueEventListener mUserSettingsListener;
 
     public UserProfileFragment() {
-        // Required empty public constructor
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // widgets
@@ -58,6 +58,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         mLocationTextView = view.findViewById(R.id.text_location);
 
         mEditProfileButton.setOnClickListener(this);
+
     }
 
     @Override
@@ -101,11 +102,9 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     /**
      * Fill the widgets from the Profile with the information from Firebase
-     *
-     * @param settings
      */
     private void setProfileWidgets(UserAccountSettings settings) {
-        mNameTextView.setText(settings.getFirstName() + " " + settings.getLastName());
+        mNameTextView.setText(String.format("%s %s", settings.getFirstName(), settings.getLastName()));
         mDescriptionTextView.setText(settings.getDescription());
 
         String capitalizedString = settings.getUserType().substring(0, 1).toUpperCase() +

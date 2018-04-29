@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,6 +57,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ioanap.classbook.model.User;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.shared.DrawerActivity;
+import com.ioanap.classbook.shared.NoInternetActivity;
 import com.ioanap.classbook.utils.ChooseUserTypeDialog;
 
 import java.util.HashMap;
@@ -143,12 +146,31 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
+        checkInternetConnection();
+
         if(mAuth.getCurrentUser() != null){
             CURRENT_USER_ID = mAuth.getCurrentUser().getUid();
         }
 
         setupGoogleSignIn();
 
+    }
+
+    protected void checkInternetConnection() {
+        if (!isOnline()) {
+            // show no Internet error activity
+            startActivity(new Intent(BaseActivity.this, NoInternetActivity.class));
+        }
+    }
+
+    /**
+     * Checks if device is connected to the Internet
+     */
+    public boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr != null ? conMgr.getActiveNetworkInfo() : null;
+
+        return !(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable());
     }
 
     public void showProgressDialog(String msg) {
