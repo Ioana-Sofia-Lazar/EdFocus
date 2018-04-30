@@ -53,6 +53,7 @@
                         android:id="@+id/image_profile_photo"
                         android:layout_width="170dp"
                         android:layout_height="170dp"
+                        android:src="@drawable/profile_photo_placeholder"
                         app:civ_border_color="@android:color/white"
                         app:civ_border_width="4dp" />
 

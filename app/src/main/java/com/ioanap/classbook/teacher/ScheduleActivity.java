@@ -9,6 +9,8 @@ import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.utils.ScheduleFragmentPagerAdapter;
 
+import java.util.Calendar;
+
 public class ScheduleActivity extends BaseActivity {
 
     // variables
@@ -32,6 +34,33 @@ public class ScheduleActivity extends BaseActivity {
         // give the TabLayout the ViewPager
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+        // default tab is with the schedule of current day
+        tabLayout.getTabAt(getDayOfWeek()).select();
+    }
+
+    private int getDayOfWeek() {
+        // get what day of the week today is
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                return 0;
+            case Calendar.TUESDAY:
+                return 1;
+            case Calendar.WEDNESDAY:
+                return 2;
+            case Calendar.THURSDAY:
+                return 3;
+            case Calendar.FRIDAY:
+                return 4;
+            case Calendar.SATURDAY:
+                return 5;
+            case Calendar.SUNDAY:
+                return 6;
+            default:
+                return 0;
+        }
     }
 
 }
