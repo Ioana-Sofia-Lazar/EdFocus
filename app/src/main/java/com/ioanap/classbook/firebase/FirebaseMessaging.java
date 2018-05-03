@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,42 +26,32 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
-
-        createNotificationChannel();
-
-        if (remoteMessage.getNotification() == null) return;
-
         String notificationTitle = remoteMessage.getNotification().getTitle();
         String notificationMessage = remoteMessage.getNotification().getBody();
         String clickAction = remoteMessage.getNotification().getClickAction();
         String fromUserId = remoteMessage.getData().get("from_user_id");
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        // send notification
+        Intent intent = new Intent(clickAction);
+        intent.putExtra("userId", fromUserId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* request code */,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long[] pattern = {500, 500, 500, 500, 500};
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_email_envelope)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationMessage)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setVibrate(pattern)
+                .setLights(Color.BLUE, 1, 1)
+                .setContentIntent(pendingIntent);
 
-        // notification tap redirect
-        Intent intent = new Intent(clickAction);
-        intent.putExtra("userId", fromUserId);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(getApplicationContext(),
-                        (int) System.currentTimeMillis(),
-                        intent,
-                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_ONE_SHOT);
-        mBuilder.setContentIntent(pendingIntent);
-
-        // provide unique id for each notification
-        int notificationId = (int) System.currentTimeMillis();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationId, mBuilder.build());
-
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 
     private void createNotificationChannel() {
