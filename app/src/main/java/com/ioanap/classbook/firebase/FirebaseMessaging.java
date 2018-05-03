@@ -29,11 +29,19 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String notificationTitle = remoteMessage.getNotification().getTitle();
         String notificationMessage = remoteMessage.getNotification().getBody();
         String clickAction = remoteMessage.getNotification().getClickAction();
-        String fromUserId = remoteMessage.getData().get("from_user_id");
+        String notificationType = remoteMessage.getData().get("notification_type");
 
         // send notification
         Intent intent = new Intent(clickAction);
-        intent.putExtra("userId", fromUserId);
+
+        if (notificationType.equals("request")) {
+            String fromUserId = remoteMessage.getData().get("from_user_id");
+            intent.putExtra("userId", fromUserId);
+        } else if (notificationType.equals("event")) {
+            String classId = remoteMessage.getData().get("classId");
+            intent.putExtra("classId", classId);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* request code */,

@@ -292,8 +292,8 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
         // create notification in the database
         Map<String, Object> notification = new HashMap<>();
-        request.put("from", CURRENT_USER_ID);
-        request.put("requestType", requestType);
+        notification.put("from", CURRENT_USER_ID);
+        notification.put("requestType", requestType);
         mRequestNotificationsRef.child(mUserId).push().updateChildren(notification);
     }
 

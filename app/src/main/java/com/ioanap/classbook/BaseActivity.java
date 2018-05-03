@@ -81,7 +81,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
-            mDeviceTokensRef, mRequestNotificationsRef;
+            mDeviceTokensRef, mRequestNotificationsRef, mEventNotificationsRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -147,6 +147,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mUserChildrenRef = mRootRef.child("userChildren");
         mDeviceTokensRef = mRootRef.child("deviceTokens");
         mRequestNotificationsRef = mRootRef.child("requestNotifications");
+        mEventNotificationsRef = mRootRef.child("eventNotifications");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 

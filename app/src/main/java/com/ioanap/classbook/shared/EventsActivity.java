@@ -24,6 +24,8 @@ import com.ioanap.classbook.model.Event;
 import com.ioanap.classbook.utils.EventsStickyAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -185,9 +187,23 @@ public class EventsActivity extends BaseActivity {
                     event.setId(newEventId);
                     // save to firebase
                     mClassEventsRef.child(mClassId).child(newEventId).setValue(event);
+
+                    // create notification in the database
+                    Map<String, Object> notification = new HashMap<>();
+                    notification.put("classId", mClassId);
+                    notification.put("eventId", newEventId);
+                    notification.put("type", "created");
+                    mEventNotificationsRef.push().updateChildren(notification);
                 } else {
                     // editing event
                     mClassEventsRef.child(mClassId).child(eventId).setValue(event);
+
+                    // create notification in the database
+                    Map<String, Object> notification = new HashMap<>();
+                    notification.put("classId", mClassId);
+                    notification.put("eventId", eventId);
+                    notification.put("type", "updated");
+                    mEventNotificationsRef.push().updateChildren(notification);
                 }
 
                 mDialog.dismiss();
