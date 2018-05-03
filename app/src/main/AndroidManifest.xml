@@ -34,6 +34,14 @@
             android:label="Edit your profile" />
         <activity android:name=".BaseActivity" />
 
+        <!-- Firebase Notifications -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_email_envelope" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/cyan" />
+
         <!-- Facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -55,8 +63,15 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".teacher.SearchActivity" />
-        <activity android:name=".shared.ViewProfileActivity" />
+        <activity android:name=".shared.SearchActivity" />
+        <activity
+            android:name=".shared.ViewProfileActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.ioanap.classbook_TARGET_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".teacher.ClassActivity" />
         <activity android:name=".student.ClassActivity_s" />
         <activity android:name=".teacher.AddClassActivity" />
@@ -71,7 +86,23 @@
         <activity android:name=".shared.EventsActivity" />
         <activity android:name=".teacher.AddMultipleGradesActivity" />
         <activity android:name=".student.StudentsActivity_s" />
-        <activity android:name=".shared.NoInternetActivity"></activity>
+        <activity android:name=".shared.NoInternetActivity" />
+
+        <!-- Firebase Services -->
+        <service
+            android:name=".firebase.FirebaseNotifications"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".firebase.FirebaseMessaging"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

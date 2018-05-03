@@ -138,7 +138,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         });
 
         mEmailTextView.setText(settings.getEmail());
-        mLocationTextView.setText(settings.getLocation());
+
+        if (settings.getLocation().equals("")) {
+            mLocationTextView.setTextColor(getResources().getColor(R.color.lightGray));
+            mLocationTextView.setText("Unspecified");
+        } else {
+            mLocationTextView.setTextColor(getResources().getColor(R.color.gray));
+            mLocationTextView.setText(settings.getLocation());
+        }
 
         setProfilePhoto(settings.getProfilePhoto());
     }

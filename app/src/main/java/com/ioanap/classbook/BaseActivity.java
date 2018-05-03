@@ -51,6 +51,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -79,7 +80,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected FirebaseDatabase mFirebaseDatabase;
     protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
-            mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef;
+            mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
+            mDeviceTokensRef, mRequestNotificationsRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -143,6 +145,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mStudentAbsencesRef = mRootRef.child("studentAbsences");
         mUserParentsRef = mRootRef.child("userParents");
         mUserChildrenRef = mRootRef.child("userChildren");
+        mDeviceTokensRef = mRootRef.child("deviceTokens");
+        mRequestNotificationsRef = mRootRef.child("requestNotifications");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -316,6 +320,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         if (profilePhoto != null) {
             ref.child(mContext.getString(R.string.field_profile_photo)).setValue(profilePhoto);
         }
+        if (displayName != null) {
+            ref.child(mContext.getString(R.string.field_display_name)).setValue(displayName);
+        }
 
     }
 
@@ -415,7 +422,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideProgressDialog();
                         if (task.isSuccessful()) {
-                            // signed in with given email and password
+                            saveDeviceToken(mAuth.getCurrentUser().getUid());
                         } else {
                             // toast error message
                             Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -429,6 +436,11 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * one i.e. SignInActivity)
      */
     public void signOut() {
+        // remove device token for user who is digning out
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+        mDeviceTokensRef.child(mAuth.getCurrentUser().getUid()).child(deviceToken)
+                .removeValue();
+
         // Firebase sign out
         FirebaseAuth.getInstance().signOut();
 
@@ -552,6 +564,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                                 addUserInfo(user, settings);
                             }
 
+                            saveDeviceToken(mAuth.getCurrentUser().getUid());
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -628,6 +642,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                                 addUserInfo(user, settings);
                             }
 
+                            saveDeviceToken(currentUser.getUid());
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -636,6 +652,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         }
                     }
                 });
+    }
+
+    private void saveDeviceToken(String userId) {
+        // save device token
+        Map<String, Object> token = new HashMap<>();
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+        token.put(deviceToken, deviceToken);
+        mDeviceTokensRef.child(userId).updateChildren(token);
     }
 
     /**

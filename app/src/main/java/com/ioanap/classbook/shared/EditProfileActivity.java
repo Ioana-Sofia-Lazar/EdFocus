@@ -108,18 +108,18 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
      * Retrieves info entered by the user and saves it to the database.
      */
     private void saveProfileSettings() {
-        String firstName = mFirstNameEditText.getText().toString();
-        String lastName = mLastNameEditText.getText().toString();
+        String firstName = mFirstNameEditText.getText().toString().trim();
+        String lastName = mLastNameEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString();
         String location = mLocationEditText.getText().toString();
         String phoneNumber = mPhoneNumberEditText.getText().toString();
 
         updateUserAccountSettings(null, null, null, null, null, null, firstName + " " + lastName);
         if (!mSettings.getLastName().equals(lastName)) {
-            updateUserAccountSettings(lastName, null, null, null, null, null, null);
+            updateUserAccountSettings(lastName, null, null, null, null, null, firstName + " " + lastName);
         }
         if (!mSettings.getFirstName().equals(firstName)) {
-            updateUserAccountSettings(null, firstName, null, null, null, null, null);
+            updateUserAccountSettings(null, firstName, null, null, null, null, firstName + " " + lastName);
         }
         if (!mSettings.getDescription().equals(description)) {
             updateUserAccountSettings(null, null, description, null, null, null, null);

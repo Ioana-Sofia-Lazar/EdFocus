@@ -289,6 +289,12 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         Map<String, Object> request = new HashMap<>();
         request.put("requestType", requestType);
         mRequestsRef.child(mUserId).child(CURRENT_USER_ID).updateChildren(request);
+
+        // create notification in the database
+        Map<String, Object> notification = new HashMap<>();
+        request.put("from", CURRENT_USER_ID);
+        request.put("requestType", requestType);
+        mRequestNotificationsRef.child(mUserId).push().updateChildren(notification);
     }
 
     private void addContact() {
@@ -296,6 +302,12 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         Map<String, Object> request = new HashMap<>();
         request.put("requestType", "contact");
         mRequestsRef.child(mUserId).child(CURRENT_USER_ID).updateChildren(request);
+
+        // create notification in the database
+        Map<String, Object> notification = new HashMap<>();
+        notification.put("from", CURRENT_USER_ID);
+        notification.put("requestType", "contact");
+        mRequestNotificationsRef.child(mUserId).push().updateChildren(notification);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +18,6 @@ import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Person;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.shared.ViewProfileActivity;
 import com.ioanap.classbook.utils.PeopleListAdapter;
 
 import java.util.ArrayList;

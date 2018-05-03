@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/pureWhite"
     android:fitsSystemWindows="true"
-    tools:context="com.ioanap.classbook.teacher.SearchActivity">
+    tools:context="com.ioanap.classbook.shared.SearchActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_search"

@@ -27,7 +27,6 @@ import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Contact;
 import com.ioanap.classbook.model.RequestInfo;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.teacher.SearchActivity;
 import com.ioanap.classbook.utils.ContactsListAdapter;
 
 import java.util.ArrayList;
