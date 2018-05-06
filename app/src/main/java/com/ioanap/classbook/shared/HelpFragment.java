@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.IntroActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.utils.FAQExpandableListAdapter;
@@ -58,7 +59,9 @@ public class HelpFragment extends Fragment {
         mIntroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().startActivity(new Intent(getContext(), IntroActivity.class));
+                Intent intent = new Intent(getContext(), IntroActivity.class);
+                intent.putExtra("userType", ((BaseActivity) getActivity()).getCurrentUserType());
+                getActivity().startActivity(intent);
             }
         });
     }

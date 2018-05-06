@@ -81,7 +81,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected DatabaseReference mRootRef, mUserRef, mUserAccountSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
-            mDeviceTokensRef, mRequestNotificationsRef, mEventNotificationsRef, mSettingsRef;
+            mDeviceTokensRef, mRequestNotificationsRef, mEventNotificationsRef, mSettingsRef,
+            mFirstTimeRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -149,6 +150,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mRequestNotificationsRef = mRootRef.child("requestNotifications");
         mEventNotificationsRef = mRootRef.child("eventNotifications");
         mSettingsRef = mRootRef.child("settings");
+        mFirstTimeRef = mRootRef.child("firstTime");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -237,15 +239,16 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * Adds data to Firebase for the user with ID user.getId().
      *
      * @param user
-     * @param saccountSettings
+     * @param accountSettings
      */
-    public void addUserInfo(User user, UserAccountSettings saccountSettings) {
+    public void addUserInfo(User user, UserAccountSettings accountSettings) {
         mUserRef.child(user.getId()).setValue(user);
 
-        saccountSettings.setId(user.getId());
-        saccountSettings.setEmail(user.getEmail());
-        saccountSettings.setUserType(user.getUserType());
-        mUserAccountSettingsRef.child(user.getId()).setValue(saccountSettings);
+        // user profile settings
+        accountSettings.setId(user.getId());
+        accountSettings.setEmail(user.getEmail());
+        accountSettings.setUserType(user.getUserType());
+        mUserAccountSettingsRef.child(user.getId()).setValue(accountSettings);
 
         // app settings
         Map<String, Object> settings = new HashMap<>();
@@ -253,6 +256,11 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         settings.put("location", true);
         settings.put("phone", true);
         mSettingsRef.child(user.getId()).setValue(settings);
+
+        // first time
+        Map<String, Object> node = new HashMap<>();
+        node.put(user.getId(), true);
+        mFirstTimeRef.updateChildren(node);
     }
 
     /**
@@ -378,7 +386,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        String userType;
+                        final String userType;
 
                         if (user == null) {
                             // this is user's first sign in with Google and he doesn't have his data added yet
@@ -389,10 +397,31 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         // save user type to Shared Preferences for future login
                         saveToSharedPreferences(true, userType);
 
-                        Intent intent = new Intent(mContext, DrawerActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        mContext.startActivity(intent);
+                        // if it's first time entering app, show intro
+                        mFirstTimeRef.child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    boolean isFirstTime = (boolean) dataSnapshot.getValue();
+
+                                    Intent intent = new Intent(mContext, DrawerActivity.class);
+
+                                    if (isFirstTime) {
+                                        intent = new Intent(mContext, IntroActivity.class);
+                                        intent.putExtra("userType", userType);
+                                    }
+
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    mContext.startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
                     }
 

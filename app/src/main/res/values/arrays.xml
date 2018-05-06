@@ -23,6 +23,50 @@
         <item>@drawable/ic_activity</item>
     </integer-array>
 
+    <!-- STUDENT Intro Slider -->
+    <string-array name="student_intro_titles">
+        <item>nisi ut aliquip ex ea commodo consequat.</item>
+        <item>ore commodo consequat.</item>
+        <item>Lorem ipsum dolor sit amet</item>
+        <item>Lorem ipsum dolor sit amet</item>
+    </string-array>
+
+    <string-array name="student_intro_descriptions">
+        <item>nisi ut aliquip ex ea commodo consequat.</item>
+        <item>ore commodo consequatore commodo consequatore commodo consequatore commodo consequatore commodo consequatore commodo consequat.</item>
+        <item>Lorem ipsum dolor sit aore commodo consequatore commodo consequatore commodo consequatmet</item>
+        <item>Lorem ipsum dolor sit aore commodo consequatore commodo consequatore commodo consequatmet</item>
+    </string-array>
+
+    <integer-array name="student_intro_images">
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+    </integer-array>
+
+    <!-- PARENT Intro Slider -->
+    <string-array name="parent_intro_titles">
+        <item>nisi ut aliquip ex ea commodo consequat.</item>
+        <item>ore commodo consequat.</item>
+        <item>Lorem ipsum dolor sit amet</item>
+        <item>Lorem ipsum dolor sit amet</item>
+    </string-array>
+
+    <string-array name="parent_intro_descriptions">
+        <item>nisi ut aliquip ex ea commodo consequat.</item>
+        <item>ore commodo consequatore commodo consequatore commodo consequatore commodo consequatore commodo consequatore commodo consequat.</item>
+        <item>Lorem ipsum dolor sit aore commodo consequatore commodo consequatore commodo consequatmet</item>
+        <item>Lorem ipsum dolor sit aore commodo consequatore commodo consequatore commodo consequatmet</item>
+    </string-array>
+
+    <integer-array name="parent_intro_images">
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+    </integer-array>
+
     <array name="slide_colors">
         <item>@color/turquoise</item>
         <item>@color/pink</item>
