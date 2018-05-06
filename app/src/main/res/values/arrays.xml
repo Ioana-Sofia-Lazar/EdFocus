@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- TEACHER Intro Slider -->
+    <string-array name="teacher_intro_titles">
+        <item>nisi ut aliquip ex ea commodo consequat.</item>
+        <item>ore commodo consequat.</item>
+        <item>Lorem ipsum dolor sit amet</item>
+        <item>Lorem ipsum dolor sit amet</item>
+    </string-array>
+
+    <string-array name="teacher_intro_descriptions">
+        <item>nisi ut aliquip ex ea commodo consequat.</item>
+        <item>ore commodo consequatore commodo consequatore commodo consequatore commodo consequatore commodo consequatore commodo consequat.</item>
+        <item>Lorem ipsum dolor sit aore commodo consequatore commodo consequatore commodo consequatmet</item>
+        <item>Lorem ipsum dolor sit aore commodo consequatore commodo consequatore commodo consequatmet</item>
+    </string-array>
+
+    <integer-array name="teacher_intro_images">
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+        <item>@drawable/ic_activity</item>
+    </integer-array>
+
+    <array name="slide_colors">
+        <item>@color/turquoise</item>
+        <item>@color/pink</item>
+        <item>@color/blue</item>
+        <item>@color/violet</item>
+    </array>
+
+</resources>

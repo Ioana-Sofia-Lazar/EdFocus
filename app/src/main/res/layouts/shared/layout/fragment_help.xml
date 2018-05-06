@@ -33,6 +33,12 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <Button
+        android:id="@+id/btn_start_intro"
+        style="@style/Button"
+        android:backgroundTint="@color/coral"
+        android:text="Start Intro Slider" />
+
     <TextView
         style="@style/TextBig"
         android:layout_gravity="center_horizontal"

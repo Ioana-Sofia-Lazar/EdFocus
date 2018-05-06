@@ -1,5 +1,6 @@
 package com.ioanap.classbook.shared;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.ioanap.classbook.IntroActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.utils.FAQExpandableListAdapter;
 
@@ -22,6 +25,7 @@ public class HelpFragment extends Fragment {
 
     // widgets
     ExpandableListView mQuestionsList;
+    Button mIntroButton;
 
     // variables
     FAQExpandableListAdapter mAdapter;
@@ -42,12 +46,21 @@ public class HelpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mQuestionsList = view.findViewById(R.id.list_questions);
+        mIntroButton = view.findViewById(R.id.btn_start_intro);
 
         mAdapter = new FAQExpandableListAdapter(getContext());
         mQuestionsList.setAdapter(mAdapter);
 
         // arrow bounds
         mQuestionsList.setIndicatorBounds(GetPixelFromDips(0), GetPixelFromDips(50));
+
+        // start intro slider
+        mIntroButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().startActivity(new Intent(getContext(), IntroActivity.class));
+            }
+        });
     }
 
     public int GetPixelFromDips(float pixels) {

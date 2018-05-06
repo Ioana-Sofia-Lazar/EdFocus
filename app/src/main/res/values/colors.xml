@@ -18,4 +18,10 @@
     <color name="errorRed">#FF0000</color>
 
     <color name="drawerMenuItemColor"></color>
+
+    <!-- Intro slider -->
+    <color name="turquoise">#4dc790</color>
+    <color name="pink">#ff56da</color>
+    <color name="violet">#a159e9</color>
+    <color name="blue">#68c5ea</color>
 </resources>
