@@ -34,7 +34,8 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<RequestInfo> mRequests = new ArrayList<>();
     private Context mContext;
 
-    public ContactsListAdapter(Context context, ArrayList<Contact> contacts, ArrayList<RequestInfo> requests) {
+    public ContactsListAdapter(Context context, ArrayList<Contact> contacts,
+                               ArrayList<RequestInfo> requests) {
         mContext = context;
         mContacts = contacts;
         mRequests = requests;
@@ -48,37 +49,32 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // Inflate the custom layout and return a new holder instance
         if (viewType == VIEW_TYPE_CONTACT) {
             View contactView = inflater.inflate(R.layout.row_contact_item, parent, false);
-            ContactViewHolder viewHolder = new ContactViewHolder(contactView);
 
-            return viewHolder;
+            return new ContactViewHolder(contactView);
         }
 
         if (viewType == VIEW_TYPE_REQUESTS_TITLE) {
             View titleView = inflater.inflate(R.layout.row_title_item, parent, false);
-            RequestsTitleViewHolder viewHolder = new RequestsTitleViewHolder(titleView);
 
-            return viewHolder;
+            return new RequestsTitleViewHolder(titleView);
         }
 
         if (viewType == VIEW_TYPE_REQUEST) {
             View requestView = inflater.inflate(R.layout.row_request_item, parent, false);
-            RequestViewHolder viewHolder = new RequestViewHolder(requestView);
 
-            return viewHolder;
+            return new RequestViewHolder(requestView);
         }
 
         if (viewType == VIEW_TYPE_NO_CONTACTS) {
             View requestView = inflater.inflate(R.layout.row_no_contacts, parent, false);
-            NoContactsViewHolder viewHolder = new NoContactsViewHolder(requestView);
 
-            return viewHolder;
+            return new NoContactsViewHolder(requestView);
         }
 
         // viewType == VIEW_TYPE_NO_REQUESTS
         View requestView = inflater.inflate(R.layout.row_no_requests, parent, false);
-        NoRequestsViewHolder viewHolder = new NoRequestsViewHolder(requestView);
 
-        return viewHolder;
+        return new NoRequestsViewHolder(requestView);
 
     }
 

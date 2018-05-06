@@ -2,6 +2,7 @@ package com.ioanap.classbook.shared;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -68,7 +69,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     private void displayContacts() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        ((BaseActivity) getActivity()).showProgressDialog("");
         mContactsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -89,7 +89,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        ((BaseActivity) getActivity()).hideProgressDialog();
     }
 
     /**
@@ -124,10 +123,9 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     /**
      * Display requests for the current user
      */
-    private void displayRequests() {
+    public void displayRequests() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        ((BaseActivity) getActivity()).showProgressDialog("");
         mRequestsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,6 +141,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                     showRequestData(id, requestType);
                 }
 
+                mContactsListAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -151,7 +151,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        ((BaseActivity) getActivity()).hideProgressDialog();
     }
 
     /**
@@ -164,7 +163,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
-                Log.d(TAG, "getrequestdata : " + settings.toString());
+                Log.d(TAG, "showRequestData : " + settings.toString());
 
                 RequestInfo request = new RequestInfo();
                 request.setPersonId(id);
@@ -187,7 +186,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((BaseActivity) getActivity()).hideKeyboard(getActivity());
+        BaseActivity.hideKeyboard(getActivity());
 
         mContacts = new ArrayList<>();
         mRequests = new ArrayList<>();
@@ -224,7 +223,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     }
 
     void filterContactsList(String text){
-        ArrayList<Contact> temp = new ArrayList();
+        ArrayList<Contact> temp = new ArrayList<>();
         text = text.toLowerCase();
 
         for(Contact contact: mContacts){
@@ -238,7 +237,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_contacts, container, false);
