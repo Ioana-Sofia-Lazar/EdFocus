@@ -36,7 +36,7 @@ import com.ioanap.classbook.R;
  * Created by ioana on 2/23/2018.
  */
 
-public class SettingsFragment extends Fragment implements View.OnClickListener {
+public class SettingsFragment extends Fragment {
 
     private static final String TAG = "SettingsFragment";
 
@@ -229,7 +229,4 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    @Override
-    public void onClick(View view) {
-    }
 }

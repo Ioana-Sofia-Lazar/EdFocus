@@ -107,6 +107,9 @@ public class DrawerActivity extends BaseActivity
         } else if (id == R.id.nav_children) {
             checkInternetConnection();
             displayFragment(new ChildrenFragment());
+        } else if (id == R.id.nav_help) {
+            checkInternetConnection();
+            displayFragment(new HelpFragment());
         } else if (id == R.id.nav_logout) {
             // sign user out
             signOut();

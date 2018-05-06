@@ -14,7 +14,7 @@
 
     <!-- Firebase references -->
     <string name="ref_users">users</string>
-    <string name="ref_user_settings">user_account_settings</string>
+    <string name="ref_user_settings">userAccountSettings</string>
     <string name="ref_contacts">contacts</string>
 
     <!-- Firebase fields -->
@@ -45,6 +45,19 @@
     <string name="absences_no_courses_error">Before adding Absences for Students, you need to create at least one Course from the Courses Page.</string>
     <string name="default_no_courses_error">You need to create at least one Course in the Courses Page before being able to perform this action.</string>
 
+    <!-- Student enrollment -->
     <string name="student_enroll_info">Enter the token provided by your teacher in order to enroll to a Class.</string>
+
+    <!-- FAQ -->
+    <string-array name="faq_questions">
+        <item>Lorem ipsum dolor sit amet?</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore?</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laboreLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore?</item>
+    </string-array>
+    <string-array name="faq_answers">
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit</item>
+    </string-array>
 
 </resources>

@@ -42,10 +42,10 @@
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
         <item
-            android:id="@+id/nav_help_feedback"
+            android:id="@+id/nav_help"
             android:enabled="true"
-            android:icon="@drawable/ic_help_feedback"
-            android:title="Help and Feedback" />
+            android:icon="@drawable/ic_help"
+            android:title="Help" />
         <item
             android:id="@+id/nav_logout"
             android:enabled="true"
