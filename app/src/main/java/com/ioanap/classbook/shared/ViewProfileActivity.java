@@ -32,7 +32,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
     private Button mAddContactButton, mAcceptRequestButton, mDeclineRequestButton, mCancelRequestButton;
     private ImageView mProfilePhotoImageView;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
-            mEmailTextView, mLocationTextView, mUserTypeTextView;
+            mEmailTextView, mLocationTextView, mPhoneTextView, mUserTypeTextView;
     private LinearLayout mRequestSentLayout, mRequestReceivedLayout, mInfoLayout, mPrivateLayout;
     private GridLayout mInfoNumbersLayout;
 
@@ -59,6 +59,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         mClassesTextView = findViewById(R.id.text_classes);
         mEmailTextView = findViewById(R.id.text_email);
         mLocationTextView = findViewById(R.id.text_location);
+        mPhoneTextView = findViewById(R.id.text_phone);
         mUserTypeTextView = findViewById(R.id.text_user_type);
         mRequestSentLayout = findViewById(R.id.layout_request_sent);
         mRequestReceivedLayout = findViewById(R.id.layout_request_received);
@@ -95,7 +96,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-    private void setProfileWidgets(UserAccountSettings settings) {
+    private void setProfileWidgets(final UserAccountSettings settings) {
         mNameTextView.setText(String.format("%s %s", settings.getFirstName(), settings.getLastName()));
         mDescriptionTextView.setText(settings.getDescription());
         mUserTypeTextView.setText(settings.getUserType());
@@ -126,8 +127,29 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
             }
         });
 
-        mEmailTextView.setText(settings.getEmail());
-        mLocationTextView.setText(settings.getLocation());
+        // see if user being viewed has his information secret or unspecified
+        mSettingsRef.child(CURRENT_USER_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("email").exists()) {
+                    boolean isPublic = (boolean) dataSnapshot.child("email").getValue();
+                    checkInfoUnspecified(mEmailTextView, settings.getEmail(), isPublic);
+                }
+                if (dataSnapshot.child("location").exists()) {
+                    boolean isPublic = (boolean) dataSnapshot.child("location").getValue();
+                    checkInfoUnspecified(mLocationTextView, settings.getLocation(), isPublic);
+                }
+                if (dataSnapshot.child("phone").exists()) {
+                    boolean isPublic = (boolean) dataSnapshot.child("phone").getValue();
+                    checkInfoUnspecified(mPhoneTextView, settings.getPhoneNumber(), isPublic);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         UniversalImageLoader.setImage(settings.getProfilePhoto(), mProfilePhotoImageView, null);
 
@@ -136,6 +158,16 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         checkRequestReceived();
         checkAlreadyContact();
 
+    }
+
+    private void checkInfoUnspecified(TextView textView, String text, Boolean isPublic) {
+        if (text.equals("") || !isPublic) {
+            textView.setTextColor(getResources().getColor(R.color.lightGray));
+            textView.setText("Unspecified");
+        } else {
+            textView.setTextColor(getResources().getColor(R.color.gray));
+            textView.setText(text);
+        }
     }
 
     private void checkRequestSent() {

@@ -32,7 +32,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     // widgets
     private ImageView mProfilePhotoImageView, mEditProfileButton;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
-            mEmailTextView, mLocationTextView, mUserTypeTextView;
+            mEmailTextView, mLocationTextView, mPhoneTextView, mUserTypeTextView;
 
     // variables
     private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef;
@@ -56,6 +56,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         mUserTypeTextView = view.findViewById(R.id.text_user_type);
         mEmailTextView = view.findViewById(R.id.text_email);
         mLocationTextView = view.findViewById(R.id.text_location);
+        mPhoneTextView = view.findViewById(R.id.text_phone);
 
         mEditProfileButton.setOnClickListener(this);
 
@@ -139,13 +140,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         mEmailTextView.setText(settings.getEmail());
 
-        if (settings.getLocation().equals("")) {
-            mLocationTextView.setTextColor(getResources().getColor(R.color.lightGray));
-            mLocationTextView.setText("Unspecified");
-        } else {
-            mLocationTextView.setTextColor(getResources().getColor(R.color.gray));
-            mLocationTextView.setText(settings.getLocation());
-        }
+        checkUnspecified(mLocationTextView, settings.getLocation());
+        checkUnspecified(mPhoneTextView, settings.getPhoneNumber());
 
         setProfilePhoto(settings.getProfilePhoto());
     }
@@ -190,6 +186,16 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         if (view == mEditProfileButton) {
             // jump to edit profile page
             startActivity(new Intent(getActivity(), EditProfileActivity.class));
+        }
+    }
+
+    private void checkUnspecified(TextView textView, String text) {
+        if (text.equals("")) {
+            textView.setTextColor(getResources().getColor(R.color.lightGray));
+            textView.setText("Unspecified");
+        } else {
+            textView.setTextColor(getResources().getColor(R.color.gray));
+            textView.setText(text);
         }
     }
 
