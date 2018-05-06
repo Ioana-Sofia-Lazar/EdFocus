@@ -81,7 +81,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        Query query = mSettingsRef.orderByChild(getString(R.string.field_display_name)).equalTo(keyword);
+        Query query = mUserAccountSettingsRef.orderByChild(getString(R.string.field_display_name)).equalTo(keyword);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

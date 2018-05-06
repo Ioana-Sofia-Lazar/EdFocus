@@ -143,6 +143,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         if (view == mSwitchToSignInTextView) {
             // jump to Login activity
             startActivity(new Intent(this, SignInActivity.class));
+            finish();
         }
         if (view == mChooseTeacherLayout) {
             // user chose Teacher type

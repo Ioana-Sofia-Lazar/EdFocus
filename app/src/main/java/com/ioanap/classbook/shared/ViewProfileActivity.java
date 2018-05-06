@@ -76,7 +76,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void showUserInfo() {
         // add listener for the settings of the user whose profile is being viewed
-        mSettingsRef.child(mUserId).addValueEventListener(new ValueEventListener() {
+        mUserAccountSettingsRef.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info

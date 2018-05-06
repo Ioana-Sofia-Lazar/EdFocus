@@ -1,4 +1,4 @@
-package com.ioanap.classbook.teacher;
+package com.ioanap.classbook.shared;
 
 import android.app.Dialog;
 import android.content.ClipData;
@@ -19,9 +19,10 @@ import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Class;
 import com.ioanap.classbook.model.UserAccountSettings;
-import com.ioanap.classbook.shared.CoursesActivity;
-import com.ioanap.classbook.shared.EventsActivity;
-import com.ioanap.classbook.shared.ViewProfileActivity;
+import com.ioanap.classbook.teacher.AddClassActivity;
+import com.ioanap.classbook.teacher.FilesActivity;
+import com.ioanap.classbook.teacher.ScheduleActivity;
+import com.ioanap.classbook.teacher.StudentsActivity;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 
 public class ClassActivity extends BaseActivity implements View.OnClickListener {
@@ -158,7 +159,7 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
                 UniversalImageLoader.setImage(aClass.getPhoto(), mClassPhoto, null);
 
                 // get teacher info
-                mSettingsRef.child(aClass.getTeacherId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                mUserAccountSettingsRef.child(aClass.getTeacherId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);

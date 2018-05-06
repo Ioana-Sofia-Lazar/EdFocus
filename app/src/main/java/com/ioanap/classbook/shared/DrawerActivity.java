@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.parent.ChildrenFragment;
-import com.ioanap.classbook.teacher.MessagesFragment;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -103,7 +102,8 @@ public class DrawerActivity extends BaseActivity
             checkInternetConnection();
             displayFragment(new ClassesFragment());
         } else if (id == R.id.nav_settings) {
-
+            checkInternetConnection();
+            displayFragment(new SettingsFragment());
         } else if (id == R.id.nav_children) {
             checkInternetConnection();
             displayFragment(new ChildrenFragment());

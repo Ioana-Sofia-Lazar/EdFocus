@@ -162,7 +162,7 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
                 UniversalImageLoader.setImage(aClass.getPhoto(), mClassPhoto, null);
 
                 // get teacher info
-                mSettingsRef.child(aClass.getTeacherId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                mUserAccountSettingsRef.child(aClass.getTeacherId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);

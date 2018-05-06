@@ -62,7 +62,7 @@ public class StudentActivity extends BaseActivity {
 
     private void displayStudentInfo() {
         // get info for student that is being viewed
-        mSettingsRef.child(mStudentId).addValueEventListener(new ValueEventListener() {
+        mUserAccountSettingsRef.child(mStudentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info

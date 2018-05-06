@@ -191,7 +191,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void showStudentData(final String id) {
-        mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserAccountSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);

@@ -40,8 +40,7 @@
             android:id="@+id/nav_settings"
             android:enabled="true"
             android:icon="@drawable/ic_settings"
-            android:title="Settings"
-            android:visible="false" />
+            android:title="Settings" />
         <item
             android:id="@+id/nav_help_feedback"
             android:enabled="true"

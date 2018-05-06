@@ -79,18 +79,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        Intent intent;
-
-        if (userType.equals("teacher")) {
-            intent = new Intent(mContext, DrawerActivity.class);
-            mContext.startActivity(intent);
-        } else if (userType.equals("parent")) {
-            intent = new Intent(mContext, DrawerActivity.class);
-            mContext.startActivity(intent);
-        } else {
-            intent = new Intent(mContext, DrawerActivity.class);
-            mContext.startActivity(intent);
-        }
+        startActivity(new Intent(mContext, DrawerActivity.class));
 
         Log.d(TAG, "redirecting already logged " + userType);
     }
@@ -259,6 +248,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (view == mSwitchToSignUpTextView) {
             // jump to sign up activity
             startActivity(new Intent(this, SignUpActivity.class));
+            finish();
         }
         if (view == mGoogleSignInButton) {
             googleSignIn();

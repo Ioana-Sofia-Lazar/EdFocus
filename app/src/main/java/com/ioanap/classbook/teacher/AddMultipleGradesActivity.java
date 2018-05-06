@@ -71,7 +71,7 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
     private void populateListView() {
         for (String studentId : mStudentIds) {
             // get student name from Firebase and create a row for him
-            mSettingsRef.child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
+            mUserAccountSettingsRef.child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);

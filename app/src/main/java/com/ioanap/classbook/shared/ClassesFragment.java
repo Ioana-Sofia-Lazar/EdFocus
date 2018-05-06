@@ -29,7 +29,6 @@ import com.ioanap.classbook.R;
 import com.ioanap.classbook.model.Class;
 import com.ioanap.classbook.student.ClassActivity_s;
 import com.ioanap.classbook.teacher.AddClassActivity;
-import com.ioanap.classbook.teacher.ClassActivity;
 import com.ioanap.classbook.utils.ClassesListAdapter;
 
 import java.util.ArrayList;

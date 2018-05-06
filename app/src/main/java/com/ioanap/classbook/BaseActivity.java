@@ -78,10 +78,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     // firebase
     protected FirebaseAuth mAuth;
     protected FirebaseDatabase mFirebaseDatabase;
-    protected DatabaseReference mRootRef, mUserRef, mSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
+    protected DatabaseReference mRootRef, mUserRef, mUserAccountSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
-            mDeviceTokensRef, mRequestNotificationsRef, mEventNotificationsRef;
+            mDeviceTokensRef, mRequestNotificationsRef, mEventNotificationsRef, mSettingsRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -131,7 +131,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = mFirebaseDatabase.getReference();
         mUserRef = mRootRef.child("users");
-        mSettingsRef = mRootRef.child("userAccountSettings");
+        mUserAccountSettingsRef = mRootRef.child("userAccountSettings");
         mContactsRef = mRootRef.child("contacts");
         mRequestsRef = mRootRef.child("requests");
         mClassesRef = mRootRef.child("classes");
@@ -148,6 +148,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mDeviceTokensRef = mRootRef.child("deviceTokens");
         mRequestNotificationsRef = mRootRef.child("requestNotifications");
         mEventNotificationsRef = mRootRef.child("eventNotifications");
+        mSettingsRef = mRootRef.child("settings");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -236,14 +237,21 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * Adds data to Firebase for the user with ID user.getId().
      *
      * @param user
-     * @param settings
+     * @param saccountSettings
      */
-    public void addUserInfo(User user, UserAccountSettings settings) {
+    public void addUserInfo(User user, UserAccountSettings saccountSettings) {
         mUserRef.child(user.getId()).setValue(user);
 
-        settings.setId(user.getId());
-        settings.setEmail(user.getEmail());
-        settings.setUserType(user.getUserType());
+        saccountSettings.setId(user.getId());
+        saccountSettings.setEmail(user.getEmail());
+        saccountSettings.setUserType(user.getUserType());
+        mUserAccountSettingsRef.child(user.getId()).setValue(saccountSettings);
+
+        // app settings
+        Map<String, Object> settings = new HashMap<>();
+        settings.put("email", true);
+        settings.put("location", true);
+        settings.put("phone", true);
         mSettingsRef.child(user.getId()).setValue(settings);
     }
 
@@ -301,7 +309,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     public void updateUserAccountSettings(String lastName, String firstName, String description,
                                           String location, String phoneNumber, String profilePhoto,
                                           String displayName) {
-        DatabaseReference ref = mSettingsRef.child(CURRENT_USER_ID);
+        DatabaseReference ref = mUserAccountSettingsRef.child(CURRENT_USER_ID);
 
         if (lastName != null) {
             ref.child(mContext.getString(R.string.field_last_name)).setValue(lastName);
@@ -381,27 +389,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         // save user type to Shared Preferences for future login
                         saveToSharedPreferences(true, userType);
 
-                        // redirect user to corresponding type of profile and delete all previous
-                        // activities from stack
-                        Intent intent;
-                        if (userType.equals("teacher")) {
-                            intent = new Intent(mContext, DrawerActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            mContext.startActivity(intent);
-                        } else if (userType.equals("parent")) {
-                            intent = new Intent(mContext, DrawerActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            mContext.startActivity(intent);
-                        } else {
-                            intent = new Intent(mContext, DrawerActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            mContext.startActivity(intent);
-                        }
-
-                        Log.d(TAG, "redirecting as" + userType);
+                        Intent intent = new Intent(mContext, DrawerActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        mContext.startActivity(intent);
 
                     }
 
@@ -424,6 +415,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         hideProgressDialog();
                         if (task.isSuccessful()) {
                             saveDeviceToken(mAuth.getCurrentUser().getUid());
+                            userRedirect();
                         } else {
                             // toast error message
                             Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

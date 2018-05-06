@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
+import com.ioanap.classbook.shared.ClassActivity;
 
 public class ClassTokenActivity extends BaseActivity implements View.OnClickListener {
 
