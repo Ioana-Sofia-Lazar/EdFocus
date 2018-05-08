@@ -70,7 +70,7 @@ public class NotificationsFragment extends Fragment {
     private void displayNotifications() {
         String userId = ((BaseActivity) getContext()).getCurrentUserId();
 
-        mNotificationsRef.child(userId).addValueEventListener(new ValueEventListener() {
+        mNotificationsRef.child(userId).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mNotifications.clear();
@@ -88,4 +88,26 @@ public class NotificationsFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // mark notifications as seen
+        String userId = ((BaseActivity) getContext()).getCurrentUserId();
+
+        mNotificationsRef.child(userId).orderByChild("seen").equalTo(false)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            data.getRef().child("seen").setValue(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
 }
