@@ -48,7 +48,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         // Inflate the custom layout and return a new holder instance
         if (viewType == VIEW_TYPE_CONTACT) {
-            View contactView = inflater.inflate(R.layout.row_contact_item, parent, false);
+            View contactView = inflater.inflate(R.layout.row_contact, parent, false);
 
             return new ContactViewHolder(contactView);
         }

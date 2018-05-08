@@ -18,7 +18,7 @@
         <item name="actionModeCloseDrawable">@drawable/ic_x_cancel_white</item>
         <item name="android:actionModeBackground">@color/lightCyan</item>
 
-        <item name="listPreferredItemHeightSmall">60dp</item>
+        <item name="listPreferredItemHeightSmall">50dp</item>
     </style>
 
     <style name="ActionMode" parent="@style/Widget.AppCompat.ActionMode">

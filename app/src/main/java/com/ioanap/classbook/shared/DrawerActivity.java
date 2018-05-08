@@ -110,6 +110,9 @@ public class DrawerActivity extends BaseActivity
         } else if (id == R.id.nav_help) {
             checkInternetConnection();
             displayFragment(new HelpFragment());
+        } else if (id == R.id.nav_notifications) {
+            checkInternetConnection();
+            displayFragment(new NotificationsFragment());
         } else if (id == R.id.nav_logout) {
             // sign user out
             signOut();

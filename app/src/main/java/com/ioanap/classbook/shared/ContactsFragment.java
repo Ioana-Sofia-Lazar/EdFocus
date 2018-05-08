@@ -109,7 +109,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 contact.setProfilePhoto(settings.getProfilePhoto());
                 contact.setUserType(settings.getUserType());
 
-                mContacts.add(contact); Log.d(TAG, "contact : " + contact.toString());
+                mContacts.add(contact);
                 mContactsListAdapter.notifyDataSetChanged();
             }
 

@@ -52,9 +52,6 @@ public class HelpFragment extends Fragment {
         mAdapter = new FAQExpandableListAdapter(getContext());
         mQuestionsList.setAdapter(mAdapter);
 
-        // arrow bounds
-        mQuestionsList.setIndicatorBounds(GetPixelFromDips(0), GetPixelFromDips(50));
-
         // start intro slider
         mIntroButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,13 +61,6 @@ public class HelpFragment extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
-    }
-
-    public int GetPixelFromDips(float pixels) {
-        // Get the screen's density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
     }
 
 }

@@ -55,6 +55,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ioanap.classbook.model.Notification;
 import com.ioanap.classbook.model.User;
 import com.ioanap.classbook.model.UserAccountSettings;
 import com.ioanap.classbook.shared.DrawerActivity;
@@ -82,7 +83,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
             mDeviceTokensRef, mRequestNotificationsRef, mEventNotificationsRef, mSettingsRef,
-            mFirstTimeRef;
+            mFirstTimeRef, mNotificationsRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -151,6 +152,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mEventNotificationsRef = mRootRef.child("eventNotifications");
         mSettingsRef = mRootRef.child("settings");
         mFirstTimeRef = mRootRef.child("firstTime");
+        mNotificationsRef = mRootRef.child("notifications");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -877,6 +879,17 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         else date += day;
 
         return date;
+    }
+
+    public void createNotification(String title, String message, int icon, String clickAction,
+                                   long compareValue) {
+        Notification notification = new Notification(title, message, icon, clickAction, compareValue, false);
+        mNotificationsRef.child(CURRENT_USER_ID).push().setValue(notification);
+    }
+
+    // todo
+    public void markNotificationSeen() {
+
     }
 
 }
