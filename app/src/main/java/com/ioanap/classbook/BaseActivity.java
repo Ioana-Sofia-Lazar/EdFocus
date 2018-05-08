@@ -81,7 +81,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected DatabaseReference mRootRef, mUserRef, mUserAccountSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
-            mDeviceTokensRef, mRequestNotificationsRef, mEventNotificationsRef, mSettingsRef,
+            mDeviceTokensRef, mSettingsRef,
             mFirstTimeRef, mNotificationsRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
@@ -147,8 +147,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mUserParentsRef = mRootRef.child("userParents");
         mUserChildrenRef = mRootRef.child("userChildren");
         mDeviceTokensRef = mRootRef.child("deviceTokens");
-        mRequestNotificationsRef = mRootRef.child("requestNotifications");
-        mEventNotificationsRef = mRootRef.child("eventNotifications");
         mSettingsRef = mRootRef.child("settings");
         mFirstTimeRef = mRootRef.child("firstTime");
         mNotificationsRef = mRootRef.child("notifications");
@@ -879,12 +877,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
         return date;
     }
-
-    /*public void createNotification(String title, String message, String icon, String clickAction,
-                                   long compareValue) {
-        Notification notification = new Notification(title, message, icon, clickAction, compareValue, false);
-        mNotificationsRef.child(CURRENT_USER_ID).push().setValue(notification);
-    }*/
 
     // todo
     public void markNotificationSeen() {
