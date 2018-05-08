@@ -2,6 +2,7 @@ package com.ioanap.classbook.shared;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,13 +13,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
 import com.ioanap.classbook.parent.ChildrenFragment;
 import com.ioanap.classbook.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import static android.support.v4.view.MenuItemCompat.getActionView;
 
 public class DrawerActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -26,7 +35,11 @@ public class DrawerActivity extends BaseActivity
 
     private static final String TAG = "DrawerActivity";
 
+    // variables
     private Context mContext = DrawerActivity.this;
+
+    // widgets
+    private TextView mNotificationsCounterText, mRequestsCounterText;
 
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction =
@@ -73,6 +86,65 @@ public class DrawerActivity extends BaseActivity
             // show "Notifications" for parent and student
             navigationView.getMenu().findItem(R.id.nav_notifications).setVisible(true);
         }
+
+        // number badges
+        mNotificationsCounterText = (TextView) getActionView(navigationView.getMenu().
+                findItem(R.id.nav_notifications));
+        mRequestsCounterText = (TextView) getActionView(navigationView.getMenu().
+                findItem(R.id.nav_contacts));
+        initializeDrawerCounters();
+    }
+
+    private void initializeDrawerCounters() {
+        // style
+        styleBadgeCounter(mNotificationsCounterText);
+        styleBadgeCounter(mRequestsCounterText);
+
+        // get number of new notifications (not seen)
+        mNotificationsRef.child(CURRENT_USER_ID).orderByChild("seen").equalTo(false)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int nb = (int) dataSnapshot.getChildrenCount();
+                        if (nb == 0) {
+                            mNotificationsCounterText.setVisibility(View.GONE);
+                        } else {
+                            mNotificationsCounterText.setVisibility(View.VISIBLE);
+                            mNotificationsCounterText.setText(String.valueOf(nb));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+        // get number of new notifications (not seen)
+        mRequestsRef.child(CURRENT_USER_ID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int nb = (int) dataSnapshot.getChildrenCount();
+                        if (nb == 0) {
+                            mRequestsCounterText.setVisibility(View.GONE);
+                        } else {
+                            mRequestsCounterText.setVisibility(View.VISIBLE);
+                            mRequestsCounterText.setText(String.valueOf(nb));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void styleBadgeCounter(TextView textView) {
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextColor(getResources().getColor(R.color.colorAccent));
     }
 
     @Override

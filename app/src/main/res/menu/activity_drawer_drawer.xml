@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group
         android:id="@+id/group_items_1"
@@ -19,12 +20,14 @@
             android:enabled="true"
             android:icon="@drawable/ic_bell"
             android:title="Notifications"
-            android:visible="false" />
+            android:visible="false"
+            app:actionViewClass="android.widget.TextView" />
         <item
             android:id="@+id/nav_contacts"
             android:enabled="true"
             android:icon="@drawable/ic_contact"
-            android:title="Contacts" />
+            android:title="Contacts"
+            app:actionViewClass="android.widget.TextView" />
         <item
             android:id="@+id/nav_classes"
             android:enabled="true"
