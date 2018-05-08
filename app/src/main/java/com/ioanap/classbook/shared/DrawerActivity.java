@@ -69,6 +69,10 @@ public class DrawerActivity extends BaseActivity
             // show "My children" for parent
             navigationView.getMenu().findItem(R.id.nav_children).setVisible(true);
         }
+        if (getCurrentUserType().equals("parent") || getCurrentUserType().equals("student")) {
+            // show "Notifications" for parent and student
+            navigationView.getMenu().findItem(R.id.nav_notifications).setVisible(true);
+        }
     }
 
     @Override

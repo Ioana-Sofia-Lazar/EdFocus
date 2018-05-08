@@ -18,7 +18,8 @@
             android:id="@+id/nav_notifications"
             android:enabled="true"
             android:icon="@drawable/ic_bell"
-            android:title="Notifications" />
+            android:title="Notifications"
+            android:visible="false" />
         <item
             android:id="@+id/nav_contacts"
             android:enabled="true"
