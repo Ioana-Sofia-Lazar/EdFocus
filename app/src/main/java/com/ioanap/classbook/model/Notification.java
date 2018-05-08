@@ -1,5 +1,7 @@
 package com.ioanap.classbook.model;
 
+import java.util.Map;
+
 /**
  * Created by Ioana Pascu on 5/6/2018.
  */
@@ -7,21 +9,31 @@ package com.ioanap.classbook.model;
 public class Notification {
     private String title;
     private String message;
-    private int icon;
+    private String icon;
     private String clickAction;
     private long compareValue;
     private boolean seen;
+    private Map<String, Object> extras;
 
-    public Notification(String title, String message, int icon, String clickAction, long compareValue, boolean seen) {
+    public Notification(String title, String message, String icon, String clickAction, long compareValue, boolean seen, Map<String, Object> extras) {
         this.title = title;
         this.message = message;
         this.icon = icon;
         this.clickAction = clickAction;
         this.compareValue = compareValue;
         this.seen = seen;
+        this.extras = extras;
     }
 
     public Notification() {
+    }
+
+    public Map<String, Object> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(Map<String, Object> extras) {
+        this.extras = extras;
     }
 
     public boolean isSeen() {
@@ -48,11 +60,11 @@ public class Notification {
         this.message = message;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

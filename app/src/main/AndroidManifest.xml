@@ -83,11 +83,15 @@
         <activity
             android:name=".teacher.StudentsActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".teacher.StudentActivity" />
+        <activity android:name=".teacher.StudentActivity">
+            <intent-filter>
+                <action android:name="com.ioanap.classbook_TARGET_GRADE_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".shared.EventsActivity">
             <intent-filter>
                 <action android:name="com.ioanap.classbook_TARGET_EVENT_NOTIFICATION" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

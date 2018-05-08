@@ -61,12 +61,14 @@ public class DrawerActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.bringToFront();
 
-        // show "My classes" for teacher and student
-        if (getCurrentUserType().equals("teacher") || getCurrentUserType().equals("student"))
+        if (getCurrentUserType().equals("teacher") || getCurrentUserType().equals("student")) {
+            // show "My classes" for teacher and student
             navigationView.getMenu().findItem(R.id.nav_classes).setVisible(true);
+        }
+        if (getCurrentUserType().equals("parent")) {
             // show "My children" for parent
-        else
             navigationView.getMenu().findItem(R.id.nav_children).setVisible(true);
+        }
     }
 
     @Override

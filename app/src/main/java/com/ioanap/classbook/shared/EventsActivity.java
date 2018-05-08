@@ -20,16 +20,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanap.classbook.BaseActivity;
 import com.ioanap.classbook.R;
-import com.ioanap.classbook.model.Class;
 import com.ioanap.classbook.model.Event;
-import com.ioanap.classbook.model.Notification;
-import com.ioanap.classbook.model.NotificationFactory;
-import com.ioanap.classbook.model.NotificationTypesEnum;
 import com.ioanap.classbook.utils.EventsStickyAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -199,9 +194,6 @@ public class EventsActivity extends BaseActivity {
                     notification.put("eventId", newEventId);
                     notification.put("type", "created");
                     mEventNotificationsRef.push().updateChildren(notification);
-
-                    // create notification
-                    addNotification("created");
                 } else {
                     // editing event
                     mClassEventsRef.child(mClassId).child(eventId).setValue(event);
@@ -212,9 +204,6 @@ public class EventsActivity extends BaseActivity {
                     notification.put("eventId", eventId);
                     notification.put("type", "updated");
                     mEventNotificationsRef.push().updateChildren(notification);
-
-                    // create notification
-                    addNotification("updated");
                 }
 
                 mDialog.dismiss();
@@ -263,73 +252,6 @@ public class EventsActivity extends BaseActivity {
         });
 
         mDialog.show();
-    }
-    
-    private void addNotification(final String type) {
-        // array of user id's who will see the notifications
-        final List<String> idList = new ArrayList<>();
-
-        // create notification object
-        final Notification notification = NotificationFactory.getNotification(NotificationTypesEnum.EVENT,
-                "");
-
-        // get all students of the class
-        mClassStudentsRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                idList.clear();
-                for (DataSnapshot studentData : dataSnapshot.getChildren()) {
-                    String studentId = (String) studentData.getValue();
-
-                    // add student id to list
-                    idList.add(studentId);
-
-                    // get student parents
-                    mUserParentsRef.child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot parentData : dataSnapshot.getChildren()) {
-                                String parentId = (String) parentData.getValue();
-
-                                // add parent id to list
-                                idList.add(parentId);
-                            }
-
-                            // get class name
-                            mClassesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Class aClass = dataSnapshot.getValue(Class.class);
-                                    String message = String.format("An event has been %s for class %s", type, aClass.getName());
-                                    notification.setMessage(message);
-
-                                    // add notifications for all users
-                                    for (String id : idList) {
-                                        mNotificationsRef.child(id).push().setValue(notification);
-                                    }
-                                    idList.clear();
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     /**

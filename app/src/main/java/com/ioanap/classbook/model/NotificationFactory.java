@@ -2,8 +2,6 @@ package com.ioanap.classbook.model;
 
 import android.util.Log;
 
-import com.ioanap.classbook.R;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,14 +14,17 @@ public class NotificationFactory {
 
     public static Notification getNotification(NotificationTypesEnum type, String message) {
         Notification notification = null;
-        long compareValue = getCompareValue();
+        /*long compareValue = getCompareValue();
+        Map<String, Object> extras = new HashMap<>();
 
         switch (type) {
             case EVENT:
-                notification = new Notification("Events", message, R.drawable.ic_events,
-                        "com.ioanap.classbook_TARGET_EVENT_NOTIFICATION", compareValue, false);
+                extras.clear();
+                extras.put("classId", );
+                notification = new Notification("Events", message, "ic_events",
+                        "com.ioanap.classbook_TARGET_EVENT_NOTIFICATION", compareValue, false, extras);
                 break;
-        }
+        }*/
 
         return notification;
     }
