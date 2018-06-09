@@ -50,6 +50,14 @@
         <item name="android:layout_marginRight">5dp</item>
     </style>
 
+    <!-- White Edit Text -->
+    <style name="EditTextWhite" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@color/pureWhite</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/lightGray</item>
+    </style>
+
     <!-- Toolbar -->
     <style name="Toolbar">
         <item name="android:layout_width">match_parent</item>

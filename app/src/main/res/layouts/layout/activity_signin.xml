@@ -3,7 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ioanap.classbook.SignInActivity">
+    android:background="@color/colorPrimaryDark"
+    tools:context="com.ioanapascu.edfocus.SignInActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginTop="28dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edfocus" />
 
     <LinearLayout
         android:layout_width="304dp"
@@ -19,7 +27,9 @@
             android:ems="10"
             android:hint="E-mail"
             android:inputType="textEmailAddress"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:textColor="@color/pureWhite"
+            android:theme="@style/EditTextWhite" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -33,24 +43,28 @@
                 android:ems="10"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColor="@color/pureWhite"
+                android:theme="@style/EditTextWhite" />
 
             <ImageView
                 android:id="@+id/img_see_password"
                 style="@style/Icon"
                 android:layout_alignEnd="@+id/edit_text_password"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_eye" />
+                android:src="@drawable/ic_eye"
+                android:tint="@color/lightGray" />
 
         </RelativeLayout>
 
         <Button
             android:id="@+id/button_sign_in"
             android:layout_width="212dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@color/colorAccent"
-            android:text="Sign In" />
+            android:text="Sign In"
+            android:textColor="@color/pureWhite" />
 
         <!-- or continue with -->
         <RelativeLayout
@@ -68,7 +82,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="or continue with"
-                android:textColor="@color/gray"
+                android:textColor="@color/pureWhite"
                 android:textSize="10sp" />
 
             <View
@@ -165,7 +179,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:text="Don't have an account? Sign up" />
+        android:layout_marginBottom="28dp"
+        android:text="Don't have an account? Sign up"
+        android:textColor="@color/pureWhite" />
 
 </RelativeLayout>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="4dp"
-    tools:context="com.ioanap.classbook.shared.SearchActivity">
+    tools:context="com.ioanapascu.edfocus.shared.SearchActivity">
 
     <ScrollView
         android:layout_width="match_parent"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/pureWhite"
-    tools:context="com.ioanap.classbook.teacher.ClassTokenActivity">
+    tools:context="com.ioanapascu.edfocus.teacher.ClassTokenActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.ioanap.classbook.views.CustomIconBack
+            <com.ioanapascu.edfocus.views.CustomIconBack
                 android:id="@+id/image_cancel"
                 style="@style/ToolbarIcon" />
 

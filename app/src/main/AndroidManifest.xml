@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ioanap.classbook">
+    package="com.ioanapascu.edfocus">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,23 +17,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SignInActivity"
+            android:name="com.ioanapascu.edfocus.SignInActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".parent.ParentProfileActivity" />
-        <activity android:name=".student.ChildProfileActivity" />
-        <activity android:name=".SignUpActivity" />
+        <activity android:name="com.ioanapascu.edfocus.parent.ParentProfileActivity" />
+        <activity android:name="com.ioanapascu.edfocus.student.ChildProfileActivity" />
+        <activity android:name="com.ioanapascu.edfocus.SignUpActivity" />
         <activity
-            android:name=".shared.DrawerActivity"
+            android:name="com.ioanapascu.edfocus.shared.DrawerActivity"
             android:label="" />
         <activity
-            android:name=".shared.EditProfileActivity"
+            android:name="com.ioanapascu.edfocus.shared.EditProfileActivity"
             android:label="Edit your profile" />
-        <activity android:name=".BaseActivity" />
+        <activity android:name="com.ioanapascu.edfocus.BaseActivity" />
 
         <!-- Firebase Notifications -->
         <meta-data
@@ -61,58 +61,58 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".shared.SearchActivity" />
+        <activity android:name="com.ioanapascu.edfocus.shared.SearchActivity" />
         <activity
-            android:name=".shared.ViewProfileActivity"
+            android:name="com.ioanapascu.edfocus.shared.ViewProfileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ioanap.classbook_TARGET_REQUEST_NOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".shared.ClassActivity" />
-        <activity android:name=".student.ClassActivity_s" />
-        <activity android:name=".teacher.AddClassActivity" />
-        <activity android:name=".teacher.ClassTokenActivity" />
-        <activity android:name=".shared.CoursesActivity" />
-        <activity android:name=".teacher.FilesActivity" />
-        <activity android:name=".teacher.ScheduleActivity" />
+        <activity android:name="com.ioanapascu.edfocus.shared.ClassActivity" />
+        <activity android:name="com.ioanapascu.edfocus.student.ClassActivity_s" />
+        <activity android:name="com.ioanapascu.edfocus.teacher.AddClassActivity" />
+        <activity android:name="com.ioanapascu.edfocus.teacher.ClassTokenActivity" />
+        <activity android:name="com.ioanapascu.edfocus.shared.CoursesActivity" />
+        <activity android:name="com.ioanapascu.edfocus.teacher.FilesActivity" />
+        <activity android:name="com.ioanapascu.edfocus.teacher.ScheduleActivity" />
         <activity
-            android:name=".teacher.StudentsActivity"
+            android:name="com.ioanapascu.edfocus.teacher.StudentsActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".teacher.StudentActivity">
+        <activity android:name="com.ioanapascu.edfocus.teacher.StudentActivity">
             <intent-filter>
                 <action android:name="com.ioanap.classbook_TARGET_GRADE_NOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".shared.EventsActivity">
+        <activity android:name="com.ioanapascu.edfocus.shared.EventsActivity">
             <intent-filter>
                 <action android:name="com.ioanap.classbook_TARGET_EVENT_NOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".teacher.AddMultipleGradesActivity" />
-        <activity android:name=".student.StudentsActivity_s" />
-        <activity android:name=".shared.NoInternetActivity" />
+        <activity android:name="com.ioanapascu.edfocus.teacher.AddMultipleGradesActivity" />
+        <activity android:name="com.ioanapascu.edfocus.student.StudentsActivity_s" />
+        <activity android:name="com.ioanapascu.edfocus.shared.NoInternetActivity" />
 
         <!-- Firebase Services -->
         <service
-            android:name=".firebase.FirebaseNotifications"
+            android:name="com.ioanapascu.edfocus.firebase.FirebaseNotifications"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".firebase.FirebaseMessaging"
+            android:name="com.ioanapascu.edfocus.firebase.FirebaseMessaging"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".IntroActivity" />
+        <activity android:name="com.ioanapascu.edfocus.IntroActivity" />
     </application>
 
 </manifest>

@@ -5,6 +5,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/teacher" />
+            android:src="@drawable/edfocus" />
     </item>
 </layer-list>

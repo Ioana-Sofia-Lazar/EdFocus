@@ -28,8 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Teacher"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp" />
+            android:textColor="@color/pureWhite"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -55,8 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Student"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp" />
+            android:textColor="@color/pureWhite"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -82,8 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Parent"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp" />
+            android:textColor="@color/pureWhite"
+            android:textSize="15sp" />
 
     </LinearLayout>
 

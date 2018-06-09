@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/pureWhite"
     android:fitsSystemWindows="true"
-    tools:context="com.ioanap.classbook.shared.SearchActivity">
+    tools:context="com.ioanapascu.edfocus.shared.SearchActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_search"
@@ -28,7 +28,7 @@
                 android:inputType="text"
                 android:maxLines="1" />
 
-            <com.ioanap.classbook.views.CustomIconBack
+            <com.ioanapascu.edfocus.views.CustomIconBack
                 style="@style/ToolbarIcon"
                 android:layout_marginStart="16dp"
                 android:tint="@color/gray" />

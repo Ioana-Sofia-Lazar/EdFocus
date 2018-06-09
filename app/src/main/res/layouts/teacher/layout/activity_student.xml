@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/pureWhite"
     android:orientation="vertical"
-    tools:context="com.ioanap.classbook.teacher.StudentActivity">
+    tools:context="com.ioanapascu.edfocus.teacher.StudentActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.ioanap.classbook.views.CustomIconBack
+            <com.ioanapascu.edfocus.views.CustomIconBack
                 style="@style/ToolbarIcon" />
 
             <TextView

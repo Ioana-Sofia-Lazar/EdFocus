@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/pureWhite"
     android:fitsSystemWindows="false"
-    tools:context="com.ioanap.classbook.shared.UserProfileFragment">
+    tools:context="com.ioanapascu.edfocus.shared.UserProfileFragment">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
