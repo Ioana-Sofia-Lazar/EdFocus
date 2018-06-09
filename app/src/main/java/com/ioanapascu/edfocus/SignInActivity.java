@@ -89,7 +89,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-        //FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_signin);
 
         mContext = SignInActivity.this;

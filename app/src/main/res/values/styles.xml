@@ -11,14 +11,36 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@color/pureWhite</item>
         <item name="android:textColor">@color/gray</item>
+
         <!--  Action mode overlays toolbar -->
         <item name="windowActionModeOverlay">true</item>
+
         <!--  Custom Action Mode Background Color/Drawable -->
         <item name="android:actionModeStyle">@style/ActionMode</item>
         <item name="actionModeCloseDrawable">@drawable/ic_x_cancel_white</item>
         <item name="android:actionModeBackground">@color/lightCyan</item>
-
         <item name="listPreferredItemHeightSmall">50dp</item>
+
+        <!-- Fonts -->
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat</item>
+        <!--
+        <item name="android:textViewStyle">@style/MontserratTextViewStyle</item>
+        <item name="buttonStyle">@style/MontserratButtonStyle</item>
+        <item name="android:editTextStyle">@style/MontserratEditTextStyle</item>-->
+    </style>
+
+    <!-- Fonts -->
+    <style name="MontserratTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="MontserratButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="MontserratEditTextStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">@font/montserrat</item>
     </style>
 
     <!-- Splash screen -->
