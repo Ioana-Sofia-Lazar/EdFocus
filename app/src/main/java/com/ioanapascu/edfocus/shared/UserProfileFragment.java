@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private ImageView mProfilePhotoImageView, mEditProfileButton;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
             mEmailTextView, mLocationTextView, mPhoneTextView, mUserTypeTextView;
+    private ProgressBar mProgressBar;
 
     // variables
     private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef, mUserClassesRef;
@@ -57,6 +59,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         mEmailTextView = view.findViewById(R.id.text_email);
         mLocationTextView = view.findViewById(R.id.text_location);
         mPhoneTextView = view.findViewById(R.id.text_phone);
+        mProgressBar = view.findViewById(R.id.progress_bar);
 
         mEditProfileButton.setOnClickListener(this);
 
@@ -68,7 +71,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         //setHasOptionsMenu(true);
         setupFirebase();
-
     }
 
     private void setupFirebase() {
@@ -144,7 +146,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         checkUnspecified(mLocationTextView, settings.getLocation());
         checkUnspecified(mPhoneTextView, settings.getPhoneNumber());
 
-        setProfilePhoto(settings.getProfilePhoto());
+        UniversalImageLoader.setImage(settings.getProfilePhoto(), mProfilePhotoImageView, mProgressBar);
     }
 
     @Override
@@ -163,10 +165,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    private void setProfilePhoto(String url) {
-        UniversalImageLoader.setImage(url, mProfilePhotoImageView, null);
     }
 
     @Override

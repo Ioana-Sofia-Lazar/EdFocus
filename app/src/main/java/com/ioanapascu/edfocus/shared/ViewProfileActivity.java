@@ -228,7 +228,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View view) {
         if (view == mAddContactButton) {
             addContactPossibilities();
-            hideWidgets(1);
+            //hideWidgets(1);
         } else if (view == mAcceptRequestButton) {
             confirmContactRequest(mUserId, mUserType);
             hideWidgets(3);
@@ -268,6 +268,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 addContact("parent");
+                hideWidgets(1);
 
                 dialog.dismiss();
             }
@@ -278,6 +279,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 addContact();
+                hideWidgets(1);
 
                 dialog.dismiss();
             }
@@ -299,6 +301,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 addContact("child");
+                hideWidgets(1);
 
                 dialog.dismiss();
             }
@@ -309,6 +312,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 addContact();
+                hideWidgets(1);
 
                 dialog.dismiss();
             }
@@ -329,6 +333,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         Map<String, Object> request = new HashMap<>();
         request.put("requestType", "contact");
         mRequestsRef.child(mUserId).child(CURRENT_USER_ID).updateChildren(request);
+        hideWidgets(1);
     }
 
     /**
