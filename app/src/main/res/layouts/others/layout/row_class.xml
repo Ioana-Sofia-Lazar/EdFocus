@@ -19,7 +19,7 @@
             android:layout_height="150dp"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/books" />
+            android:src="@drawable/photo_placeholder" />
 
         <LinearLayout
             android:id="@+id/layout_info"

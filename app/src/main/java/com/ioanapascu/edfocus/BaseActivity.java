@@ -81,7 +81,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected DatabaseReference mRootRef, mUsersRef, mUserAccountSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
-            mDeviceTokensRef, mSettingsRef, mFirstTimeRef, mNotificationsRef, mOnlineUsersRef;
+            mDeviceTokensRef, mSettingsRef, mFirstTimeRef, mNotificationsRef, mOnlineUsersRef, mLastSeenRef,
+            mMessagesRef, mConversationsRef;
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
@@ -150,6 +151,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         mFirstTimeRef = mRootRef.child("firstTime");
         mNotificationsRef = mRootRef.child("notifications");
         mOnlineUsersRef = mRootRef.child("onlineUsers");
+        mLastSeenRef = mRootRef.child("lastSeen");
+        mMessagesRef = mRootRef.child("messages");
+        mConversationsRef = mRootRef.child("conversations");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
@@ -461,6 +465,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
         mDeviceTokensRef.child(mAuth.getCurrentUser().getUid()).child(deviceToken)
                 .removeValue();
+
+        // mark user not online and last seen as now
+        mOnlineUsersRef.child(CURRENT_USER_ID).setValue(null);
+        mLastSeenRef.child(CURRENT_USER_ID).setValue(System.currentTimeMillis());
 
         // Firebase sign out
         FirebaseAuth.getInstance().signOut();
@@ -876,11 +884,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         else date += day;
 
         return date;
-    }
-
-    // todo
-    public void markNotificationSeen() {
-
     }
 
 }

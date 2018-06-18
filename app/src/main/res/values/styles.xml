@@ -18,7 +18,7 @@
         <!--  Custom Action Mode Background Color/Drawable -->
         <item name="android:actionModeStyle">@style/ActionMode</item>
         <item name="actionModeCloseDrawable">@drawable/ic_x_cancel_white</item>
-        <item name="android:actionModeBackground">@color/lightCyan</item>
+        <item name="android:actionModeBackground">@color/cyan</item>
         <item name="listPreferredItemHeightSmall">50dp</item>
 
         <!-- Fonts -->
@@ -54,7 +54,7 @@
     </style>
 
     <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/pureWhite</item>
     </style>
 
     <!-- Icons -->
@@ -132,14 +132,14 @@
     <style name="FormFieldTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:layout_marginTop">10dp</item>
     </style>
 
     <style name="FormFieldInput">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">45dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:inputType">text</item>
     </style>
 
@@ -225,40 +225,56 @@
 
     <!-- Class Activity Menu -->
     <style name="ClassMenuCard">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_columnWeight">1</item>
-        <item name="android:layout_rowWeight">1</item>
-        <item name="android:layout_marginLeft">16dp</item>
-        <item name="android:layout_marginRight">16dp</item>
-        <item name="android:layout_marginBottom">16dp</item>
-        <item name="cardElevation">6dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
+        <item name="cardElevation">3dp</item>
         <item name="cardCornerRadius">8dp</item>
-        <item name="android:backgroundTint">@color/cyan</item>
+        <item name="android:backgroundTint">@color/pureWhite</item>
     </style>
 
-    <style name="ClassMenuCardLL">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_margin">16dp</item>
-        <item name="android:orientation">vertical</item>
+    <style name="ClassMenuCardRL">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">5dp</item>
     </style>
 
     <style name="ClassMenuCardIV">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:tint">@color/pureWhite</item>
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:tint">@color/gray</item>
+    </style>
+
+    <style name="ClassMenuCardSeparator">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:background">@color/lightGray</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:tint">@color/gray</item>
     </style>
 
     <style name="ClassMenuCardTV">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/pureWhite</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:textSize">19sp</item>
         <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="ClassMenuCardIcon">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:src">@drawable/ic_arrow_right</item>
+        <item name="android:tint">@color/gray</item>
     </style>
 
     <!-- Schedule Tabs -->

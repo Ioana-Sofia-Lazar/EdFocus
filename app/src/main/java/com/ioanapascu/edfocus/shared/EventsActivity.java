@@ -175,7 +175,8 @@ public class EventsActivity extends BaseActivity {
                 String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
                         + datePicker.getDayOfMonth();
 
-                Event event = new Event(eventId, date, time, location, name, description,
+                String evenTime = getTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+                Event event = new Event(eventId, date, evenTime, location, name, description,
                         getCompareValue(date, time));
 
                 // creating a new event
@@ -236,6 +237,13 @@ public class EventsActivity extends BaseActivity {
         });
 
         mDialog.show();
+    }
+
+    private String getTime(int hour, int minute) {
+        String time = "";
+        time += hour <= 9 ? "0" + String.valueOf(hour) : String.valueOf(hour);
+        time += minute <= 9 ? "0" + String.valueOf(hour) : String.valueOf(minute);
+        return time;
     }
 
     /**

@@ -1,49 +1,56 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/image_contact_profile_photo"
+        android:id="@+id/profile_photo"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/profile_photo_placeholder" />
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@+id/profile_photo"
+        android:layout_toStartOf="@+id/text_date"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/text_contact_name"
+            android:id="@+id/text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="User Name" />
+            android:text="User Name"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/text_contact_email"
+            android:id="@+id/text_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:padding="3dp"
-            android:text="Last message from this user " />
+            android:text="Last message from this user "
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-    <!-- Helps align message icon to the right of the Linear Layout -->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/linearLayout4"
+        android:layout_marginTop="8dp"
+        android:text="2018-03-02"
+        android:textColor="@color/lightGray"
+        android:textSize="13sp" />
 
-    <ImageView
-        android:id="@+id/image_message_contact"
-        style="@style/Icon"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_message"
-        android:visibility="gone" />
-
-</LinearLayout>
+</RelativeLayout>

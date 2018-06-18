@@ -7,6 +7,7 @@
 
     <color name="cyan">#006c70</color>
     <color name="lightCyan">#17b6bc</color>
+    <color name="veryLightCyan">#9adbde</color>
     <color name="navyBlue">#022546</color>
     <color name="coral">#E75523</color>
     <color name="lightCoral">#ff936d</color>
@@ -20,8 +21,8 @@
     <color name="drawerMenuItemColor"></color>
 
     <!-- Intro slider -->
-    <color name="turquoise">#4dc790</color>
-    <color name="pink">#ff56da</color>
-    <color name="violet">#a159e9</color>
-    <color name="blue">#68c5ea</color>
+    <color name="turquoise">#7ae8d9</color>
+    <color name="yellow">#ffde68</color>
+    <color name="blue">#9fe7f2</color>
+    <color name="purple">#b4a5ff</color>
 </resources>

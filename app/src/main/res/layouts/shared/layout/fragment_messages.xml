@@ -24,5 +24,16 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_conversations"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_new_message"
+        style="@style/FabButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_message" />
+
 </RelativeLayout>

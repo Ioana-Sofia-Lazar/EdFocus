@@ -20,10 +20,11 @@
         <EditText
             android:id="@+id/text_grade"
             style="@style/TextBig"
-            android:layout_width="60dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/text_student_name"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="16dp"
             android:hint="grade"
             android:textAlignment="center"
             android:textColor="@color/colorAccent" />

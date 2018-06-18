@@ -131,8 +131,6 @@ public class StudentActivityFragment extends Fragment implements View.OnClickLis
 
                             }
                         });
-
-
                     }
                 }
 

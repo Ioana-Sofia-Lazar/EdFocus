@@ -161,9 +161,9 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         // change style of the selected items in list view
         convertView
                 .setBackgroundColor(mSelectedItemsIds.get(position) ?
-                        mContext.getResources().getColor(R.color.lightCyan) : Color.TRANSPARENT);
+                        mContext.getResources().getColor(R.color.veryLightCyan) : Color.TRANSPARENT);
         holder.mName.setTextColor(mSelectedItemsIds.get(position) ?
-                mContext.getResources().getColor(R.color.colorPrimaryDark) :
+                mContext.getResources().getColor(R.color.cyan) :
                 mContext.getResources().getColor(R.color.cyan));
 
         return convertView;

@@ -42,6 +42,6 @@
         android:id="@+id/image_add_person"
         style="@style/Icon"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_add_person" />
+        android:src="@drawable/ic_arrow_right" />
 
 </LinearLayout>

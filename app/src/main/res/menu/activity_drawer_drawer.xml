@@ -14,7 +14,8 @@
             android:id="@+id/nav_messages"
             android:enabled="true"
             android:icon="@drawable/ic_message"
-            android:title="Messages" />
+            android:title="Messages"
+            app:actionViewClass="android.widget.TextView" />
         <item
             android:id="@+id/nav_notifications"
             android:enabled="true"

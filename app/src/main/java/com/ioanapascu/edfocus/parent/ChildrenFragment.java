@@ -91,7 +91,7 @@ public class ChildrenFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
                             final Child child = new Child(settings.getId(), settings.getFirstName() + " " +
-                                    settings.getFirstName(), settings.getProfilePhoto(), new ArrayList<String>());
+                                    settings.getLastName(), settings.getProfilePhoto(), new ArrayList<String>());
 
                             // get child classes
                             mUserClassesRef.child(childId).addListenerForSingleValueEvent(new ValueEventListener() {

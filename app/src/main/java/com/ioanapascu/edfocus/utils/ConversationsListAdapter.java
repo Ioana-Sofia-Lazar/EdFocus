@@ -1,16 +1,18 @@
 package com.ioanapascu.edfocus.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Conversation;
+import com.ioanapascu.edfocus.shared.ConversationActivity;
 
 import java.util.List;
 
@@ -20,60 +22,72 @@ import java.util.List;
 
 public class ConversationsListAdapter extends RecyclerView.Adapter<ConversationsListAdapter.MyViewHolder> {
 
-    private List<Conversation> mNotificationList;
+    private List<Conversation> mConversationsList;
     private Context mContext;
+    private String mCurrentUserId;
 
-    public ConversationsListAdapter(Context context, List<Conversation> notificationList) {
-        this.mNotificationList = notificationList;
+    public ConversationsListAdapter(Context context, List<Conversation> notificationList, String currentUserId) {
+        this.mConversationsList = notificationList;
         this.mContext = context;
+        this.mCurrentUserId = currentUserId;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_notification, parent, false);
+                .inflate(R.layout.row_conversation, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        final Conversation notification = mNotificationList.get(position);
-/*
-        holder.titleText.setText(notification.getTitle());
-        holder.messageText.setText(notification.getMessage());
-        int drawableResourceId = mContext.getResources().getIdentifier(notification.getIcon(),
-                "drawable", mContext.getPackageName());
-        holder.iconImage.setImageResource(drawableResourceId);
+        final Conversation conversation = mConversationsList.get(position);
+
+        holder.nameText.setText(conversation.getUserName());
+        if (conversation.getFrom().equals(mCurrentUserId)) {
+            holder.messageText.setText(String.format("Me: %s", conversation.getLastMessage()));
+        } else {
+            holder.messageText.setText(conversation.getLastMessage());
+        }
+
+        if (!conversation.isSeen() && !conversation.getFrom().equals(mCurrentUserId)) {
+            holder.messageText.setTypeface(null, Typeface.BOLD);
+            holder.messageText.setTextColor(mContext.getResources().getColor(R.color.cyan));
+        } else {
+            holder.messageText.setTypeface(null, Typeface.NORMAL);
+            holder.messageText.setTextColor(mContext.getResources().getColor(R.color.gray));
+        }
+
+        holder.dateText.setText(Utils.formatMessageDate(conversation.getLastMessageDate()));
+
+        UniversalImageLoader.setImage(conversation.getUserPhoto(), holder.profilePhoto, null);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(notification.getClickAction());
-                for (Map.Entry<String, Object> entry : notification.getExtras().entrySet()) {
-                    intent.putExtra(entry.getKey(), entry.getValue().toString());
-                }
+                Intent intent = new Intent(mContext, ConversationActivity.class);
+                intent.putExtra("userId", conversation.getUserId());
                 mContext.startActivity(intent);
             }
-        });*/
+        });
     }
 
     @Override
     public int getItemCount() {
-        return mNotificationList.size();
+        return mConversationsList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView titleText, messageText;
-        ImageView iconImage;
-        RelativeLayout containerLayout;
+        TextView nameText, messageText, dateText;
+        ImageView profilePhoto;
 
         MyViewHolder(View view) {
             super(view);
-            titleText = view.findViewById(R.id.text_title);
+            nameText = view.findViewById(R.id.text_name);
             messageText = view.findViewById(R.id.text_message);
-            iconImage = view.findViewById(R.id.icon);
-            containerLayout = view.findViewById(R.id.layout_container);
+            dateText = view.findViewById(R.id.text_date);
+            profilePhoto = view.findViewById(R.id.profile_photo);
         }
     }
 }

@@ -17,7 +17,7 @@
         android:layout_alignStart="@+id/view"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="-8dp"
+        android:layout_marginStart="-9dp"
         android:src="@drawable/ic_circle"
         android:tint="@color/gray" />
 

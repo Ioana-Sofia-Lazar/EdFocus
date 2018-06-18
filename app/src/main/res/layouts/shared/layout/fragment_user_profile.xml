@@ -8,28 +8,21 @@
     android:fitsSystemWindows="false"
     tools:context="com.ioanapascu.edfocus.shared.UserProfileFragment">
 
-    <android.support.design.widget.AppBarLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-        <!-- Top part (image + profile pic + name + description) -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="340dp"
-            android:background="@color/pureWhite">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/gradient_toolbar" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true">
+                android:background="@drawable/gradient_toolbar">
 
                 <ImageView
                     android:id="@+id/button_edit_profile"
@@ -39,59 +32,74 @@
                     android:layout_gravity="end"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_settings" />
+
+
             </android.support.v7.widget.Toolbar>
 
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <!-- Top part (image + profile pic + name + description) -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:background="@color/pureWhite">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/image_profile_photo"
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:src="@drawable/profile_photo_placeholder"
-                    app:civ_border_color="@android:color/white"
-                    app:civ_border_width="4dp" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/gradient_toolbar" />
 
-                <TextView
-                    android:id="@+id/text_name"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/roboto_medium"
-                    android:text="User Name"
-                    android:textColor="@color/cyan"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/text_user_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/lato"
-                    android:text="User Type"
-                    android:textColor="@color/gray"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_alignParentStart="true"
                     android:gravity="center"
-                    android:text="Lorem ipsum dolor sit amet, nibh exerci adipisci sit ad. Duo viris persius definitionem ad. "
-                    android:textColor="@color/gray" />
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-            </LinearLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_profile_photo"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:src="@drawable/profile_photo_placeholder"
+                        app:civ_border_color="@android:color/white"
+                        app:civ_border_width="4dp" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/text_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="User Name"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_user_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/lato"
+                        android:text="User Type"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center"
+                        android:text="Lorem ipsum dolor sit amet, nibh exerci adipisci sit ad. Duo viris persius definitionem ad. "
+                        android:textColor="@color/gray" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,7 +114,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:columnCount="3"
-                android:padding="8dp"
                 android:rowCount="2">
 
                 <TextView
@@ -117,7 +124,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="0"
                     android:text="0"
-                    android:textColor="@color/coral"
+                    android:textColor="@color/cyan"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -128,7 +135,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="1"
                     android:text="Contacts"
-                    android:textColor="@color/coral"
+                    android:textColor="@color/cyan"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -139,7 +146,7 @@
                     android:layout_row="0"
                     android:layout_rowSpan="2"
                     android:layout_rowWeight="1"
-                    android:background="@color/coral" />
+                    android:background="@color/cyan" />
 
                 <TextView
                     android:id="@+id/text_classes"
@@ -149,7 +156,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="0"
                     android:text="0"
-                    android:textColor="@color/coral"
+                    android:textColor="@color/cyan"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -160,7 +167,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_row="1"
                     android:text="Classes"
-                    android:textColor="@color/coral"
+                    android:textColor="@color/cyan"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -238,5 +245,7 @@
 
         </LinearLayout>
 
-    </android.support.design.widget.AppBarLayout>
+        </LinearLayout>
+
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

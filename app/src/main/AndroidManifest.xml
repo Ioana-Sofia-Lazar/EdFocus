@@ -17,28 +17,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.ioanapascu.edfocus.SignInActivity"
+            android:name=".SignInActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ioanapascu.edfocus.parent.ParentProfileActivity" />
-        <activity android:name="com.ioanapascu.edfocus.student.ChildProfileActivity" />
-        <activity android:name="com.ioanapascu.edfocus.SignUpActivity" />
+        <activity android:name=".parent.ParentProfileActivity" />
+        <activity android:name=".student.ChildProfileActivity" />
+        <activity android:name=".SignUpActivity" />
         <activity
-            android:name="com.ioanapascu.edfocus.shared.DrawerActivity"
+            android:name=".shared.DrawerActivity"
             android:label="" />
         <activity
-            android:name="com.ioanapascu.edfocus.shared.EditProfileActivity"
+            android:name=".shared.EditProfileActivity"
             android:label="Edit your profile" />
-        <activity android:name="com.ioanapascu.edfocus.BaseActivity" />
+        <activity android:name=".BaseActivity" />
 
         <!-- Firebase Notifications -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_email_envelope" />
+            android:resource="@drawable/edfocus_small_no_padding" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/cyan" />
@@ -60,63 +61,69 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ioanapascu.edfocus.shared.SearchActivity" />
+        <activity android:name=".shared.SearchActivity" />
         <activity
-            android:name="com.ioanapascu.edfocus.shared.ViewProfileActivity"
+            android:name=".shared.ViewProfileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ioanap.classbook_TARGET_REQUEST_NOTIFICATION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ioanapascu.edfocus.shared.ClassActivity" />
-        <activity android:name="com.ioanapascu.edfocus.student.ClassActivity_s" />
-        <activity android:name="com.ioanapascu.edfocus.teacher.AddClassActivity" />
-        <activity android:name="com.ioanapascu.edfocus.teacher.ClassTokenActivity" />
-        <activity android:name="com.ioanapascu.edfocus.shared.CoursesActivity" />
-        <activity android:name="com.ioanapascu.edfocus.teacher.FilesActivity" />
-        <activity android:name="com.ioanapascu.edfocus.teacher.ScheduleActivity" />
+        <activity android:name=".shared.ClassActivity" />
+        <activity android:name=".student.ClassActivity_s" />
+        <activity android:name=".teacher.AddClassActivity" />
+        <activity android:name=".teacher.ClassTokenActivity" />
+        <activity android:name=".shared.CoursesActivity" />
+        <activity android:name=".teacher.FilesActivity" />
+        <activity android:name=".teacher.ScheduleActivity" />
         <activity
-            android:name="com.ioanapascu.edfocus.teacher.StudentsActivity"
+            android:name=".teacher.StudentsActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.ioanapascu.edfocus.teacher.StudentActivity">
+        <activity android:name=".teacher.StudentActivity">
             <intent-filter>
                 <action android:name="com.ioanap.classbook_TARGET_GRADE_NOTIFICATION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ioanapascu.edfocus.shared.EventsActivity">
+        <activity android:name=".shared.EventsActivity">
             <intent-filter>
                 <action android:name="com.ioanap.classbook_TARGET_EVENT_NOTIFICATION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ioanapascu.edfocus.teacher.AddMultipleGradesActivity" />
-        <activity android:name="com.ioanapascu.edfocus.student.StudentsActivity_s" />
-        <activity android:name="com.ioanapascu.edfocus.shared.NoInternetActivity" />
+        <activity android:name=".teacher.AddMultipleGradesActivity" />
+        <activity android:name=".student.StudentsActivity_s" />
+        <activity android:name=".shared.NoInternetActivity" />
 
         <!-- Firebase Services -->
         <service
-            android:name="com.ioanapascu.edfocus.firebase.FirebaseNotifications"
+            android:name=".firebase.FirebaseNotifications"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name="com.ioanapascu.edfocus.firebase.FirebaseMessaging"
+            android:name=".firebase.FirebaseMessaging"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name="com.ioanapascu.edfocus.IntroActivity" />
+        <activity android:name=".IntroActivity" />
+        <activity android:name=".shared.ConversationActivity"></activity>
     </application>
 
 </manifest>

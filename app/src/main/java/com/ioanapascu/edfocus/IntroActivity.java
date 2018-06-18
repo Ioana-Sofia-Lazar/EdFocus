@@ -43,7 +43,7 @@ public class IntroActivity extends AppIntro {
         }
 
         for (int i = 0; i < titles.length; i++) {
-            addSlide(AppIntroFragment.newInstance(titles[0], descriptions[0], images.getResourceId(i, -1), colors[i]));
+            addSlide(AppIntroFragment.newInstance(titles[i], descriptions[i], images.getResourceId(i, -1), colors[i]));
         }
 
         images.recycle();

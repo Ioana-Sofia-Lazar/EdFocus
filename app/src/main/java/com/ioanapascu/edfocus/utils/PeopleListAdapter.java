@@ -67,7 +67,8 @@ public class PeopleListAdapter extends ArrayAdapter<Person> {
         }
 
         holder.mPersonName.setText(person.getName());
-        holder.mPersonUserType.setText(person.getUserType());
+        String capitalizedUserType = person.getUserType().substring(0, 1).toUpperCase() + person.getUserType().substring(1);
+        holder.mPersonUserType.setText(capitalizedUserType);
         UniversalImageLoader.setImage(person.getProfilePhoto(), holder.mPersonProfilePhoto, null);
 
         return convertView;

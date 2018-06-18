@@ -115,7 +115,10 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
                         }
                     });
 
-                    holder.mClassesLayout.addView(classTextView);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(0, 6, 0, 6);
+
+                    holder.mClassesLayout.addView(classTextView, layoutParams);
                 }
 
                 @Override

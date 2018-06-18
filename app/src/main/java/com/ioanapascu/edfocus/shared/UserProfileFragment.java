@@ -35,7 +35,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             mEmailTextView, mLocationTextView, mPhoneTextView, mUserTypeTextView;
 
     // variables
-    private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef;
+    private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef, mUserClassesRef;
     private String mCurrentUserId;
     private ValueEventListener mUserSettingsListener;
 
@@ -66,7 +66,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         setupFirebase();
 
     }
@@ -77,6 +77,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mSettingsRef = mRootRef.child("userAccountSettings");
         mClassesRef = mRootRef.child("classes");
+        mUserClassesRef = mRootRef.child("userClasses");
         mContactsRef = mRootRef.child("contacts");
         mCurrentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -126,7 +127,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         });
 
         // set number of classes
-        mClassesRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+        mUserClassesRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mClassesTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));

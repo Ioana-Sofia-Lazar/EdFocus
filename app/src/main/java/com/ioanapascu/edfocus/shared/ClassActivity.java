@@ -54,9 +54,9 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mStudentsCard = findViewById(R.id.card_students);
         mEventsCard = findViewById(R.id.card_events);
         mSettingsCard = findViewById(R.id.card_settings);
-        mFilesCard = findViewById(R.id.card_files);
         mClassNameText = findViewById(R.id.text_class_name);
         mSchoolText = findViewById(R.id.txt_school);
+        mFilesCard = findViewById(R.id.card_files);
         mClassPhoto = findViewById(R.id.img_class_photo);
 
         // display class info from firebase
@@ -68,8 +68,8 @@ public class ClassActivity extends BaseActivity implements View.OnClickListener 
         mStudentsCard.setOnClickListener(this);
         mEventsCard.setOnClickListener(this);
         mSettingsCard.setOnClickListener(this);
-        mFilesCard.setOnClickListener(this);
         mClassNameText.setOnClickListener(this);
+        mFilesCard.setOnClickListener(this);
     }
 
     private void displayClassInfo() {

@@ -12,9 +12,20 @@
         android:layout_height="wrap_content"
         android:scrollbars="none">
 
-        <android.support.design.widget.AppBarLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gradient_toolbar">
+
+                <com.ioanapascu.edfocus.views.CustomIconBack style="@style/ToolbarIcon" />
+
+            </android.support.v7.widget.Toolbar>
 
             <!-- Top part (image + profile pic + name + description) -->
             <RelativeLayout
@@ -24,30 +35,20 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="120dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/gradient_toolbar" />
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true">
-
-                    <com.ioanapascu.edfocus.views.CustomIconBack style="@style/ToolbarIcon" />
-
-                </android.support.v7.widget.Toolbar>
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/toolbar"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="8dp"
+                    android:paddingTop="0dp"
+                    android:visibility="visible">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/image_profile_photo"
@@ -64,7 +65,7 @@
                         android:layout_marginTop="8dp"
                         android:fontFamily="@font/roboto_medium"
                         android:text="User Name"
-                        android:textColor="@color/cyan"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
@@ -78,20 +79,22 @@
                         android:textColor="@color/gray"
                         android:textSize="12sp" />
 
+                    <!-- Widgets that will be shown/hidden according to the status of users -->
                     <TextView
                         android:id="@+id/text_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="0dp"
                         android:gravity="center"
                         android:text="Lorem ipsum dolor sit amet, nibh exerci adipisci sit ad. Duo viris persius definitionem ad. "
                         android:textColor="@color/gray" />
 
-                    <!-- Widgets that will be shown/hidden according to the status of users -->
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp">
+                        android:layout_margin="8dp"
+                        android:visibility="visible">
 
                         <!-- Not contacts, no existent request from anyone to anyone -->
                         <Button
@@ -99,7 +102,6 @@
                             style="@style/Button"
                             android:layout_width="150dp"
                             android:layout_height="40dp"
-                            android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
                             android:text="Add contact"
                             android:visibility="gone" />
@@ -179,7 +181,8 @@
                 android:background="@color/common_google_signin_btn_text_dark_default"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingBottom="10dp">
+                android:paddingBottom="10dp"
+                android:visibility="visible">
 
                 <!-- Number of Contacts and Classes -->
                 <GridLayout
@@ -188,6 +191,7 @@
                     android:layout_height="wrap_content"
                     android:columnCount="3"
                     android:padding="8dp"
+                    android:paddingTop="0dp"
                     android:rowCount="2"
                     android:visibility="gone">
 
@@ -199,7 +203,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_row="0"
                         android:text="0"
-                        android:textColor="@color/coral"
+                        android:textColor="@color/cyan"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
@@ -210,7 +214,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_row="1"
                         android:text="Contacts"
-                        android:textColor="@color/coral"
+                        android:textColor="@color/cyan"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -221,7 +225,7 @@
                         android:layout_row="0"
                         android:layout_rowSpan="2"
                         android:layout_rowWeight="1"
-                        android:background="@color/coral" />
+                        android:background="@color/cyan" />
 
                     <TextView
                         android:id="@+id/text_classes"
@@ -231,7 +235,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_row="0"
                         android:text="0"
-                        android:textColor="@color/coral"
+                        android:textColor="@color/cyan"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
@@ -242,7 +246,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_row="1"
                         android:text="Classes"
-                        android:textColor="@color/coral"
+                        android:textColor="@color/cyan"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -356,6 +360,6 @@
 
             </LinearLayout>
 
-        </android.support.design.widget.AppBarLayout>
+        </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

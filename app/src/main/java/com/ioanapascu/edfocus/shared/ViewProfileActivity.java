@@ -99,7 +99,8 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
     private void setProfileWidgets(final UserAccountSettings settings) {
         mNameTextView.setText(String.format("%s %s", settings.getFirstName(), settings.getLastName()));
         mDescriptionTextView.setText(settings.getDescription());
-        mUserTypeTextView.setText(settings.getUserType());
+        String capitalizedUserType = settings.getUserType().substring(0, 1).toUpperCase() + settings.getUserType().substring(1);
+        mUserTypeTextView.setText(capitalizedUserType);
 
         // set number of contacts
         mContactsRef.child(mUserId).addValueEventListener(new ValueEventListener() {

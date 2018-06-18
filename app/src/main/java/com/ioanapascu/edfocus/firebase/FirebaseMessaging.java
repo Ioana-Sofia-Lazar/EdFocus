@@ -34,6 +34,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         // send notification
         Intent intent = new Intent(clickAction);
 
+        if (notificationType == null) return;
         if (notificationType.equals("request")) {
             String fromUserId = remoteMessage.getData().get("from_user_id");
             intent.putExtra("userId", fromUserId);
@@ -55,7 +56,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         long[] pattern = {500, 500, 500, 500, 500};
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_email_envelope)
+                .setSmallIcon(R.drawable.edfocus_small_no_padding)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationMessage)
                 .setAutoCancel(true)

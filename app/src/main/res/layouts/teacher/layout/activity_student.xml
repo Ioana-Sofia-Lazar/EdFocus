@@ -34,7 +34,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_photo"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/profile_photo_placeholder"
@@ -45,7 +45,8 @@
                 android:id="@+id/text_student_name"
                 style="@style/TextBig"
                 android:layout_gravity="center_horizontal"
-                android:text="Studentul X" />
+                android:text="Studentul X"
+                android:textColor="@color/colorPrimaryDark" />
 
     </LinearLayout>
 

@@ -27,10 +27,6 @@ import com.ioanapascu.edfocus.parent.ChildrenFragment;
 import com.ioanapascu.edfocus.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import static android.support.v4.view.MenuItemCompat.getActionView;
 
 public class DrawerActivity extends BaseActivity
@@ -43,7 +39,7 @@ public class DrawerActivity extends BaseActivity
     private Context mContext = DrawerActivity.this;
 
     // widgets
-    private TextView mNotificationsCounterText, mRequestsCounterText;
+    private TextView mNotificationsCounterText, mRequestsCounterText, mMessagesCounterText;
 
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction =
@@ -92,16 +88,16 @@ public class DrawerActivity extends BaseActivity
             navigationView.getMenu().findItem(R.id.nav_notifications).setVisible(true);
         }
 
-        // mark user as being online and save last seen as now
-        Map<String, Object> node = new HashMap<>();
-        node.put("lastSeen", new Date());
-        mOnlineUsersRef.child(CURRENT_USER_ID).setValue(node);
+        // mark user as being online
+        mOnlineUsersRef.child(CURRENT_USER_ID).setValue(true);
 
         // number badges
         mNotificationsCounterText = (TextView) getActionView(navigationView.getMenu().
                 findItem(R.id.nav_notifications));
         mRequestsCounterText = (TextView) getActionView(navigationView.getMenu().
                 findItem(R.id.nav_contacts));
+        mMessagesCounterText = (TextView) getActionView(navigationView.getMenu().
+                findItem(R.id.nav_messages));
         initializeDrawerCounters();
     }
 
@@ -109,6 +105,7 @@ public class DrawerActivity extends BaseActivity
         // style
         styleBadgeCounter(mNotificationsCounterText);
         styleBadgeCounter(mRequestsCounterText);
+        styleBadgeCounter(mMessagesCounterText);
 
         // get number of new notifications (not seen)
         mNotificationsRef.child(CURRENT_USER_ID).orderByChild("seen").equalTo(false)
@@ -149,6 +146,8 @@ public class DrawerActivity extends BaseActivity
 
                     }
                 });
+
+        mMessagesCounterText.setText(String.valueOf(2));
     }
 
     private void styleBadgeCounter(TextView textView) {
