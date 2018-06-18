@@ -154,7 +154,13 @@ public class ConversationActivity extends BaseActivity {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                // mark message as seen if it was from the other user
                 Message message = dataSnapshot.getValue(Message.class);
+                if (!message.getFrom().equals(CURRENT_USER_ID) && !message.isSeen()) {
+                    mMessagesRef.child(CURRENT_USER_ID).child(userId).child(dataSnapshot.getKey()).child("seen").setValue(true);
+                    mMessagesRef.child(userId).child(CURRENT_USER_ID).child(dataSnapshot.getKey()).child("seen").setValue(true);
+                    message.setSeen(true);
+                }
 
                 mItemPosition++;
 
@@ -204,8 +210,9 @@ public class ConversationActivity extends BaseActivity {
         Message message = new Message(messageText, false, "text", System.currentTimeMillis(),
                 CURRENT_USER_ID);
 
-        mMessagesRef.child(CURRENT_USER_ID).child(userId).push().setValue(message);
-        mMessagesRef.child(userId).child(CURRENT_USER_ID).push().setValue(message);
+        String messageId = mMessagesRef.child(CURRENT_USER_ID).child(userId).push().getKey();
+        mMessagesRef.child(CURRENT_USER_ID).child(userId).child(messageId).setValue(message);
+        mMessagesRef.child(userId).child(CURRENT_USER_ID).child(messageId).setValue(message);
 
         // set as last message of the conversations (used for for conversations list)
         mConversationsRef.child(CURRENT_USER_ID).child(userId).setValue(message);

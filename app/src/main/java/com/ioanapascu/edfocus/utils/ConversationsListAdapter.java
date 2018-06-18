@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
+import com.ioanapascu.edfocus.firebase.FirebaseUtils;
 import com.ioanapascu.edfocus.model.Conversation;
 import com.ioanapascu.edfocus.shared.ConversationActivity;
 
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class ConversationsListAdapter extends RecyclerView.Adapter<ConversationsListAdapter.MyViewHolder> {
 
+    private FirebaseUtils firebase;
     private List<Conversation> mConversationsList;
     private Context mContext;
     private String mCurrentUserId;
@@ -30,6 +32,7 @@ public class ConversationsListAdapter extends RecyclerView.Adapter<Conversations
         this.mConversationsList = notificationList;
         this.mContext = context;
         this.mCurrentUserId = currentUserId;
+        this.firebase = new FirebaseUtils();
     }
 
     @Override
@@ -66,6 +69,10 @@ public class ConversationsListAdapter extends RecyclerView.Adapter<Conversations
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // mark conversation as seen
+                firebase.mConversationsRef.child(mCurrentUserId).child(conversation.getFrom()).child("seen").setValue(true);
+                firebase.mConversationsRef.child(conversation.getFrom()).child(mCurrentUserId).child("seen").setValue(true);
+
                 Intent intent = new Intent(mContext, ConversationActivity.class);
                 intent.putExtra("userId", conversation.getUserId());
                 mContext.startActivity(intent);

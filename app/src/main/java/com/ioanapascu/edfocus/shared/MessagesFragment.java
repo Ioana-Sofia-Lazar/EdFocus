@@ -69,8 +69,6 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
 
         firebase = new FirebaseUtils();
 
-        //startActivity(new Intent(getContext(), ConversationActivity.class));
-
         mConversationsRecycler = view.findViewById(R.id.recycler_conversations);
         mNewMessageFab = view.findViewById(R.id.fab_new_message);
 
@@ -170,37 +168,6 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
 
         newMessageDialog = builder.create();
         newMessageDialog.show();
-
-
-        /*final Dialog dialog = new Dialog(getContext());
-        dialog.setTitle("Add Course");
-        dialog.setContentView(R.layout.dialog_new_message);
-
-        // dialog widgets
-        Button okBtn = dialog.findViewById(R.id.btn_ok);
-        RecyclerView contactsRecycler = dialog.findViewById(R.id.recycler_contacts);
-        ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
-
-        // contacts adapter
-
-        // create course button click
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-            }
-        });
-
-        // x button click (cancel)
-        cancelImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();*/
     }
 
     private void displayConversations() {
@@ -208,6 +175,7 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mConversations.clear();
+                mAdapter.notifyDataSetChanged();
 
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     final Message message = data.getValue(Message.class);

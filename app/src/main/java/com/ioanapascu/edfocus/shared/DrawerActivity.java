@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
+import com.ioanapascu.edfocus.model.Message;
 import com.ioanapascu.edfocus.parent.ChildrenFragment;
 import com.ioanapascu.edfocus.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,6 +38,7 @@ public class DrawerActivity extends BaseActivity
 
     // variables
     private Context mContext = DrawerActivity.this;
+    private int nbOfMessages = 0;
 
     // widgets
     private TextView mNotificationsCounterText, mRequestsCounterText, mMessagesCounterText;
@@ -147,7 +149,34 @@ public class DrawerActivity extends BaseActivity
                     }
                 });
 
-        mMessagesCounterText.setText(String.valueOf(2));
+        // get number of new notifications (not seen)
+        mMessagesRef.child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                nbOfMessages = 0;
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) { // each user that current user has a conversation with
+                    for (DataSnapshot snapshot : userSnapshot.getChildren()) {
+                        if (snapshot.exists()) {
+                            Message message = snapshot.getValue(Message.class);
+                            if (!message.getFrom().equals(CURRENT_USER_ID) && !message.isSeen()) {
+                                nbOfMessages++;
+                                mMessagesCounterText.setVisibility(View.VISIBLE);
+                                mMessagesCounterText.setText(String.valueOf(nbOfMessages));
+                            }
+                        }
+                    }
+                }
+                if (nbOfMessages == 0) {
+                    mMessagesCounterText.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void styleBadgeCounter(TextView textView) {
