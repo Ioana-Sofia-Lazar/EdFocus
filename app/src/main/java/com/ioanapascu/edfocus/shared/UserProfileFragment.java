@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
             mEmailTextView, mLocationTextView, mPhoneTextView, mUserTypeTextView;
     private ProgressBar mProgressBar;
+    private LinearLayout mEditProfileLayout;
 
     // variables
     private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef, mUserClassesRef;
@@ -60,8 +62,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         mLocationTextView = view.findViewById(R.id.text_location);
         mPhoneTextView = view.findViewById(R.id.text_phone);
         mProgressBar = view.findViewById(R.id.progress_bar);
+        mEditProfileLayout = view.findViewById(R.id.layout_edit_profile);
 
         mEditProfileButton.setOnClickListener(this);
+        mEditProfileLayout.setOnClickListener(this);
 
     }
 
@@ -182,7 +186,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (view == mEditProfileButton) {
+        if (view == mEditProfileButton || view == mEditProfileLayout) {
             // jump to edit profile page
             startActivity(new Intent(getActivity(), EditProfileActivity.class));
         }

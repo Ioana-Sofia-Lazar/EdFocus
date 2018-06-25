@@ -49,4 +49,14 @@ public class FirebaseUtils {
     public String getCurrentUserId() {
         return mAuth.getCurrentUser().getUid();
     }
+
+    public void removeContact(String userId, String contactId) {
+        // unmark as contact, parent and child
+        mContactsRef.child(userId).child(contactId).setValue(null);
+        mContactsRef.child(contactId).child(userId).setValue(null);
+        mUserParentsRef.child(userId).child(contactId).setValue(null);
+        mUserParentsRef.child(contactId).child(userId).setValue(null);
+        mUserChildrenRef.child(userId).child(contactId).setValue(null);
+        mUserChildrenRef.child(contactId).child(userId).setValue(null);
+    }
 }

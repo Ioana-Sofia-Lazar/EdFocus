@@ -55,6 +55,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ioanapascu.edfocus.firebase.FirebaseUtils;
 import com.ioanapascu.edfocus.model.User;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
 import com.ioanapascu.edfocus.shared.DrawerActivity;
@@ -86,6 +87,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
+    protected FirebaseUtils firebase;
 
     // Facebook
     protected CallbackManager mCallbackManager;
@@ -128,6 +130,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        firebase = new FirebaseUtils();
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = mFirebaseDatabase.getReference();

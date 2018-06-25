@@ -70,8 +70,10 @@ public class ConversationsListAdapter extends RecyclerView.Adapter<Conversations
             @Override
             public void onClick(View v) {
                 // mark conversation as seen
-                firebase.mConversationsRef.child(mCurrentUserId).child(conversation.getFrom()).child("seen").setValue(true);
-                firebase.mConversationsRef.child(conversation.getFrom()).child(mCurrentUserId).child("seen").setValue(true);
+                if (!conversation.getFrom().equals(mCurrentUserId)) {
+                    firebase.mConversationsRef.child(mCurrentUserId).child(conversation.getFrom()).child("seen").setValue(true);
+                    firebase.mConversationsRef.child(conversation.getFrom()).child(mCurrentUserId).child("seen").setValue(true);
+                }
 
                 Intent intent = new Intent(mContext, ConversationActivity.class);
                 intent.putExtra("userId", conversation.getUserId());

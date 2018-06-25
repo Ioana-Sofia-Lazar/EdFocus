@@ -268,12 +268,15 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         // dialog widgets
         final DatePicker datePicker = dialog.findViewById(R.id.date_picker);
         Button createBtn = dialog.findViewById(R.id.btn_create);
+        ImageView deleteBtn = dialog.findViewById(R.id.btn_delete);
         ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
         final Spinner coursesSpinner = dialog.findViewById(R.id.spinner_courses);
         final CheckBox absentAllDayCB = dialog.findViewById(R.id.checkbox_absent_all_day);
         final CheckBox authorisedCB = dialog.findViewById(R.id.checkbox_authorised);
 
         populateSpinner(coursesSpinner);
+
+        deleteBtn.setVisibility(View.GONE);
 
         // add course button click
         createBtn.setOnClickListener(new View.OnClickListener() {

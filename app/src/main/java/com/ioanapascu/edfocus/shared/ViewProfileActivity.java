@@ -1,14 +1,19 @@
 package com.ioanapascu.edfocus.shared;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +27,7 @@ import com.ioanapascu.edfocus.utils.UniversalImageLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ViewProfileActivity extends BaseActivity implements View.OnClickListener {
+public class ViewProfileActivity extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private static final String TAG = "ViewProfileActivity";
 
@@ -30,11 +35,12 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     // widgets
     private Button mAddContactButton, mAcceptRequestButton, mDeclineRequestButton, mCancelRequestButton;
-    private ImageView mProfilePhotoImageView;
+    private ImageView mProfilePhotoImageView, mShowOptionsImg;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
             mEmailTextView, mLocationTextView, mPhoneTextView, mUserTypeTextView;
     private LinearLayout mRequestSentLayout, mRequestReceivedLayout, mInfoLayout, mPrivateLayout;
     private GridLayout mInfoNumbersLayout;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,8 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         mInfoLayout = findViewById(R.id.layout_info);
         mPrivateLayout = findViewById(R.id.layout_private);
         mInfoNumbersLayout = findViewById(R.id.layout_info_numbers);
+        mToolbar = findViewById(R.id.toolbar);
+        mShowOptionsImg = findViewById(R.id.img_show_options);
 
         showUserInfo();
 
@@ -73,6 +81,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         mAcceptRequestButton.setOnClickListener(this);
         mDeclineRequestButton.setOnClickListener(this);
         mCancelRequestButton.setOnClickListener(this);
+        mShowOptionsImg.setOnClickListener(this);
     }
 
     private void showUserInfo() {
@@ -238,7 +247,16 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         } else if (view == mCancelRequestButton) {
             cancelRequestTo(mUserId);
             hideWidgets(0);
+        } else if (view == mShowOptionsImg) {
+            showPopupMenu(view);
         }
+    }
+
+    private void showPopupMenu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.menu_view_profile);
+        popup.show();
     }
 
     public void addContactPossibilities() {
@@ -353,6 +371,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
                 mInfoLayout.setVisibility(View.GONE);
                 mInfoNumbersLayout.setVisibility(View.GONE);
                 mPrivateLayout.setVisibility(View.VISIBLE);
+                mShowOptionsImg.setVisibility(View.GONE);
                 break;
             case 1:
                 mAddContactButton.setVisibility(View.GONE);
@@ -361,6 +380,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
                 mInfoLayout.setVisibility(View.GONE);
                 mInfoNumbersLayout.setVisibility(View.GONE);
                 mPrivateLayout.setVisibility(View.VISIBLE);
+                mShowOptionsImg.setVisibility(View.GONE);
                 break;
             case 2:
                 mAddContactButton.setVisibility(View.GONE);
@@ -369,6 +389,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
                 mInfoLayout.setVisibility(View.GONE);
                 mInfoNumbersLayout.setVisibility(View.GONE);
                 mPrivateLayout.setVisibility(View.VISIBLE);
+                mShowOptionsImg.setVisibility(View.GONE);
                 break;
             case 3:
                 mAddContactButton.setVisibility(View.GONE);
@@ -377,7 +398,44 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
                 mInfoLayout.setVisibility(View.VISIBLE);
                 mInfoNumbersLayout.setVisibility(View.VISIBLE);
                 mPrivateLayout.setVisibility(View.GONE);
+                mShowOptionsImg.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_remove_contact:
+                showConfirmationDialog();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void showConfirmationDialog() {
+        // show confirmation dialog
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("Are you sure you want to delete this person from your contacts list?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        firebase.removeContact(firebase.getCurrentUserId(), mUserId);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        // create and show alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+        alertDialog.show();
     }
 }

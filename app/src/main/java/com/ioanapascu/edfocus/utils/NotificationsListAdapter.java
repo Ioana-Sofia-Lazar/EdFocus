@@ -60,7 +60,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         });
 
         if (!notification.isSeen()) {
-            holder.containerLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            holder.containerLayout.setBackgroundColor(mContext.getResources().getColor(R.color.pureWhite));
         }
     }
 

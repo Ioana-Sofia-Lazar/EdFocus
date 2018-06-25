@@ -31,7 +31,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_gravity="end"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_settings" />
+                    android:src="@drawable/ic_settings"
+                    android:visibility="gone" />
 
 
             </android.support.v7.widget.Toolbar>
@@ -43,10 +44,34 @@
                 android:background="@color/pureWhite">
 
                 <ImageView
+                    android:id="@+id/img_background"
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/gradient_toolbar" />
+
+                <LinearLayout
+                    android:id="@+id/layout_edit_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/img_background"
+                    android:layout_alignEnd="@+id/img_background"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="16dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/ic_edit"
+                        android:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Edit..."
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
 
                 <LinearLayout
