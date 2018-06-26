@@ -111,6 +111,7 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
                         public void onClick(View v) {
                             Intent myIntent = new Intent(getContext(), ClassActivity_s.class);
                             myIntent.putExtra("classId", classId);
+                            myIntent.putExtra("studentId", child.getId());
                             mContext.startActivity(myIntent);
                         }
                     });

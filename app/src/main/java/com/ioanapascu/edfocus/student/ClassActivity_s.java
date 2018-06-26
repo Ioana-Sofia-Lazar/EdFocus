@@ -32,7 +32,7 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
     private static final String TAG = "ClassActivity";
 
     // variables
-    private String mClassId;
+    private String mClassId, mStudentId;
     private ValueEventListener mClassInfoListener;
 
     // widgets
@@ -49,6 +49,7 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
         // get id of class to display
         Intent myIntent = getIntent();
         mClassId = myIntent.getStringExtra("classId");
+        mStudentId = myIntent.getStringExtra("studentId");
 
         // widgets
         mCoursesCard = findViewById(R.id.card_courses);
@@ -122,7 +123,11 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
         }
         if (view == mActivityCard) {
             Intent myIntent = new Intent(getApplicationContext(), StudentActivity.class);
-            myIntent.putExtra("studentId", getCurrentUserId());
+            if (mStudentId != null) { // parent is looking at child's activity
+                myIntent.putExtra("studentId", mStudentId);
+            } else { // student is looking at own activity
+                myIntent.putExtra("studentId", firebase.getCurrentUserId());
+            }
             myIntent.putExtra("classId", mClassId);
             startActivity(myIntent);
         }

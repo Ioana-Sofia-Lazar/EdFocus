@@ -76,6 +76,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     private void searchForMatch(String keyword) {
         mPeople.clear();
+        mPeopleListAdapter.notifyDataSetChanged();
 
         if (keyword.length() == 0) {
             return;

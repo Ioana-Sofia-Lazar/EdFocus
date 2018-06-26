@@ -123,7 +123,13 @@
         </service>
 
         <activity android:name=".IntroActivity" />
-        <activity android:name=".shared.ConversationActivity"></activity>
+        <activity android:name=".shared.ConversationActivity">
+            <intent-filter>
+                <action android:name="com.ioanap.classbook_TARGET_MESSAGE_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
