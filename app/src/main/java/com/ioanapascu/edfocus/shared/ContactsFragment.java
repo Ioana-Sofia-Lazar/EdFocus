@@ -73,6 +73,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mContacts.clear();
+                mContactsListAdapter.notifyDataSetChanged();
 
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     String contactId = data.getValue(String.class);

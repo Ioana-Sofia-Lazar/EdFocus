@@ -73,7 +73,8 @@
         <TextView
             style="@style/InfoTextSmall"
             android:gravity="center_horizontal"
-            android:text="@string/class_created_token_info" />
+            android:text="@string/class_created_token_info"
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/btn_manage"

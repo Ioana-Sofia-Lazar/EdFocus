@@ -81,10 +81,12 @@ public class StudentsActivity_s extends BaseActivity implements View.OnClickList
         mStudentsRecycler.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // clicking a student row redirects to his profile
-                Intent myIntent = new Intent(StudentsActivity_s.this, ViewProfileActivity.class);
-                myIntent.putExtra("userId", mStudents.get(position).getId());
-                startActivity(myIntent);
+                // clicking a student row redirects to user profile, unless clicking on own name
+                if (!mStudents.get(position).getId().equals(firebase.getCurrentUserId())) {
+                    Intent myIntent = new Intent(StudentsActivity_s.this, ViewProfileActivity.class);
+                    myIntent.putExtra("userId", mStudents.get(position).getId());
+                    startActivity(myIntent);
+                }
             }
         });
     }

@@ -425,6 +425,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         firebase.removeContact(firebase.getCurrentUserId(), mUserId);
+                        hideWidgets(0);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
