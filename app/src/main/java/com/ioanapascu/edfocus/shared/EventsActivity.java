@@ -241,8 +241,13 @@ public class EventsActivity extends BaseActivity {
 
     private String getTime(int hour, int minute) {
         String time = "";
-        time += hour <= 9 ? "0" + String.valueOf(hour) : String.valueOf(hour);
-        time += minute <= 9 ? "0" + String.valueOf(hour) : String.valueOf(minute);
+        //time += hour <= 9 ? "0" + String.valueOf(hour) : String.valueOf(hour);
+        if (hour <= 9) time += "0" + String.valueOf(hour);
+        else time += String.valueOf(hour);
+        time += ":";
+        if (minute <= 9) time += "0" + String.valueOf(minute);
+        else time += String.valueOf(minute);
+        //time += minute <= 9 ? "0" + String.valueOf(hour) : String.valueOf(minute);
         return time;
     }
 

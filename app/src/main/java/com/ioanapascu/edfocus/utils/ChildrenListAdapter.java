@@ -58,7 +58,6 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
             convertView = inflater.inflate(mResource, parent, false);
             holder = new ChildrenListAdapter.ViewHolder();
             holder.mNameText = convertView.findViewById(R.id.text_name);
-            holder.mTitleText = convertView.findViewById(R.id.text_title);
             holder.mClassesLayout = convertView.findViewById(R.id.layout_classes);
             holder.mPhotoImage = convertView.findViewById(R.id.profile_photo);
 
@@ -88,8 +87,6 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
 
         // if child is not enrolled to any class
         if (child.getClassIds().size() == 0) {
-            holder.mTitleText.setVisibility(View.GONE);
-
             final TextView classTextView = new TextView(mContext);
             classTextView.setText("Your child is not enrolled to any classes yet.");
             classTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -138,7 +135,7 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
      */
     private static class ViewHolder {
         CircleImageView mPhotoImage;
-        TextView mNameText, mTitleText;
+        TextView mNameText;
         LinearLayout mClassesLayout;
     }
 
