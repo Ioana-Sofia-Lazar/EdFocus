@@ -96,7 +96,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             // save information
             saveProfileSettings();
 
-            finish();
+            //finish();
         }
         if (view == mEditProfilePhotoTextView) {
             // verify permissions
@@ -114,21 +114,21 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         String location = mLocationEditText.getText().toString();
         String phoneNumber = mPhoneNumberEditText.getText().toString();
 
-        updateUserAccountSettings(null, null, null, null, null, null, firstName + " " + lastName);
+        firebase.updateUserAccountSettings(null, null, null, null, null, null, firstName + " " + lastName);
         if (!mSettings.getLastName().equals(lastName)) {
-            updateUserAccountSettings(lastName, null, null, null, null, null, firstName + " " + lastName);
+            firebase.updateUserAccountSettings(lastName, null, null, null, null, null, firstName + " " + lastName);
         }
         if (!mSettings.getFirstName().equals(firstName)) {
-            updateUserAccountSettings(null, firstName, null, null, null, null, firstName + " " + lastName);
+            firebase.updateUserAccountSettings(null, firstName, null, null, null, null, firstName + " " + lastName);
         }
         if (!mSettings.getDescription().equals(description)) {
-            updateUserAccountSettings(null, null, description, null, null, null, null);
+            firebase.updateUserAccountSettings(null, null, description, null, null, null, null);
         }
         if (!mSettings.getLocation().equals(location)) {
-            updateUserAccountSettings(null, null, null, location, null, null, null);
+            firebase.updateUserAccountSettings(null, null, null, location, null, null, null);
         }
         if (!mSettings.getPhoneNumber().equals(phoneNumber)) {
-            updateUserAccountSettings(null, null, null, null, phoneNumber, null, null);
+            firebase.updateUserAccountSettings(null, null, null, null, phoneNumber, null, null);
         }
 
         if (mSelectedBitmap != null && mSelectedUri == null) {
@@ -136,6 +136,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         } else if (mSelectedBitmap == null && mSelectedUri != null) {
             compressThenUploadNewPhoto(mSelectedUri);
         }
+
+        //finish();
 
     }
 
@@ -183,6 +185,12 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        hideProgressDialog();
+        super.onDestroy();
     }
 
     @Override
@@ -285,12 +293,14 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         ImageCompressionInBackground compress = new ImageCompressionInBackground(bitmap);
         Uri uri = null;
         compress.execute(uri);
+        finish();
     }
 
     private void compressThenUploadNewPhoto(Uri imagePath) {
         Log.d(TAG, "uploadNewPhoto: uploading a new image uri to storage.");
         ImageCompressionInBackground resize = new ImageCompressionInBackground(null);
         resize.execute(imagePath);
+        finish();
     }
 
     /**
@@ -335,6 +345,10 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(byte[] bytes) {
             super.onPostExecute(bytes);
+
+            if (EditProfileActivity.this.isDestroyed()) { // or call isFinishing() if min sdk version < 17
+                return;
+            }
 
             hideProgressDialog();
 

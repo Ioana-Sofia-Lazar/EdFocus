@@ -32,7 +32,7 @@ public class ConversationsListAdapter extends RecyclerView.Adapter<Conversations
         this.mConversationsList = notificationList;
         this.mContext = context;
         this.mCurrentUserId = currentUserId;
-        this.firebase = new FirebaseUtils();
+        this.firebase = new FirebaseUtils(mContext);
     }
 
     @Override

@@ -102,7 +102,7 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
         if (view == mChoosePupilLayout) {
             // user chose Pupil type
             setAlphasUserTypes(ALPHA, (float) 1, ALPHA);
-            mSelectedUserType = "";
+            mSelectedUserType = "student";
         }
         if (view == mChooseParentLayout) {
             // user chose Parent type

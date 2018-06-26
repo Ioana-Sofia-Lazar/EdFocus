@@ -164,7 +164,7 @@ public class ActionModeCallback implements ActionMode.Callback {
                 // get info introduced by user
                 boolean absentAllDay = absentAllDayCB.isChecked();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = ((BaseActivity) mContext).getDateString(datePicker.getYear(),
+                String date = Utils.getDateString(datePicker.getYear(),
                         datePicker.getMonth() + 1, datePicker.getDayOfMonth());
 
                 // add absence for all selected students

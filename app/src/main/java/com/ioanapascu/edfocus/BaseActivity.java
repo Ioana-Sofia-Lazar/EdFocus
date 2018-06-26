@@ -130,7 +130,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        firebase = new FirebaseUtils();
+        firebase = new FirebaseUtils(BaseActivity.this);
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = mFirebaseDatabase.getReference();
@@ -312,44 +312,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     /**
-     * Update "userAccountSettings" node for current user.
-     *
-     * @param lastName
-     * @param firstName
-     * @param description
-     * @param location
-     * @param phoneNumber
-     */
-    public void updateUserAccountSettings(String lastName, String firstName, String description,
-                                          String location, String phoneNumber, String profilePhoto,
-                                          String displayName) {
-        DatabaseReference ref = mUserAccountSettingsRef.child(CURRENT_USER_ID);
-
-        if (lastName != null) {
-            ref.child(mContext.getString(R.string.field_last_name)).setValue(lastName);
-        }
-        if (firstName != null) {
-            ref.child(mContext.getString(R.string.field_first_name)).setValue(firstName);
-        }
-        if (description != null) {
-            ref.child(mContext.getString(R.string.field_description)).setValue(description);
-        }
-        if (location != null) {
-            ref.child(mContext.getString(R.string.field_location)).setValue(location);
-        }
-        if (phoneNumber != null) {
-            ref.child(mContext.getString(R.string.field_phone_number)).setValue(phoneNumber);
-        }
-        if (profilePhoto != null) {
-            ref.child(mContext.getString(R.string.field_profile_photo)).setValue(profilePhoto);
-        }
-        if (displayName != null) {
-            ref.child(mContext.getString(R.string.field_display_name)).setValue(displayName);
-        }
-
-    }
-
-    /**
      * Receive an image as a byte array, save image to Firebase Storage, get uri(reference) to
      * the image and then call "updateUserAccountSettings" to save reference in Firebase Database.
      *
@@ -369,7 +331,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 Log.d(TAG, "success - firebase download url: " + firebaseUri.toString());
 
                 // save image url to firebase database
-                updateUserAccountSettings(null, null, null, null, null, firebaseUri.toString(), null);
+                firebase.updateUserAccountSettings(null, null, null, null, null, firebaseUri.toString(), null);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -385,9 +347,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * Parent or Child.
      */
     public void userRedirect() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        mUsersRef.child(currentUser.getUid()).addListenerForSingleValueEvent(
+        mUsersRef.child(firebase.getCurrentUserId()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -428,7 +388,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
                             }
                         });
-
                     }
 
                     @Override
@@ -436,7 +395,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         Log.e(TAG, "failed to redirect user");
                     }
                 });
-
     }
 
     public void signIn(String email, String password) {
@@ -803,90 +761,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
 
-    }
-
-    public void removeStudentFromClass(String studentId, String classId) {
-        Map<String, Object> removeMap = new HashMap<>();
-
-        // remove from classStudents
-        removeMap.put("/classStudents/" + classId + "/" + studentId + "/", null);
-
-        // remove from studentAbsences
-        removeMap.put("/studentAbsences/" + classId + "/" + studentId + "/", null);
-
-        // remove from studentGrades
-        removeMap.put("/studentAbsences/" + classId + "/" + studentId + "/", null);
-
-        // remove from userClasses
-        removeMap.put("/userClasses/" + studentId + "/" + classId + "/", null);
-
-        mRootRef.updateChildren(removeMap);
-
-    }
-
-    public void confirmContactRequest(String fromUserId, String requestType) {
-        // delete request from database
-        mRequestsRef.child(CURRENT_USER_ID).child(fromUserId).removeValue();
-
-        // add each as a contact for the other
-        Map<String, Object> contact = new HashMap<>();
-        contact.put(fromUserId, fromUserId);
-        mContactsRef.child(CURRENT_USER_ID).updateChildren(contact);
-
-        contact = new HashMap<>();
-        contact.put(CURRENT_USER_ID, CURRENT_USER_ID);
-        mContactsRef.child(fromUserId).updateChildren(contact);
-
-        // if parent wants to add current user as child
-        if (requestType.equals("child")) {
-            contact = new HashMap<>();
-            contact.put(fromUserId, fromUserId);
-            mUserParentsRef.child(CURRENT_USER_ID).updateChildren(contact);
-
-            contact = new HashMap<>();
-            contact.put(CURRENT_USER_ID, CURRENT_USER_ID);
-            mUserChildrenRef.child(fromUserId).updateChildren(contact);
-        }
-
-        // if parent wants to add current user as parent
-        if (requestType.equals("parent")) {
-            contact = new HashMap<>();
-            contact.put(fromUserId, fromUserId);
-            mUserChildrenRef.child(CURRENT_USER_ID).updateChildren(contact);
-
-            contact = new HashMap<>();
-            contact.put(CURRENT_USER_ID, CURRENT_USER_ID);
-            mUserParentsRef.child(fromUserId).updateChildren(contact);
-        }
-    }
-
-    public void declineContactRequest(String fromUserId) {
-        // delete request from database
-        mRequestsRef.child(CURRENT_USER_ID).child(fromUserId).removeValue();
-    }
-
-    public void cancelRequestTo(String userId) {
-        Map<String, Object> remove = new HashMap<>();
-        remove.put(CURRENT_USER_ID, null);
-        mRequestsRef.child(userId).updateChildren(remove);
-    }
-
-    /**
-     * If year is 2018, month is 3, day is 21 returns 2018-03-21
-     */
-    public String getDateString(int year, int month, int day) {
-        String date = "";
-        date += year + "-";
-
-        if (month < 10) date += "0" + month;
-        else date += month;
-
-        date += "-";
-
-        if (day < 10) date += "0" + day;
-        else date += day;
-
-        return date;
     }
 
 }

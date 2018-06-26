@@ -67,7 +67,7 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        firebase = new FirebaseUtils();
+        firebase = new FirebaseUtils(getContext());
 
         mConversationsRecycler = view.findViewById(R.id.recycler_conversations);
         mNewMessageFab = view.findViewById(R.id.fab_new_message);

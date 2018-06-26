@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
+import com.ioanapascu.edfocus.firebase.FirebaseUtils;
 import com.ioanapascu.edfocus.model.Contact;
 import com.ioanapascu.edfocus.model.RequestInfo;
 import com.ioanapascu.edfocus.shared.ViewProfileActivity;
@@ -33,6 +33,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<RequestInfo> mRequests = new ArrayList<>();
     private Context mContext;
+    private final FirebaseUtils firebase = new FirebaseUtils(mContext);
 
     public ContactsListAdapter(Context context, ArrayList<Contact> contacts,
                                ArrayList<RequestInfo> requests) {
@@ -247,7 +248,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mConfirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((BaseActivity) mContext).confirmContactRequest(mRequest.getPersonId(), mRequest.getRequestType());
+                    firebase.confirmContactRequest(mRequest.getPersonId(), mRequest.getRequestType());
                 }
             });
 
@@ -255,7 +256,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mDeclineButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((BaseActivity) mContext).declineContactRequest(mRequest.getPersonId());
+                    firebase.declineContactRequest(mRequest.getPersonId());
                 }
             });
         }

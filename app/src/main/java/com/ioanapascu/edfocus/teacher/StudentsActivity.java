@@ -144,7 +144,7 @@ public class StudentsActivity extends BaseActivity implements View.OnClickListen
         for (int i = (selected.size() - 1); i >= 0; i--) {
             if (selected.valueAt(i)) {
                 // if current id is selected remove the item via key
-                removeStudentFromClass(mStudents.get(selected.keyAt(i)).getId(), mClassId);
+                firebase.removeStudentFromClass(mStudents.get(selected.keyAt(i)).getId(), mClassId);
                 mStudentsListAdapter.notifyDataSetChanged();
             }
         }

@@ -26,8 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
+import com.ioanapascu.edfocus.firebase.FirebaseUtils;
 import com.ioanapascu.edfocus.model.AbsenceDb;
 import com.ioanapascu.edfocus.model.Contact;
 import com.ioanapascu.edfocus.model.Course;
@@ -56,6 +56,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
     private ArrayList<String> mCourseNames, mCourseIds;
     private DatabaseReference mClassCoursesRef, mStudentGradesRef, mStudentAbsencesRef, mScheduleRef;
     private int mClickedPosition;
+    private FirebaseUtils firebase;
 
     public StudentsListAdapter(Context context, int resource, ArrayList<Contact> objects, String classId) {
         super(context, resource, objects);
@@ -64,6 +65,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         mStudents = objects;
         mSelectedItemsIds = new SparseBooleanArray();
         mClassId = classId;
+        firebase = new FirebaseUtils(mContext);
         mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
         mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
         mStudentAbsencesRef = FirebaseDatabase.getInstance().getReference().child("studentAbsences");
@@ -198,7 +200,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 mContext.startActivity(intent);
                 return true;
             case R.id.option_remove:
-                ((StudentsActivity) mContext).removeStudentFromClass(getItem(mClickedPosition).getId(), mClassId);
+                firebase.removeStudentFromClass(getItem(mClickedPosition).getId(), mClassId);
                 return true;
             default:
                 return false;
@@ -234,7 +236,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 String description = descriptionText.getText().toString();
                 String name = nameText.getText().toString();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = ((BaseActivity) mContext).getDateString(datePicker.getYear(),
+                String date = Utils.getDateString(datePicker.getYear(),
                         datePicker.getMonth() + 1, datePicker.getDayOfMonth());
 
                 // get id where to put the new grade in firebase
@@ -286,7 +288,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 boolean absentAllDay = absentAllDayCB.isChecked();
                 boolean authorised = authorisedCB.isChecked();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = ((BaseActivity) mContext).getDateString(datePicker.getYear(),
+                String date = Utils.getDateString(datePicker.getYear(),
                         datePicker.getMonth() + 1, datePicker.getDayOfMonth());
 
                 // get an array of the absences that need to be inserted

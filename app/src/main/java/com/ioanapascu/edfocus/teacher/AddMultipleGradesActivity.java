@@ -20,6 +20,7 @@ import com.ioanapascu.edfocus.model.GradeDb;
 import com.ioanapascu.edfocus.model.GradeRow;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
 import com.ioanapascu.edfocus.utils.MultipleGradesListAdapter;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -131,7 +132,7 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
 
     private void saveAllGrades() {
         String courseId = mCourseIds.get(mCoursesSpinner.getSelectedItemPosition());
-        String date = getDateString(mDatePicker.getYear(), mDatePicker.getMonth() + 1,
+        String date = Utils.getDateString(mDatePicker.getYear(), mDatePicker.getMonth() + 1,
                 mDatePicker.getDayOfMonth());
         String name = mNameText.getText().toString();
 

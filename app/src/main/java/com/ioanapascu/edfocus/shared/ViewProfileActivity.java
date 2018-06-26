@@ -239,13 +239,13 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
             addContactPossibilities();
             //hideWidgets(1);
         } else if (view == mAcceptRequestButton) {
-            confirmContactRequest(mUserId, mUserType);
+            firebase.confirmContactRequest(mUserId, mUserType);
             hideWidgets(3);
         } else if (view == mDeclineRequestButton) {
-            declineContactRequest(mUserId);
+            firebase.declineContactRequest(mUserId);
             hideWidgets(0);
         } else if (view == mCancelRequestButton) {
-            cancelRequestTo(mUserId);
+            firebase.cancelRequestTo(mUserId);
             hideWidgets(0);
         } else if (view == mShowOptionsImg) {
             showPopupMenu(view);
