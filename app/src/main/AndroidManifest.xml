@@ -13,7 +13,6 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -39,7 +38,7 @@
         <!-- Firebase Notifications -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/edfocus_small_no_padding" />
+            android:resource="@drawable/edfocus_small" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/cyan" />

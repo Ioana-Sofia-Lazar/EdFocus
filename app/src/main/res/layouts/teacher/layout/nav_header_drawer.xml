@@ -12,7 +12,7 @@
         android:layout_width="100dp"
         android:layout_height="80dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/edfocus_small_no_padding" />
+        android:src="@drawable/edfocus_small_nobg" />
 
     <TextView
         android:id="@+id/textView2"

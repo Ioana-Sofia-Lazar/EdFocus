@@ -131,6 +131,4 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
     public interface OnUserTypeSelectedListener {
         void getChosenUserType(String type);
     }
-
-
 }

@@ -13,7 +13,7 @@
         android:layout_alignTop="@+id/linearLayout3"
         android:layout_centerHorizontal="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/edfocus_small" />
+        android:src="@drawable/edfocus_small_nobg" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"

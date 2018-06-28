@@ -59,7 +59,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         long[] pattern = {500, 500, 500, 500, 500};
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.edfocus_small_no_padding)
+                .setSmallIcon(R.drawable.edfocus_small)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationMessage)
                 .setAutoCancel(true)

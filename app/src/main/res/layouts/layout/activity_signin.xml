@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/edfocus_small" />
+        android:src="@drawable/edfocus_small_nobg" />
 
     <LinearLayout
         android:layout_width="304dp"
