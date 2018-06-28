@@ -137,7 +137,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             compressThenUploadNewPhoto(mSelectedUri);
         }
 
-        //finish();
+        finish();
 
     }
 
@@ -173,7 +173,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
-                UserAccountSettings settings = settings = dataSnapshot.getValue(UserAccountSettings.class);
+                UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
 
                 // setup widgets to display user info from the database
                 setEditProfileWidgets(settings);
@@ -293,14 +293,14 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         ImageCompressionInBackground compress = new ImageCompressionInBackground(bitmap);
         Uri uri = null;
         compress.execute(uri);
-        finish();
+        //finish();
     }
 
     private void compressThenUploadNewPhoto(Uri imagePath) {
         Log.d(TAG, "uploadNewPhoto: uploading a new image uri to storage.");
         ImageCompressionInBackground resize = new ImageCompressionInBackground(null);
         resize.execute(imagePath);
-        finish();
+        //finish();
     }
 
     /**

@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,9 +25,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Message;
+import com.ioanapascu.edfocus.model.UserAccountSettings;
 import com.ioanapascu.edfocus.parent.ChildrenFragment;
 import com.ioanapascu.edfocus.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.support.v4.view.MenuItemCompat.getActionView;
 
@@ -35,11 +39,10 @@ public class DrawerActivity extends BaseActivity
         UserProfileFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "DrawerActivity";
-
+    NavigationView mNavigationView;
     // variables
     private Context mContext = DrawerActivity.this;
     private int nbOfMessages = 0;
-
     // widgets
     private TextView mNotificationsCounterText, mRequestsCounterText, mMessagesCounterText;
 
@@ -72,35 +75,63 @@ public class DrawerActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.bringToFront();
+        mNavigationView = findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.bringToFront();
+
+        loadUserInfoInHeader();
 
         // show and hide menu options according to user type
         if (getCurrentUserType().equals("teacher") || getCurrentUserType().equals("student")) {
             // show "My classes" for teacher and student
-            navigationView.getMenu().findItem(R.id.nav_classes).setVisible(true);
+            mNavigationView.getMenu().findItem(R.id.nav_classes).setVisible(true);
         }
         if (getCurrentUserType().equals("parent")) {
             // show "My children" for parent
-            navigationView.getMenu().findItem(R.id.nav_children).setVisible(true);
+            mNavigationView.getMenu().findItem(R.id.nav_children).setVisible(true);
         }
         if (getCurrentUserType().equals("parent") || getCurrentUserType().equals("student")) {
             // show "Notifications" for parent and student
-            navigationView.getMenu().findItem(R.id.nav_notifications).setVisible(true);
+            mNavigationView.getMenu().findItem(R.id.nav_notifications).setVisible(true);
         }
 
         // mark user as being online
         mOnlineUsersRef.child(CURRENT_USER_ID).setValue(true);
 
         // number badges
-        mNotificationsCounterText = (TextView) getActionView(navigationView.getMenu().
+        mNotificationsCounterText = (TextView) getActionView(mNavigationView.getMenu().
                 findItem(R.id.nav_notifications));
-        mRequestsCounterText = (TextView) getActionView(navigationView.getMenu().
+        mRequestsCounterText = (TextView) getActionView(mNavigationView.getMenu().
                 findItem(R.id.nav_contacts));
-        mMessagesCounterText = (TextView) getActionView(navigationView.getMenu().
+        mMessagesCounterText = (TextView) getActionView(mNavigationView.getMenu().
                 findItem(R.id.nav_messages));
         initializeDrawerCounters();
+    }
+
+    private void loadUserInfoInHeader() {
+        // get drawer header widgets
+        LinearLayout drawerHeader = (LinearLayout) mNavigationView.getHeaderView(0);
+        final TextView userName = drawerHeader.findViewById(R.id.text_user_name);
+        final TextView userEmail = drawerHeader.findViewById(R.id.text_user_email);
+        final CircleImageView userPhoto = drawerHeader.findViewById(R.id.image_user_photo);
+
+        // show user info
+        firebase.mUserAccountSettingsRef.child(firebase.getCurrentUserId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
+
+                        UniversalImageLoader.setImage(settings.getProfilePhoto(), userPhoto, null);
+                        userName.setText(settings.getFirstName() + " " + settings.getLastName());
+                        userEmail.setText(settings.getEmail());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void initializeDrawerCounters() {

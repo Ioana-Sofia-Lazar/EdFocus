@@ -9,24 +9,50 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/edfocus_small_nobg" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="EdFocus"
-        android:textColor="@color/pureWhite"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Version 1.1.0"
-        android:textColor="@color/lightCyan" />
+        android:layout_height="27dp"
+        android:layout_marginBottom="26dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/edfocus_horizontal" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_user_photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/profile_photo_placeholder" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="3dp"
+                android:text="name"
+                android:textColor="@color/pureWhite"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="3dp"
+                android:text="email"
+                android:textColor="@color/pureWhite" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
