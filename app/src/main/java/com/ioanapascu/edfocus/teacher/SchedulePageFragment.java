@@ -109,6 +109,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEntries.clear();
+                mScheduleListAdapter.notifyDataSetChanged();
 
                 if (dataSnapshot.getChildrenCount() > 0) {
                     mNoCoursesLayout.setVisibility(View.GONE);

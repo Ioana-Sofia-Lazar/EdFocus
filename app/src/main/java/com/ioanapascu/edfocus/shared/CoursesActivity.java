@@ -82,6 +82,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCourses.clear();
+                mCoursesListAdapter.notifyDataSetChanged();
 
                 if (dataSnapshot.getChildrenCount() > 0) {
                     mNoCoursesLayout.setVisibility(View.GONE);

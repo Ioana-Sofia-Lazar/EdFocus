@@ -227,6 +227,12 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
     private void saveClass() {
         String name = mNameText.getText().toString();
+
+        if (name.isEmpty()) {
+            mNameText.setError("Please enter a name for your class");
+            return;
+        }
+
         String school = mSchoolText.getText().toString();
         String description = mDescriptionText.getText().toString();
 

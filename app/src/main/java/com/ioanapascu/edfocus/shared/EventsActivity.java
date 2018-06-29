@@ -79,6 +79,7 @@ public class EventsActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEvents.clear();
+                mEventsAdapter.notifyDataSetChanged();
 
                 if (dataSnapshot.getChildrenCount() > 0) {
                     mNoEventsLayout.setVisibility(View.GONE);

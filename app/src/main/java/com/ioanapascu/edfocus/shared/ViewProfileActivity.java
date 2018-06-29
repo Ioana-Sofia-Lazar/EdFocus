@@ -138,7 +138,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         });
 
         // see if user being viewed has his information secret or unspecified
-        mSettingsRef.child(CURRENT_USER_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+        mSettingsRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child("email").exists()) {

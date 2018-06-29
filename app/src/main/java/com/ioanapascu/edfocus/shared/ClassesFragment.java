@@ -128,6 +128,7 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mClasses.clear();
+                mClassesListAdapter.notifyDataSetChanged();
 
                 if (dataSnapshot.getChildrenCount() > 0) {
                     mNoClassesLayout.setVisibility(View.GONE);

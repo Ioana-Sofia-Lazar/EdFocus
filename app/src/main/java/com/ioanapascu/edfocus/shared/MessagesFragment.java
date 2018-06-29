@@ -102,6 +102,7 @@ public class MessagesFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         mContacts.clear();
+                        mContactsAdapter.notifyDataSetChanged();
 
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             String contactId = data.getValue(String.class);
