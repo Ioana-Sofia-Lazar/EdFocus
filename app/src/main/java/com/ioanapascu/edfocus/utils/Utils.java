@@ -1,5 +1,6 @@
 package com.ioanapascu.edfocus.utils;
 
+import android.support.design.widget.TextInputLayout;
 import android.text.format.DateUtils;
 
 import java.text.SimpleDateFormat;
@@ -10,6 +11,16 @@ import java.util.Date;
  */
 
 public class Utils {
+
+    public static boolean toggleFieldError(TextInputLayout inputLayout, String input, String message) {
+        if (input.isEmpty()) {
+            inputLayout.setErrorEnabled(true);
+            inputLayout.setError(message);
+            return false;
+        }
+        inputLayout.setErrorEnabled(false);
+        return true;
+    }
 
     public static String getDateString(int year, int month, int day) {
         String date = "";

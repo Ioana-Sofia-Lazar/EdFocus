@@ -129,6 +129,32 @@
     </style>
 
     <!-- Form -->
+    <style name="FormFieldLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">13dp</item>
+        <item name="hintTextAppearance">@style/HintStyle</item>
+    </style>
+
+    <style name="FormFieldText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:theme">@style/EditTextTheme</item>
+    </style>
+
+    <style name="HintStyle" parent="TextAppearance.Design.Hint">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="EditTextTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+    </style>
+
+
+    <!-- old form-->
     <style name="FormFieldTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

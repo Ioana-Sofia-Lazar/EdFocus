@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Notification;
@@ -38,7 +36,6 @@ public class NotificationsFragment extends Fragment {
     // variables
     NotificationsListAdapter mAdapter;
     List<Notification> mNotifications;
-    DatabaseReference mNotificationsRef;
     FirebaseUtils firebase;
 
     @Override
@@ -61,7 +58,6 @@ public class NotificationsFragment extends Fragment {
         mNotificationsRecycler = view.findViewById(R.id.recycler_notifications);
 
         mNotifications = new ArrayList<>();
-        mNotificationsRef = FirebaseDatabase.getInstance().getReference().child("notifications");
 
         mAdapter = new NotificationsListAdapter(getContext(), mNotifications);
         mNotificationsRecycler.setAdapter(mAdapter);
@@ -76,7 +72,7 @@ public class NotificationsFragment extends Fragment {
     private void displayNotifications() {
         String userId = firebase.getCurrentUserId();
 
-        mNotificationsRef.child(userId).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
+        firebase.mNotificationsRef.child(userId).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mNotifications.clear();
@@ -101,7 +97,7 @@ public class NotificationsFragment extends Fragment {
         // mark notifications as seen
         String userId = firebase.getCurrentUserId();
 
-        mNotificationsRef.child(userId).orderByChild("seen").equalTo(false)
+        firebase.mNotificationsRef.child(userId).orderByChild("seen").equalTo(false)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +30,7 @@ import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
 import com.ioanapascu.edfocus.others.SelectProfilePhotoDialog;
 import com.ioanapascu.edfocus.others.UniversalImageLoader;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private ImageView mSaveImageView, mEditProfilePhotoImageView;
     private TextView mEditProfilePhotoTextView;
     private EditText mFirstNameEditText, mLastNameEditText, mDescriptionEditText, mLocationEditText, mEmailEditText, mPhoneNumberEditText;
+    private TextInputLayout mFirstNameTil, mLastNameTil;
 
     private Context mContext;
 
@@ -80,6 +83,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         mLocationEditText = findViewById(R.id.edit_text_location);
         mEmailEditText = findViewById(R.id.edit_text_email);
         mPhoneNumberEditText = findViewById(R.id.edit_text_phone_number);
+        mFirstNameTil = findViewById(R.id.til_first_name);
+        mLastNameTil = findViewById(R.id.til_last_name);
 
         // toolbar buttons
         mSaveImageView = findViewById(R.id.image_save);
@@ -110,9 +115,16 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private void saveProfileSettings() {
         String firstName = mFirstNameEditText.getText().toString().trim();
         String lastName = mLastNameEditText.getText().toString().trim();
-        String description = mDescriptionEditText.getText().toString();
-        String location = mLocationEditText.getText().toString();
-        String phoneNumber = mPhoneNumberEditText.getText().toString();
+        String description = mDescriptionEditText.getText().toString().trim();
+        String location = mLocationEditText.getText().toString().trim();
+        String phoneNumber = mPhoneNumberEditText.getText().toString().trim();
+
+        // validation
+        boolean valid = Utils.toggleFieldError(mFirstNameTil, firstName, "Please enter your first name.");
+        valid = Utils.toggleFieldError(mLastNameTil, lastName, "Please enter your last name.") && valid;
+        if (!valid) {
+            return;
+        }
 
         firebase.updateUserAccountSettings(null, null, null, null, null, null, firstName + " " + lastName);
         if (!mSettings.getLastName().equals(lastName)) {

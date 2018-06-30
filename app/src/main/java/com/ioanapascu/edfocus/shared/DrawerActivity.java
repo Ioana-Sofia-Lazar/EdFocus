@@ -63,6 +63,9 @@ public class DrawerActivity extends BaseActivity
         setStatusBarGradient(DrawerActivity.this, true);
         setContentView(R.layout.activity_drawer);
 
+        mCurrentUserType = firebase.getCurrentUserType();
+        mCurrentUserId = firebase.getCurrentUserId();
+
         // set initially shown fragment
         displayFragment(new UserProfileFragment());
 

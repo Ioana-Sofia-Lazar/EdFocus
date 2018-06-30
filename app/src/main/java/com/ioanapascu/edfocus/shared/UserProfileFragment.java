@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,8 +72,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void setupFirebase() {
-        Log.d(TAG, "setupFirebase");
-
         mCurrentUserId = firebase.getCurrentUserId();
 
         // add listener for the settings of the currently logged user
@@ -94,7 +91,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             }
         };
 
-        firebase.mSettingsRef.child(mCurrentUserId).addValueEventListener(mUserSettingsListener);
+        firebase.mUserAccountSettingsRef.child(mCurrentUserId).addValueEventListener(mUserSettingsListener);
 
     }
 
