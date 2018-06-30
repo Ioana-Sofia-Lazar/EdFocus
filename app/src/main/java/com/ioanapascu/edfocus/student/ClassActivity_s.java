@@ -19,13 +19,13 @@ import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Class;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
 import com.ioanapascu.edfocus.shared.CoursesActivity;
 import com.ioanapascu.edfocus.shared.EventsActivity;
 import com.ioanapascu.edfocus.shared.ViewProfileActivity;
 import com.ioanapascu.edfocus.teacher.FilesActivity;
 import com.ioanapascu.edfocus.teacher.ScheduleActivity;
 import com.ioanapascu.edfocus.teacher.StudentActivity;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
 
 public class ClassActivity_s extends BaseActivity implements View.OnClickListener {
 
@@ -96,7 +96,7 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
 
             }
         };
-        mClassesRef.child(mClassId).addValueEventListener(mClassInfoListener);
+        firebase.mClassesRef.child(mClassId).addValueEventListener(mClassInfoListener);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
         final TextView mToken = dialog.findViewById(R.id.text_token);
         final ImageView mCopyIcon = dialog.findViewById(R.id.img_copy_icon);
 
-        mClassesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mClassesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Class aClass = dataSnapshot.getValue(Class.class);
@@ -167,7 +167,7 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
                 UniversalImageLoader.setImage(aClass.getPhoto(), mClassPhoto, null);
 
                 // get teacher info
-                mUserAccountSettingsRef.child(aClass.getTeacherId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                firebase.mUserAccountSettingsRef.child(aClass.getTeacherId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
@@ -224,6 +224,6 @@ public class ClassActivity_s extends BaseActivity implements View.OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mClassesRef.child(mClassId).removeEventListener(mClassInfoListener);
+        firebase.mClassesRef.child(mClassId).removeEventListener(mClassInfoListener);
     }
 }

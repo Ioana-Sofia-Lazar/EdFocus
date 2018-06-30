@@ -39,9 +39,9 @@ import com.google.firebase.storage.UploadTask;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Class;
-import com.ioanapascu.edfocus.utils.SelectProfilePhotoDialog;
+import com.ioanapascu.edfocus.others.SelectProfilePhotoDialog;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
 import com.ioanapascu.edfocus.utils.UniqueStringGenerator;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
     // variables
     private Bitmap mSelectedBitmap;
     private Uri mSelectedUri;
-    private String mClassId, mOldToken, mOldPhoto;
+    private String mClassId, mOldToken, mOldPhoto, mCurrentUserId;
     private int mMode = 0; // 0 when creating new class, 1 when editing class
 
     public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
@@ -81,6 +81,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
         // classId will be null if we are creating a new class or the id of the class that the user is editing
         mClassId = getIntent().getStringExtra("classId");
+        mCurrentUserId = firebase.getCurrentUserId();
 
         // widgets
         mNameText = findViewById(R.id.txt_name);
@@ -119,7 +120,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
     private void displayClassInfo() {
         // load event info and display it in widgets
-        mClassesRef.child(mClassId).addListenerForSingleValueEvent(
+        firebase.mClassesRef.child(mClassId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -239,14 +240,14 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         if (mClassId == null) {
             // creating new class
             // get id where to put the new class in firebase
-            mClassId = mClassesRef.push().getKey();
+            mClassId = firebase.mClassesRef.push().getKey();
         }
 
-        Class aClass = new Class(mClassId, name, school, description, mOldPhoto, mOldToken, CURRENT_USER_ID);
+        Class aClass = new Class(mClassId, name, school, description, mOldPhoto, mOldToken, mCurrentUserId);
 
         // save to the database
-        mClassesRef.child(mClassId).setValue(aClass);
-        mUserClassesRef.child(CURRENT_USER_ID).child(mClassId).setValue(mClassId);
+        firebase.mClassesRef.child(mClassId).setValue(aClass);
+        firebase.mUserClassesRef.child(mCurrentUserId).child(mClassId).setValue(mClassId);
 
         // compress and save class photo to database
         if (mSelectedBitmap != null && mSelectedUri == null) {
@@ -267,12 +268,12 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // delete class from all students of the class
-        mClassStudentsRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mClassStudentsRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot data : dataSnapshot.getChildren()) { // for each student of the class
                     // delete from user classes
-                    mUserClassesRef.child(data.getKey()).child(classId).removeValue();
+                    firebase.mUserClassesRef.child(data.getKey()).child(classId).removeValue();
                 }
             }
 
@@ -315,7 +316,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
         final String token = UniqueStringGenerator.nextString();
 
         // check if the code already exists
-        mClassTokensRef.child(token).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mClassTokensRef.child(token).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -325,10 +326,10 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
                     // otherwise add token to db - class tokens
                     Map<String, Object> node = new HashMap<>();
                     node.put("classId", mClassId);
-                    mClassTokensRef.child(token).updateChildren(node);
+                    firebase.mClassTokensRef.child(token).updateChildren(node);
 
                     // add to classes ref
-                    mClassesRef.child(mClassId).child("token").setValue(token);
+                    firebase.mClassesRef.child(mClassId).child("token").setValue(token);
 
                     redirectToActivity(token);
                 }
@@ -385,7 +386,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
     private void uploadClassPhoto(byte[] bytes) {
         // add photo to directory in firebase storage
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                .child("photos/" + CURRENT_USER_ID + "/classes/" + mClassId + "/classPhoto");
+                .child("photos/" + mCurrentUserId + "/classes/" + mClassId + "/classPhoto");
         UploadTask uploadTask = storageReference.putBytes(bytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -394,7 +395,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
                 Uri firebaseUri = taskSnapshot.getDownloadUrl();
 
                 // save image url to firebase database
-                mClassesRef.child(mClassId).child("photo").setValue(firebaseUri.toString());
+                firebase.mClassesRef.child(mClassId).child("photo").setValue(firebaseUri.toString());
 
             }
         }).addOnFailureListener(new OnFailureListener() {

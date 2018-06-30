@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.graphics.Typeface;

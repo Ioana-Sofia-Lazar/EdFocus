@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -18,12 +18,11 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Grade;
 import com.ioanapascu.edfocus.model.GradeDb;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,13 +34,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 
 public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements StickyListHeadersAdapter {
+    private final FirebaseUtils firebase;
     // StickyListHeadersAdapter needs header id's as long, so map course id to a long value.
     HashMap<String, Long> mHeaderIds;
     private ArrayList<Grade> mGrades;
     private Context mContext;
     private int mResource, mHeaderResource;
     private String mClassId, mStudentId, mUserType;
-    private DatabaseReference mClassCoursesRef, mStudentGradesRef;
 
     public StudentGradesStickyAdapter(Context context, int resource, int headerResource, ArrayList<Grade> objects,
                                       HashMap<String, Long> headerIds, String classId, String studentId,
@@ -55,8 +54,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
         mClassId = classId;
         mStudentId = studentId;
         mUserType = userType;
-        mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
-        mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
+        firebase = new FirebaseUtils(mContext);
     }
 
     @NonNull
@@ -121,7 +119,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
         coursesSpinner.setVisibility(View.GONE);
 
         // load grade info and display it in widgets
-        mStudentGradesRef.child(mClassId).child(mStudentId).child(gradeId).addListenerForSingleValueEvent(
+        firebase.mStudentGradesRef.child(mClassId).child(mStudentId).child(gradeId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -131,7 +129,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
                         nameText.setText(grade.getName());
 
                         // get course name
-                        mClassCoursesRef.child(mClassId).child(grade.getCourseId()).addValueEventListener(new ValueEventListener() {
+                        firebase.mClassCoursesRef.child(mClassId).child(grade.getCourseId()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 courseText.setText("Course: " + dataSnapshot.child("name").getValue());
@@ -173,7 +171,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
                         getItem(position).getCourseId(), mStudentId);
 
                 // save to firebase
-                mStudentGradesRef.child(mClassId).child(mStudentId).child(gradeId).setValue(grade);
+                firebase.mStudentGradesRef.child(mClassId).child(mStudentId).child(gradeId).setValue(grade);
                 editDialog.dismiss();
             }
         });
@@ -192,7 +190,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // delete from firebase
-                                mStudentGradesRef.child(mClassId).child(mStudentId).child(gradeId).removeValue();
+                                firebase.mStudentGradesRef.child(mClassId).child(mStudentId).child(gradeId).removeValue();
                                 dialog.dismiss();
                                 editDialog.dismiss();
                             }

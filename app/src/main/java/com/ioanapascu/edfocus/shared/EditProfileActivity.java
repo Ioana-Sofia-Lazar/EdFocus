@@ -27,8 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.SelectProfilePhotoDialog;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
+import com.ioanapascu.edfocus.others.SelectProfilePhotoDialog;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -169,7 +169,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
      */
     private void setupFirebase() {
         // add listener for the settings of the currently logged user
-        mUserAccountSettingsRef.child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
+        firebase.mUserAccountSettingsRef.child(firebase.getCurrentUserId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info

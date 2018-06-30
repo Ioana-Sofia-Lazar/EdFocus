@@ -15,8 +15,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.StudentFragmentPagerAdapter;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
+import com.ioanapascu.edfocus.others.StudentFragmentPagerAdapter;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,7 +62,7 @@ public class StudentActivity extends BaseActivity {
 
     private void displayStudentInfo() {
         // get info for student that is being viewed
-        mUserAccountSettingsRef.child(mStudentId).addValueEventListener(new ValueEventListener() {
+        firebase.mUserAccountSettingsRef.child(mStudentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info

@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,31 +10,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
-import com.ioanapascu.edfocus.model.Contact;
+import com.ioanapascu.edfocus.model.Class;
 
-import java.util.List;
+import java.util.ArrayList;
 
-/**
- * Lst adapter for the Recycler View that will contain Contacts and Requests.
- */
+public class ClassesListAdapter extends ArrayAdapter<Class> {
 
-public class MessageContactsListAdapter extends ArrayAdapter<Contact> {
+    private static final String TAG = "ClassesListAdapter";
 
-    private List<Contact> mContacts;
+    private ArrayList<Class> mClasses;
     private Context mContext;
     private int mResource;
 
-    public MessageContactsListAdapter(Context context, int resource, List<Contact> objects) {
+    public ClassesListAdapter(Context context, int resource, ArrayList<Class> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
-        mContacts = objects;
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Contact contact = getItem(position);
+        final Class aClass = getItem(position);
 
         ViewHolder holder;
 
@@ -42,16 +39,20 @@ public class MessageContactsListAdapter extends ArrayAdapter<Contact> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(mResource, parent, false);
             holder = new ViewHolder();
-            holder.mContactName = convertView.findViewById(R.id.text_contact_name);
-            holder.mContactProfilePhoto = convertView.findViewById(R.id.image_contact_photo);
+            holder.mName = convertView.findViewById(R.id.txt_name);
+            holder.mSchool = convertView.findViewById(R.id.txt_school);
+            holder.mDescription = convertView.findViewById(R.id.txt_description);
+            holder.mPhoto = convertView.findViewById(R.id.img_photo);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.mContactName.setText(contact.getName());
-        UniversalImageLoader.setImage(contact.getProfilePhoto(), holder.mContactProfilePhoto, null);
+        holder.mName.setText(aClass.getName());
+        holder.mSchool.setText(aClass.getSchool());
+        holder.mDescription.setText(aClass.getDescription());
+        UniversalImageLoader.setImage(aClass.getPhoto(), holder.mPhoto, null);
 
         return convertView;
     }
@@ -60,7 +61,8 @@ public class MessageContactsListAdapter extends ArrayAdapter<Contact> {
      * Holds variables in a View
      */
     private static class ViewHolder {
-        public TextView mContactName;
-        public ImageView mContactProfilePhoto;
+        ImageView mPhoto;
+        TextView mName, mSchool, mDescription;
     }
+
 }

@@ -1,11 +1,14 @@
-package com.ioanapascu.edfocus.firebase;
+package com.ioanapascu.edfocus.utils;
 
 import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ioanapascu.edfocus.R;
+import com.ioanapascu.edfocus.model.User;
+import com.ioanapascu.edfocus.model.UserAccountSettings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +24,7 @@ public class FirebaseUtils {
             mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
             mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
             mDeviceTokensRef, mSettingsRef, mFirstTimeRef, mNotificationsRef, mOnlineUsersRef, mLastSeenRef,
-            mMessagesRef, mConversationsRef;
+            mMessagesRef, mConversationsRef, mClassScheduleRef;
     public String mCurrentUserId;
     private Context mContext;
 
@@ -43,6 +46,7 @@ public class FirebaseUtils {
         mClassEventsRef = mRootRef.child("classEvents");
         mStudentGradesRef = mRootRef.child("studentGrades");
         mStudentAbsencesRef = mRootRef.child("studentAbsences");
+        mClassScheduleRef = mRootRef.child("classSchedule");
         mUserParentsRef = mRootRef.child("userParents");
         mUserChildrenRef = mRootRef.child("userChildren");
         mDeviceTokensRef = mRootRef.child("deviceTokens");
@@ -58,6 +62,38 @@ public class FirebaseUtils {
         if (mAuth.getCurrentUser() != null) {
             mCurrentUserId = mAuth.getCurrentUser().getUid();
         }
+    }
+
+    /**
+     * Adds data to Firebase for the user with ID user.getId().
+     *
+     * @param user
+     * @param accountSettings
+     */
+    public void addUserInfo(User user, UserAccountSettings accountSettings) {
+        mUsersRef.child(user.getId()).setValue(user);
+
+        // user profile settings
+        accountSettings.setId(user.getId());
+        accountSettings.setEmail(user.getEmail());
+        accountSettings.setUserType(user.getUserType());
+        mUserAccountSettingsRef.child(user.getId()).setValue(accountSettings);
+
+        // app settings
+        Map<String, Object> settings = new HashMap<>();
+        settings.put("email", true);
+        settings.put("location", true);
+        settings.put("phone", true);
+        mSettingsRef.child(user.getId()).setValue(settings);
+
+        // first time
+        Map<String, Object> node = new HashMap<>();
+        node.put(user.getId(), true);
+        mFirstTimeRef.updateChildren(node);
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return mAuth.getCurrentUser();
     }
 
     public String getCurrentUserId() {
@@ -179,5 +215,9 @@ public class FirebaseUtils {
             ref.child(mContext.getString(R.string.field_display_name)).setValue(displayName);
         }
 
+    }
+
+    public String getCurrentUserType() {
+        return mContext.getSharedPreferences("LoginInfo", 0).getString("userType", "none");
     }
 }

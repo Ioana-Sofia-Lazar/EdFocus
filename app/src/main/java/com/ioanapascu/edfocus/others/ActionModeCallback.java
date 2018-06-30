@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,8 +17,6 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
@@ -29,6 +27,8 @@ import com.ioanapascu.edfocus.model.ScheduleEntry;
 import com.ioanapascu.edfocus.teacher.AddMultipleGradesActivity;
 import com.ioanapascu.edfocus.teacher.ScheduleActivity;
 import com.ioanapascu.edfocus.teacher.StudentsActivity;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
+import com.ioanapascu.edfocus.utils.Utils;
 import com.ioanapascu.edfocus.views.NoCoursesDialog;
 
 import java.util.ArrayList;
@@ -43,12 +43,12 @@ import java.util.List;
 
 public class ActionModeCallback implements ActionMode.Callback {
 
-    DatabaseReference mClassCoursesRef, mStudentAbsencesRef, mScheduleRef;
     private Context mContext;
     private StudentsListAdapter mStudentsListAdapter;
     private ArrayList<Contact> mStudents;
     private ArrayList<String> mCourseNames, mCourseIds;
     private String mClassId;
+    private FirebaseUtils firebase;
 
     public ActionModeCallback(Context context, StudentsListAdapter studentsListAdapter,
                               ArrayList<Contact> students, String classId) {
@@ -56,9 +56,7 @@ public class ActionModeCallback implements ActionMode.Callback {
         this.mStudentsListAdapter = studentsListAdapter;
         this.mStudents = students;
         this.mClassId = classId;
-        mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
-        mStudentAbsencesRef = FirebaseDatabase.getInstance().getReference().child("studentAbsences");
-        mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
+        this.firebase = new FirebaseUtils(mContext);
     }
 
     @Override
@@ -85,7 +83,7 @@ public class ActionModeCallback implements ActionMode.Callback {
             case R.id.option_add_grade:
                 // if there are no courses for this class show error
                 // otherwise activity to add grades
-                mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+                firebase.mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() == 0) {
@@ -110,7 +108,7 @@ public class ActionModeCallback implements ActionMode.Callback {
             case R.id.option_mark_absent:
                 // if there are no courses for this class show error
                 // otherwise dialog to add absences
-                mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+                firebase.mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() == 0) {
@@ -178,11 +176,11 @@ public class ActionModeCallback implements ActionMode.Callback {
                         // add single absence for the selected course
 
                         // get id where to put the new absence in firebase
-                        String absenceId = mStudentAbsencesRef.child(mClassId).child(studentId).push().getKey();
+                        String absenceId = firebase.mStudentAbsencesRef.child(mClassId).child(studentId).push().getKey();
                         AbsenceDb absence = new AbsenceDb(absenceId, date, false, mClassId, courseId, studentId);
 
                         // save to firebase
-                        mStudentAbsencesRef.child(mClassId).child(studentId).child(absenceId).setValue(absence);
+                        firebase.mStudentAbsencesRef.child(mClassId).child(studentId).child(absenceId).setValue(absence);
                     }
                 }
 
@@ -214,7 +212,7 @@ public class ActionModeCallback implements ActionMode.Callback {
         String dayOfWeek = StudentsListAdapter.DAYS[c.get(Calendar.DAY_OF_WEEK)];
 
         // iterate all courses of this class for this day
-        mScheduleRef.child(mClassId).child(dayOfWeek).addListenerForSingleValueEvent(
+        firebase.mClassScheduleRef.child(mClassId).child(dayOfWeek).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -224,13 +222,13 @@ public class ActionModeCallback implements ActionMode.Callback {
                             String courseId = entry.getCourseId();
 
                             // get id where to put the new absence in firebase
-                            String absenceId = mStudentAbsencesRef.child(mClassId).child(studentId)
+                            String absenceId = firebase.mStudentAbsencesRef.child(mClassId).child(studentId)
                                     .push().getKey();
                             AbsenceDb absence = new AbsenceDb(absenceId, date, false, mClassId,
                                     courseId, studentId);
 
                             // save to firebase
-                            mStudentAbsencesRef.child(mClassId).child(studentId).child(absenceId)
+                            firebase.mStudentAbsencesRef.child(mClassId).child(studentId).child(absenceId)
                                     .setValue(absence);
                         }
                     }
@@ -259,7 +257,7 @@ public class ActionModeCallback implements ActionMode.Callback {
         spinner.setAdapter(dataAdapter);
 
         // get courses from firebase
-        mClassCoursesRef.child(mClassId).addValueEventListener(new ValueEventListener() {
+        firebase.mClassCoursesRef.child(mClassId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCourseNames.clear();

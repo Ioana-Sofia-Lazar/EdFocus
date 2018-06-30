@@ -17,8 +17,8 @@ import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Contact;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
+import com.ioanapascu.edfocus.others.StudentsListAdapter_s;
 import com.ioanapascu.edfocus.shared.ViewProfileActivity;
-import com.ioanapascu.edfocus.utils.StudentsListAdapter_s;
 
 import java.util.ArrayList;
 
@@ -92,7 +92,7 @@ public class StudentsActivity_s extends BaseActivity implements View.OnClickList
     }
 
     private void displayStudents() {
-        mClassStudentsRef.child(mClassId).addValueEventListener(new ValueEventListener() {
+        firebase.mClassStudentsRef.child(mClassId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mStudents.clear();
@@ -128,7 +128,7 @@ public class StudentsActivity_s extends BaseActivity implements View.OnClickList
     }
 
     private void showStudentData(final String id) {
-        mUserAccountSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mUserAccountSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);

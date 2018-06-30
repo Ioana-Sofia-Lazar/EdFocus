@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
-import com.ioanapascu.edfocus.firebase.FirebaseUtils;
 import com.ioanapascu.edfocus.model.Conversation;
 import com.ioanapascu.edfocus.shared.ConversationActivity;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.List;
 

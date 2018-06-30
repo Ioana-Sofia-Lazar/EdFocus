@@ -47,8 +47,9 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             intent.putExtra("classId", classId);
             intent.putExtra("studentId", studentId);
         } else if (notificationType.equals("message")) {
-            String userId = remoteMessage.getData().get("userId");
-            intent.putExtra("userId", userId);
+            /*String userId = remoteMessage.getData().get("userId");
+            intent.putExtra("userId", userId);*/
+            return;
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

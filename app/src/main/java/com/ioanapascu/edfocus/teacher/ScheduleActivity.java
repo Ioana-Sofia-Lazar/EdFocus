@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
-import com.ioanapascu.edfocus.utils.ScheduleFragmentPagerAdapter;
+import com.ioanapascu.edfocus.others.ScheduleFragmentPagerAdapter;
 
 import java.util.Calendar;
 

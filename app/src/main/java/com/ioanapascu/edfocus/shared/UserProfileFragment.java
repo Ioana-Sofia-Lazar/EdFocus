@@ -16,30 +16,25 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 public class UserProfileFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "UserProfileFragment";
-
+    FirebaseUtils firebase;
     private OnFragmentInteractionListener mListener;
-
     // widgets
     private ImageView mProfilePhotoImageView, mEditProfileButton;
     private TextView mNameTextView, mDescriptionTextView, mContactsTextView, mClassesTextView,
             mEmailTextView, mLocationTextView, mPhoneTextView, mUserTypeTextView;
     private ProgressBar mProgressBar;
     private LinearLayout mEditProfileLayout;
-
     // variables
-    private DatabaseReference mRootRef, mSettingsRef, mContactsRef, mClassesRef, mUserClassesRef;
     private String mCurrentUserId;
     private ValueEventListener mUserSettingsListener;
 
@@ -73,19 +68,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //setHasOptionsMenu(true);
+        firebase = new FirebaseUtils(getContext());
         setupFirebase();
     }
 
     private void setupFirebase() {
         Log.d(TAG, "setupFirebase");
 
-        mRootRef = FirebaseDatabase.getInstance().getReference();
-        mSettingsRef = mRootRef.child("userAccountSettings");
-        mClassesRef = mRootRef.child("classes");
-        mUserClassesRef = mRootRef.child("userClasses");
-        mContactsRef = mRootRef.child("contacts");
-        mCurrentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mCurrentUserId = firebase.getCurrentUserId();
 
         // add listener for the settings of the currently logged user
         mUserSettingsListener = new ValueEventListener() {
@@ -104,7 +94,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             }
         };
 
-        mSettingsRef.child(mCurrentUserId).addValueEventListener(mUserSettingsListener);
+        firebase.mSettingsRef.child(mCurrentUserId).addValueEventListener(mUserSettingsListener);
 
     }
 
@@ -120,7 +110,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         mUserTypeTextView.setText(capitalizedString);
 
         // set number of contacts
-        mContactsRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+        firebase.mContactsRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mContactsTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));
@@ -133,7 +123,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         });
 
         // set number of classes
-        mUserClassesRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+        firebase.mUserClassesRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mClassesTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));
@@ -175,13 +165,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mSettingsRef.child(mCurrentUserId).removeEventListener(mUserSettingsListener);
+        firebase.mSettingsRef.child(mCurrentUserId).removeEventListener(mUserSettingsListener);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSettingsRef.child(mCurrentUserId).removeEventListener(mUserSettingsListener);
+        firebase.mSettingsRef.child(mCurrentUserId).removeEventListener(mUserSettingsListener);
     }
 
     @Override

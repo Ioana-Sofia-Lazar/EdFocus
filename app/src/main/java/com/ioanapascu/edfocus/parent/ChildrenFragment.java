@@ -13,14 +13,12 @@ import android.widget.RelativeLayout;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Child;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.ChildrenListAdapter;
+import com.ioanapascu.edfocus.others.ChildrenListAdapter;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,26 +30,18 @@ import java.util.List;
 public class ChildrenFragment extends Fragment {
 
     private static final String TAG = "ChildrenFragment";
-
+    private final FirebaseUtils firebase = new FirebaseUtils(getContext());
     // widgets
     private ListView mChildrenListView;
-
     // variables
     private ArrayList<Child> mChildren;
     private ArrayList<String> mChildrenIds;
     private ChildrenListAdapter mAdapter;
     private RelativeLayout mNoChildrenLayout;
 
-    // db references
-    private DatabaseReference mUserClassesRef, mUserChildrenRef, mSettingsRef;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mUserClassesRef = FirebaseDatabase.getInstance().getReference().child("userClasses");
-        mUserChildrenRef = FirebaseDatabase.getInstance().getReference().child("userChildren");
-        mSettingsRef = FirebaseDatabase.getInstance().getReference().child("userAccountSettings");
     }
 
     @Nullable
@@ -75,9 +65,7 @@ public class ChildrenFragment extends Fragment {
     }
 
     private void displayChildren() {
-        String currentUserId = ((BaseActivity) getActivity()).getCurrentUserId();
-
-        mUserChildrenRef.child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mUserChildrenRef.child(firebase.getCurrentUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, String.valueOf(dataSnapshot));
@@ -86,7 +74,7 @@ public class ChildrenFragment extends Fragment {
                     final String childId = data.getValue().toString();
 
                     // get child info
-                    mSettingsRef.child(childId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    firebase.mSettingsRef.child(childId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
@@ -94,7 +82,7 @@ public class ChildrenFragment extends Fragment {
                                     settings.getLastName(), settings.getProfilePhoto(), new ArrayList<String>());
 
                             // get child classes
-                            mUserClassesRef.child(childId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            firebase.mUserClassesRef.child(childId).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (!dataSnapshot.exists()) {

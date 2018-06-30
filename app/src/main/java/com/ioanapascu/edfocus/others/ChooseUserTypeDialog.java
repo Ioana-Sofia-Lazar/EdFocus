@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,8 +22,10 @@ public class ChooseUserTypeDialog extends DialogFragment implements View.OnClick
 
     // variables
     private final float ALPHA = (float) 0.2; // opacity of user types that are not selected
+
     // widgets
     Button mContinueButton;
+
     // choose user type included layout
     View mChooseUserTypeView;
     LinearLayout mChooseTeacherLayout, mChoosePupilLayout, mChooseParentLayout;

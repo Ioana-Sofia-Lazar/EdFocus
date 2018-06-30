@@ -2,6 +2,7 @@ package com.ioanapascu.edfocus.shared;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -24,10 +25,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
+import com.ioanapascu.edfocus.SignInActivity;
 import com.ioanapascu.edfocus.model.Message;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
 import com.ioanapascu.edfocus.parent.ChildrenFragment;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,11 +41,12 @@ public class DrawerActivity extends BaseActivity
         UserProfileFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "DrawerActivity";
+    // widgets
     NavigationView mNavigationView;
     // variables
     private Context mContext = DrawerActivity.this;
     private int nbOfMessages = 0;
-    // widgets
+    private String mCurrentUserType, mCurrentUserId;
     private TextView mNotificationsCounterText, mRequestsCounterText, mMessagesCounterText;
 
     public void displayFragment(Fragment fragment) {
@@ -82,21 +85,21 @@ public class DrawerActivity extends BaseActivity
         loadUserInfoInHeader();
 
         // show and hide menu options according to user type
-        if (getCurrentUserType().equals("teacher") || getCurrentUserType().equals("student")) {
+        if (mCurrentUserType.equals("teacher") || mCurrentUserType.equals("student")) {
             // show "My classes" for teacher and student
             mNavigationView.getMenu().findItem(R.id.nav_classes).setVisible(true);
         }
-        if (getCurrentUserType().equals("parent")) {
+        if (mCurrentUserType.equals("parent")) {
             // show "My children" for parent
             mNavigationView.getMenu().findItem(R.id.nav_children).setVisible(true);
         }
-        if (getCurrentUserType().equals("parent") || getCurrentUserType().equals("student")) {
+        if (mCurrentUserType.equals("parent") || mCurrentUserType.equals("student")) {
             // show "Notifications" for parent and student
             mNavigationView.getMenu().findItem(R.id.nav_notifications).setVisible(true);
         }
 
         // mark user as being online
-        mOnlineUsersRef.child(CURRENT_USER_ID).setValue(true);
+        firebase.mOnlineUsersRef.child(mCurrentUserId).setValue(true);
 
         // number badges
         mNotificationsCounterText = (TextView) getActionView(mNavigationView.getMenu().
@@ -141,7 +144,7 @@ public class DrawerActivity extends BaseActivity
         styleBadgeCounter(mMessagesCounterText);
 
         // get number of new notifications (not seen)
-        mNotificationsRef.child(CURRENT_USER_ID).orderByChild("seen").equalTo(false)
+        firebase.mNotificationsRef.child(mCurrentUserId).orderByChild("seen").equalTo(false)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -161,7 +164,7 @@ public class DrawerActivity extends BaseActivity
                 });
 
         // get number of new notifications (not seen)
-        mRequestsRef.child(CURRENT_USER_ID)
+        firebase.mRequestsRef.child(mCurrentUserId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -181,7 +184,7 @@ public class DrawerActivity extends BaseActivity
                 });
 
         // get number of new notifications (not seen)
-        mMessagesRef.child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
+        firebase.mMessagesRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 nbOfMessages = 0;
@@ -189,7 +192,7 @@ public class DrawerActivity extends BaseActivity
                     for (DataSnapshot snapshot : userSnapshot.getChildren()) {
                         if (snapshot.exists()) {
                             Message message = snapshot.getValue(Message.class);
-                            if (!message.getFrom().equals(CURRENT_USER_ID) && !message.isSeen()) {
+                            if (!message.getFrom().equals(mCurrentUserId) && !message.isSeen()) {
                                 nbOfMessages++;
                                 mMessagesCounterText.setVisibility(View.VISIBLE);
                                 mMessagesCounterText.setText(String.valueOf(nbOfMessages));
@@ -263,6 +266,10 @@ public class DrawerActivity extends BaseActivity
         } else if (id == R.id.nav_logout) {
             // sign user out
             signOut();
+            // jump to Sign In activity
+            Intent intent = new Intent(this, SignInActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            mContext.startActivity(intent);
 
             finish();
         }

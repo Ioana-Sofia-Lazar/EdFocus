@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.GradeRow;
 
@@ -31,13 +29,9 @@ public class MultipleGradesListAdapter extends
     private Context mContext;
     private String mClassId;
 
-    // firebase
-    private DatabaseReference mStudentGradesRef;
-
     public MultipleGradesListAdapter(Context context, List<GradeRow> studentNames, String classId) {
         this.mContext = context;
         this.mGrades = studentNames;
-        mStudentGradesRef = FirebaseDatabase.getInstance().getReference().child("studentGrades");
     }
 
     @Override

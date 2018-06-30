@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
-import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.IntroActivity;
 import com.ioanapascu.edfocus.R;
-import com.ioanapascu.edfocus.utils.FAQExpandableListAdapter;
+import com.ioanapascu.edfocus.others.FAQExpandableListAdapter;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 /**
  * Created by ioana on 2/23/2018.
@@ -30,6 +30,7 @@ public class HelpFragment extends Fragment {
 
     // variables
     FAQExpandableListAdapter mAdapter;
+    FirebaseUtils firebase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class HelpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        firebase = new FirebaseUtils(getContext());
         mQuestionsList = view.findViewById(R.id.list_questions);
         mIntroButton = view.findViewById(R.id.btn_start_intro);
 
@@ -57,7 +59,7 @@ public class HelpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), IntroActivity.class);
-                intent.putExtra("userType", ((BaseActivity) getActivity()).getCurrentUserType());
+                intent.putExtra("userType", firebase.getCurrentUserType());
                 getActivity().startActivity(intent);
             }
         });

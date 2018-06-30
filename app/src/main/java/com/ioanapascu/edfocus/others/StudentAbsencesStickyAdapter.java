@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -18,12 +18,11 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Absence;
 import com.ioanapascu.edfocus.model.AbsenceDb;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,13 +34,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 
 public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implements StickyListHeadersAdapter {
+    private final FirebaseUtils firebase;
     // StickyListHeadersAdapter needs header id's as long, so map course id to a long value.
     HashMap<String, Long> mHeaderIds;
     private ArrayList<Absence> mAbsences;
     private Context mContext;
     private int mResource, mHeaderResource;
     private String mClassId, mStudentId, mUserType;
-    private DatabaseReference mClassCoursesRef, mStudentAbsencesRef;
 
     public StudentAbsencesStickyAdapter(Context context, int resource, int headerResource, ArrayList<Absence> objects,
                                         HashMap<String, Long> headerIds, String classId, String studentId,
@@ -55,8 +54,7 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
         mClassId = classId;
         mStudentId = studentId;
         mUserType = userType;
-        mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
-        mStudentAbsencesRef = FirebaseDatabase.getInstance().getReference().child("studentAbsences");
+        firebase = new FirebaseUtils(mContext);
     }
 
     @NonNull
@@ -125,7 +123,7 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
         coursesSpinner.setVisibility(View.GONE);
 
         // load absence info and display it in widgets
-        mStudentAbsencesRef.child(mClassId).child(mStudentId).child(absenceId).addListenerForSingleValueEvent(
+        firebase.mStudentAbsencesRef.child(mClassId).child(mStudentId).child(absenceId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -133,7 +131,7 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
                         authorisedCB.setChecked(absence.isAuthorised());
 
                         // get course name
-                        mClassCoursesRef.child(mClassId).child(absence.getCourseId()).addValueEventListener(new ValueEventListener() {
+                        firebase.mClassCoursesRef.child(mClassId).child(absence.getCourseId()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 courseText.setText("Course: " + dataSnapshot.child("name").getValue());
@@ -172,7 +170,7 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
                 AbsenceDb absence = new AbsenceDb(absenceId, date, authorised, mClassId, courseId, mStudentId);
 
                 // save to firebase
-                mStudentAbsencesRef.child(mClassId).child(mStudentId).child(absenceId).setValue(absence);
+                firebase.mStudentAbsencesRef.child(mClassId).child(mStudentId).child(absenceId).setValue(absence);
                 editDialog.dismiss();
             }
         });
@@ -191,7 +189,7 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // delete from firebase
-                                mStudentAbsencesRef.child(mClassId).child(mStudentId).child(absenceId).removeValue();
+                                firebase.mStudentAbsencesRef.child(mClassId).child(mStudentId).child(absenceId).removeValue();
                                 dialog.dismiss();
                                 editDialog.dismiss();
                             }

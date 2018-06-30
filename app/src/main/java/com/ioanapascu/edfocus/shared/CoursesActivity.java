@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Course;
-import com.ioanapascu.edfocus.utils.CoursesListAdapter;
+import com.ioanapascu.edfocus.others.CoursesListAdapter;
 
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_courses);
 
         mCourses = new ArrayList<>();
-        mUserType = getCurrentUserType();
+        mUserType = firebase.getCurrentUserType();
 
         // get id of class to display courses for
         Intent myIntent = getIntent();
@@ -78,7 +78,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void displayCourses() {
-        mClassCoursesRef.child(mClassId).addValueEventListener(new ValueEventListener() {
+        firebase.mClassCoursesRef.child(mClassId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCourses.clear();
@@ -141,7 +141,7 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
                 Course newCourse = new Course(course.getId(), name, teacher, description);
 
                 // save to firebase
-                mClassCoursesRef.child(mClassId).child(course.getId()).setValue(newCourse);
+                firebase.mClassCoursesRef.child(mClassId).child(course.getId()).setValue(newCourse);
                 dialog.dismiss();
             }
         });
@@ -179,11 +179,11 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
                 String description = descriptionText.getText().toString();
 
                 // get id where to put the new course in firebase
-                String courseId = mClassCoursesRef.child(CURRENT_USER_ID).push().getKey();
+                String courseId = firebase.mClassCoursesRef.child(firebase.getCurrentUserId()).push().getKey();
                 Course course = new Course(courseId, name, teacher, description);
 
                 // save to firebase
-                mClassCoursesRef.child(mClassId).child(courseId).setValue(course);
+                firebase.mClassCoursesRef.child(mClassId).child(courseId).setValue(course);
                 dialog.dismiss();
             }
         });

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,13 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Class;
+import com.ioanapascu.edfocus.others.ClassesListAdapter;
 import com.ioanapascu.edfocus.student.ClassActivity_s;
 import com.ioanapascu.edfocus.teacher.AddClassActivity;
-import com.ioanapascu.edfocus.utils.ClassesListAdapter;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +41,9 @@ import java.util.Map;
 
 public class ClassesFragment extends Fragment implements View.OnClickListener {
 
-    //widgets
+    // widgets
     private ListView mClassesListView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // variables
     private ArrayList<Class> mClasses;
@@ -50,21 +51,16 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout mNoClassesLayout;
     private FloatingActionButton mAddClassFab;
     private String mUserType, mUserId;
-
-    // db references
-    private DatabaseReference mClassesRef, mUserClassesRef, mClassTokensRef, mClassStudentsRef;
+    private FirebaseUtils firebase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mClassesRef = FirebaseDatabase.getInstance().getReference().child("classes");
-        mUserClassesRef = FirebaseDatabase.getInstance().getReference().child("userClasses");
-        mClassTokensRef = FirebaseDatabase.getInstance().getReference().child("classTokens");
-        mClassStudentsRef = FirebaseDatabase.getInstance().getReference().child("classStudents");
+        firebase = new FirebaseUtils(getContext());
 
-        mUserType = ((DrawerActivity) getContext()).getCurrentUserType();
-        mUserId = ((DrawerActivity) getContext()).getCurrentUserId();
+        mUserType = firebase.getCurrentUserType();
+        mUserId = firebase.getCurrentUserId();
     }
 
     /**
@@ -99,6 +95,17 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
         mClassesListAdapter = new ClassesListAdapter(getContext(), R.layout.row_class, mClasses);
         mClassesListView.setAdapter(mClassesListAdapter);
 
+        mSwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+
+        // swipe to refresh
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                displayClasses();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         // listeners
         mClassesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -107,9 +114,8 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
                 String classId = mClasses.get(position).getId();
 
                 // according to user type
-                String userType = ((DrawerActivity) getContext()).getCurrentUserType();
                 Intent myIntent = new Intent(getContext(), ClassActivity_s.class);
-                if (userType.equals("teacher"))
+                if (mUserType.equals("teacher"))
                     myIntent = new Intent(getContext(), ClassActivity.class);
 
                 myIntent.putExtra("classId", classId);
@@ -124,7 +130,7 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
     private void displayClasses() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        mUserClassesRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
+        firebase.mUserClassesRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mClasses.clear();
@@ -136,7 +142,7 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
                     for (DataSnapshot data : dataSnapshot.getChildren()) { // each class of this user
                         String classId = data.getKey();
 
-                        mClassesRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        firebase.mClassesRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Class aClass = dataSnapshot.getValue(Class.class);
@@ -182,7 +188,7 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
                 String token = tokenText.getText().toString();
 
                 // check if token exists in firebase
-                mClassTokensRef.child(token).addListenerForSingleValueEvent(new ValueEventListener() {
+                firebase.mClassTokensRef.child(token).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
@@ -195,12 +201,12 @@ public class ClassesFragment extends Fragment implements View.OnClickListener {
                             // add to userClasses
                             Map<String, Object> node = new HashMap<>();
                             node.put(classId, classId);
-                            mUserClassesRef.child(mUserId).updateChildren(node);
+                            firebase.mUserClassesRef.child(mUserId).updateChildren(node);
 
                             // add to classStudents
                             node = new HashMap<>();
                             node.put(mUserId, mUserId);
-                            mClassStudentsRef.child(classId).updateChildren(node);
+                            firebase.mClassStudentsRef.child(classId).updateChildren(node);
 
                             dialog.dismiss();
 

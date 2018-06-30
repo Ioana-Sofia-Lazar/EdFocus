@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Event;
-import com.ioanapascu.edfocus.utils.EventsStickyAdapter;
+import com.ioanapascu.edfocus.others.EventsStickyAdapter;
 
 import java.util.ArrayList;
 
@@ -55,7 +55,7 @@ public class EventsActivity extends BaseActivity {
         mAddEventFab = findViewById(R.id.fab_add_event);
 
         // only teacher can add events
-        String userType = getCurrentUserType();
+        String userType = firebase.getCurrentUserType();
         if (userType.equals("teacher")) mAddEventFab.setVisibility(View.VISIBLE);
 
         mAddEventFab.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +75,7 @@ public class EventsActivity extends BaseActivity {
     }
 
     private void displayEvents() {
-        mClassEventsRef.child(mClassId).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
+        firebase.mClassEventsRef.child(mClassId).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEvents.clear();
@@ -130,7 +130,7 @@ public class EventsActivity extends BaseActivity {
             createBtn.setText("Save");
 
             // load event info and display it in widgets
-            mClassEventsRef.child(mClassId).child(eventId).addListenerForSingleValueEvent(
+            firebase.mClassEventsRef.child(mClassId).child(eventId).addListenerForSingleValueEvent(
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -183,13 +183,13 @@ public class EventsActivity extends BaseActivity {
                 // creating a new event
                 if (position == -1) {
                     // get id where to put the info
-                    String newEventId = mClassEventsRef.child(mClassId).push().getKey();
+                    String newEventId = firebase.mClassEventsRef.child(mClassId).push().getKey();
                     event.setId(newEventId);
                     // save to firebase
-                    mClassEventsRef.child(mClassId).child(newEventId).setValue(event);
+                    firebase.mClassEventsRef.child(mClassId).child(newEventId).setValue(event);
                 } else {
                     // editing event
-                    mClassEventsRef.child(mClassId).child(eventId).setValue(event);
+                    firebase.mClassEventsRef.child(mClassId).child(eventId).setValue(event);
                 }
 
                 mDialog.dismiss();
@@ -211,7 +211,7 @@ public class EventsActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 // delete from firebase
                                 // todo
-                                mClassEventsRef.child(mClassId).child(eventId).removeValue();
+                                firebase.mClassEventsRef.child(mClassId).child(eventId).removeValue();
                                 dialog.dismiss();
                                 mDialog.dismiss();
                             }

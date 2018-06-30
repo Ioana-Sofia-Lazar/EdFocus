@@ -19,8 +19,8 @@ import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Message;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.MessagesListAdapter;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
+import com.ioanapascu.edfocus.others.MessagesListAdapter;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
 import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
@@ -35,13 +35,12 @@ public class ConversationActivity extends BaseActivity {
     private static final int ITEMS_TO_LOAD = 8;
     // variables
     private static String FIRST_ROW = "Pull to load more messages...";
-    private String userId;
+    private String mUserId;
     private List<Message> mMessages;
     private List<String> mFirstRow;
     private MessagesListAdapter mAdapter;
     private int mItemPosition = 0;
-    private String mLastKey = "";
-    private String mPreviousKey = "";
+    private String mLastKey = "", mPreviousKey = "", mCurrentUserId;
 
     // widgets
     private TextView mNameTxt, mLastSeenTxt;
@@ -58,7 +57,8 @@ public class ConversationActivity extends BaseActivity {
         setStatusBarGradient(this, false);
         setContentView(R.layout.activity_conversation);
 
-        userId = getIntent().getStringExtra("userId");
+        mUserId = getIntent().getStringExtra("userId");
+        mCurrentUserId = firebase.getCurrentUserId();
         mMessages = new ArrayList<>();
         mFirstRow = Arrays.asList(FIRST_ROW);
 
@@ -71,7 +71,7 @@ public class ConversationActivity extends BaseActivity {
         mSwipeRefreshLayout = findViewById(R.id.layout_swipe);
 
         mAdapter = new MessagesListAdapter(this, mFirstRow,
-                mMessages, CURRENT_USER_ID);
+                mMessages, mCurrentUserId);
         mMessagesRecycler.setAdapter(mAdapter);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mMessagesRecycler.setLayoutManager(mLinearLayoutManager);
@@ -96,7 +96,8 @@ public class ConversationActivity extends BaseActivity {
     }
 
     private void showMoreMessages() {
-        Query query = mMessagesRef.child(CURRENT_USER_ID).child(userId).orderByKey().endAt(mLastKey).limitToLast(ITEMS_TO_LOAD + 1);
+        Query query = firebase.mMessagesRef.child(mCurrentUserId).child(mUserId).orderByKey()
+                .endAt(mLastKey).limitToLast(ITEMS_TO_LOAD + 1);
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -150,15 +151,15 @@ public class ConversationActivity extends BaseActivity {
 
     private void showMessages() {
         mMessages.clear();
-        Query query = mMessagesRef.child(CURRENT_USER_ID).child(userId).limitToLast(ITEMS_TO_LOAD);
+        Query query = firebase.mMessagesRef.child(mCurrentUserId).child(mUserId).limitToLast(ITEMS_TO_LOAD);
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // mark message as seen if it was from the other user
                 Message message = dataSnapshot.getValue(Message.class);
-                if (!message.getFrom().equals(CURRENT_USER_ID) && !message.isSeen()) {
-                    mMessagesRef.child(CURRENT_USER_ID).child(userId).child(dataSnapshot.getKey()).child("seen").setValue(true);
-                    mMessagesRef.child(userId).child(CURRENT_USER_ID).child(dataSnapshot.getKey()).child("seen").setValue(true);
+                if (!message.getFrom().equals(mCurrentUserId) && !message.isSeen()) {
+                    firebase.mMessagesRef.child(mCurrentUserId).child(mUserId).child(dataSnapshot.getKey()).child("seen").setValue(true);
+                    firebase.mMessagesRef.child(mUserId).child(mCurrentUserId).child(dataSnapshot.getKey()).child("seen").setValue(true);
                     message.setSeen(true);
                 }
 
@@ -208,22 +209,22 @@ public class ConversationActivity extends BaseActivity {
         }
 
         Message message = new Message(messageText, false, "text", System.currentTimeMillis(),
-                CURRENT_USER_ID);
+                mCurrentUserId);
 
-        String messageId = mMessagesRef.child(CURRENT_USER_ID).child(userId).push().getKey();
-        mMessagesRef.child(CURRENT_USER_ID).child(userId).child(messageId).setValue(message);
-        mMessagesRef.child(userId).child(CURRENT_USER_ID).child(messageId).setValue(message);
+        String messageId = firebase.mMessagesRef.child(mCurrentUserId).child(mUserId).push().getKey();
+        firebase.mMessagesRef.child(mCurrentUserId).child(mUserId).child(messageId).setValue(message);
+        firebase.mMessagesRef.child(mUserId).child(mCurrentUserId).child(messageId).setValue(message);
 
         // set as last message of the conversations (used for for conversations list)
-        mConversationsRef.child(CURRENT_USER_ID).child(userId).setValue(message);
-        mConversationsRef.child(userId).child(CURRENT_USER_ID).setValue(message);
+        firebase.mConversationsRef.child(mCurrentUserId).child(mUserId).setValue(message);
+        firebase.mConversationsRef.child(mUserId).child(mCurrentUserId).setValue(message);
 
         mMessageText.setText("");
 
     }
 
     private void showUserInfo() {
-        mUserAccountSettingsRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mUserAccountSettingsRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
@@ -240,14 +241,14 @@ public class ConversationActivity extends BaseActivity {
             }
         });
 
-        mOnlineUsersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mOnlineUsersRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     mLastSeenTxt.setText("Online");
                 } else {
                     // get last seen
-                    mLastSeenRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    firebase.mLastSeenRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {

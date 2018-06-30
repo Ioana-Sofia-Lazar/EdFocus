@@ -16,10 +16,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Notification;
-import com.ioanapascu.edfocus.utils.NotificationsListAdapter;
+import com.ioanapascu.edfocus.others.NotificationsListAdapter;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,13 @@ public class NotificationsFragment extends Fragment {
     NotificationsListAdapter mAdapter;
     List<Notification> mNotifications;
     DatabaseReference mNotificationsRef;
+    FirebaseUtils firebase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        firebase = new FirebaseUtils(getContext());
     }
 
     @Nullable
@@ -71,7 +74,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void displayNotifications() {
-        String userId = ((BaseActivity) getContext()).getCurrentUserId();
+        String userId = firebase.getCurrentUserId();
 
         mNotificationsRef.child(userId).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,7 +99,7 @@ public class NotificationsFragment extends Fragment {
         super.onDestroyView();
 
         // mark notifications as seen
-        String userId = ((BaseActivity) getContext()).getCurrentUserId();
+        String userId = firebase.getCurrentUserId();
 
         mNotificationsRef.child(userId).orderByChild("seen").equalTo(false)
                 .addListenerForSingleValueEvent(new ValueEventListener() {

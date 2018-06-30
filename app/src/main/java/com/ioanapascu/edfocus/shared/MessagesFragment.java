@@ -21,13 +21,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
-import com.ioanapascu.edfocus.firebase.FirebaseUtils;
 import com.ioanapascu.edfocus.model.Contact;
 import com.ioanapascu.edfocus.model.Conversation;
 import com.ioanapascu.edfocus.model.Message;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.ConversationsListAdapter;
-import com.ioanapascu.edfocus.utils.MessageContactsListAdapter;
+import com.ioanapascu.edfocus.others.ConversationsListAdapter;
+import com.ioanapascu.edfocus.others.MessageContactsListAdapter;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;

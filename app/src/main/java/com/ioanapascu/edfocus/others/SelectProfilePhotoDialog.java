@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
 
-public class SelectClassPhotoDialog extends DialogFragment implements View.OnClickListener {
+public class SelectProfilePhotoDialog extends DialogFragment implements View.OnClickListener {
 
-    private static final String TAG = "SelectClassPhoto";
+    private static final String TAG = "SelectPhotoDialog";
 
     private static final int PICKFILE_REQUEST_CODE = 100;
     private static final int CAMERA_REQUEST_CODE = 101;
@@ -46,7 +46,7 @@ public class SelectClassPhotoDialog extends DialogFragment implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
 
         // when selecting an image from memory
-        if (requestCode == PICKFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if(requestCode == PICKFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             Uri selectedImageUri = data.getData();
             Log.d(TAG, "selected image from memory - uri: " + selectedImageUri);
 
@@ -56,7 +56,7 @@ public class SelectClassPhotoDialog extends DialogFragment implements View.OnCli
         }
 
         // when taking a new photo with camera
-        else if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        else if(requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             Log.d(TAG, "took photo");
             Bitmap bitmap;
             bitmap = (Bitmap) data.getExtras().get("data");
@@ -88,7 +88,7 @@ public class SelectClassPhotoDialog extends DialogFragment implements View.OnCli
     public void onAttach(Context context) {
         try {
             mOnPhotoSelectedListener = (OnPhotoSelectedListener) getActivity();
-        } catch (ClassCastException e) {
+        } catch (ClassCastException e){
             Log.e(TAG, "onAttach - ClassCastException");
         }
 

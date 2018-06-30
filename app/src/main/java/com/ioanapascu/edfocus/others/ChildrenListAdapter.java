@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,14 +12,13 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Child;
 import com.ioanapascu.edfocus.model.Class;
 import com.ioanapascu.edfocus.shared.ViewProfileActivity;
 import com.ioanapascu.edfocus.student.ClassActivity_s;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 
@@ -34,16 +33,16 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
     private static final String TAG = "ChildrenListAdapter";
 
     // variables
-    private DatabaseReference mClassesRef;
     private ArrayList<Child> mChildren;
     private Context mContext;
     private int mResource;
+    private FirebaseUtils firebase;
 
     public ChildrenListAdapter(Context context, int resource, ArrayList<Child> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
-        mClassesRef = FirebaseDatabase.getInstance().getReference().child("classes");
+        firebase = new FirebaseUtils(mContext);
     }
 
     @NonNull
@@ -95,7 +94,7 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
 
         for (final String classId : child.getClassIds()) {
             // get class info
-            mClassesRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
+            firebase.mClassesRef.child(classId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     final Class c = dataSnapshot.getValue(Class.class);

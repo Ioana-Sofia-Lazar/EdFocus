@@ -48,19 +48,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ioanapascu.edfocus.firebase.FirebaseUtils;
 import com.ioanapascu.edfocus.model.User;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
+import com.ioanapascu.edfocus.others.ChooseUserTypeDialog;
 import com.ioanapascu.edfocus.shared.DrawerActivity;
 import com.ioanapascu.edfocus.shared.NoInternetActivity;
-import com.ioanapascu.edfocus.utils.ChooseUserTypeDialog;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,15 +74,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     // signing in mode : facebook | google | email
     private static String MODE = "email";
 
-    // firebase
-    protected FirebaseAuth mAuth;
-    protected FirebaseDatabase mFirebaseDatabase;
-    protected DatabaseReference mRootRef, mUsersRef, mUserAccountSettingsRef, mContactsRef, mRequestsRef, mClassesRef,
-            mUserClassesRef, mClassTokensRef, mClassCoursesRef, mClassStudentsRef, mStudentClassesRef,
-            mClassEventsRef, mStudentGradesRef, mStudentAbsencesRef, mUserParentsRef, mUserChildrenRef,
-            mDeviceTokensRef, mSettingsRef, mFirstTimeRef, mNotificationsRef, mOnlineUsersRef, mLastSeenRef,
-            mMessagesRef, mConversationsRef;
-    protected String CURRENT_USER_ID;
     protected GoogleApiClient mGoogleApiClient;
     protected ProgressDialog mProgressDialog;
     protected FirebaseUtils firebase;
@@ -131,40 +120,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
 
         firebase = new FirebaseUtils(BaseActivity.this);
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mRootRef = mFirebaseDatabase.getReference();
-        mUsersRef = mRootRef.child("users");
-        mUserAccountSettingsRef = mRootRef.child("userAccountSettings");
-        mContactsRef = mRootRef.child("contacts");
-        mRequestsRef = mRootRef.child("requests");
-        mClassesRef = mRootRef.child("classes");
-        mUserClassesRef = mRootRef.child("userClasses");
-        mClassTokensRef = mRootRef.child("classTokens");
-        mClassCoursesRef = mRootRef.child("classCourses");
-        mClassStudentsRef = mRootRef.child("classStudents");
-        mStudentClassesRef = mRootRef.child("studentClasses");
-        mClassEventsRef = mRootRef.child("classEvents");
-        mStudentGradesRef = mRootRef.child("studentGrades");
-        mStudentAbsencesRef = mRootRef.child("studentAbsences");
-        mUserParentsRef = mRootRef.child("userParents");
-        mUserChildrenRef = mRootRef.child("userChildren");
-        mDeviceTokensRef = mRootRef.child("deviceTokens");
-        mSettingsRef = mRootRef.child("settings");
-        mFirstTimeRef = mRootRef.child("firstTime");
-        mNotificationsRef = mRootRef.child("notifications");
-        mOnlineUsersRef = mRootRef.child("onlineUsers");
-        mLastSeenRef = mRootRef.child("lastSeen");
-        mMessagesRef = mRootRef.child("messages");
-        mConversationsRef = mRootRef.child("conversations");
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
 
         checkInternetConnection();
-
-        if(mAuth.getCurrentUser() != null){
-            CURRENT_USER_ID = mAuth.getCurrentUser().getUid();
-        }
 
         setupGoogleSignIn();
 
@@ -212,7 +171,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     public void registerNewUser(final User user, String email, String password){
         showProgressDialog("Signing Up...");
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        firebase.mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -221,14 +180,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                             // save info to firebase
                             FirebaseUser currentUser = task.getResult().getUser();
                             user.setId(currentUser.getUid());
-                            addUserInfo(user, new UserAccountSettings());
+                            firebase.addUserInfo(user, new UserAccountSettings());
 
                             // send verification link to the email address
                             sendEmailVerification();
 
                             Toast.makeText(mContext, "User registered", Toast.LENGTH_SHORT).show();
 
-                            mAuth.signOut();
+                            firebase.mAuth.signOut();
 
                             // redirect to login
                             mContext.startActivity(new Intent(mContext, SignInActivity.class));
@@ -239,34 +198,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
                     }
                 });
-    }
-
-    /**
-     * Adds data to Firebase for the user with ID user.getId().
-     *
-     * @param user
-     * @param accountSettings
-     */
-    public void addUserInfo(User user, UserAccountSettings accountSettings) {
-        mUsersRef.child(user.getId()).setValue(user);
-
-        // user profile settings
-        accountSettings.setId(user.getId());
-        accountSettings.setEmail(user.getEmail());
-        accountSettings.setUserType(user.getUserType());
-        mUserAccountSettingsRef.child(user.getId()).setValue(accountSettings);
-
-        // app settings
-        Map<String, Object> settings = new HashMap<>();
-        settings.put("email", true);
-        settings.put("location", true);
-        settings.put("phone", true);
-        mSettingsRef.child(user.getId()).setValue(settings);
-
-        // first time
-        Map<String, Object> node = new HashMap<>();
-        node.put(user.getId(), true);
-        mFirstTimeRef.updateChildren(node);
     }
 
     /**
@@ -303,14 +234,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         editor.apply();
     }
 
-    public String getCurrentUserId() {
-        return CURRENT_USER_ID;
-    }
-
-    public String getCurrentUserType() {
-        return getSharedPreferences("LoginInfo", 0).getString("userType", "none");
-    }
-
     /**
      * Receive an image as a byte array, save image to Firebase Storage, get uri(reference) to
      * the image and then call "updateUserAccountSettings" to save reference in Firebase Database.
@@ -320,7 +243,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     public void uploadProfilePhoto(byte[] bytes) {
         // add photo to directory in firebase storage
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                .child("photos/" + CURRENT_USER_ID + "/profilePhoto");
+                .child("photos/" + firebase.getCurrentUserId() + "/profilePhoto");
         UploadTask uploadTask = storageReference.putBytes(bytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -347,7 +270,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
      * Parent or Child.
      */
     public void userRedirect() {
-        mUsersRef.child(firebase.getCurrentUserId()).addListenerForSingleValueEvent(
+        firebase.mUsersRef.child(firebase.getCurrentUserId()).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -364,7 +287,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                         saveToSharedPreferences(true, userType);
 
                         // if it's first time entering app, show intro
-                        mFirstTimeRef.child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        firebase.mFirstTimeRef.child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
@@ -407,8 +330,13 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideProgressDialog();
                         if (task.isSuccessful()) {
-                            saveDeviceToken(mAuth.getCurrentUser().getUid());
-                            userRedirect();
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            if (currentUser != null && currentUser.isEmailVerified()) {
+                                saveDeviceToken(firebase.mAuth.getCurrentUser().getUid());
+                                userRedirect();
+                            } else {
+                                signOut();
+                            }
                         } else {
                             // toast error message
                             Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -424,12 +352,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
     public void signOut() {
         // remove device token for user who is digning out
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
-        mDeviceTokensRef.child(mAuth.getCurrentUser().getUid()).child(deviceToken)
+        firebase.mDeviceTokensRef.child(firebase.mAuth.getCurrentUser().getUid()).child(deviceToken)
                 .removeValue();
 
         // mark user not online and last seen as now
-        mOnlineUsersRef.child(CURRENT_USER_ID).setValue(null);
-        mLastSeenRef.child(CURRENT_USER_ID).setValue(System.currentTimeMillis());
+        firebase.mOnlineUsersRef.child(firebase.getCurrentUserId()).setValue(null);
+        firebase.mLastSeenRef.child(firebase.getCurrentUserId()).setValue(System.currentTimeMillis());
 
         // Firebase sign out
         FirebaseAuth.getInstance().signOut();
@@ -447,11 +375,6 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 });
 
         getSharedPreferences("LoginInfo", 0).edit().clear().apply();
-
-        // jump to Sign In activity
-        Intent intent = new Intent(mContext, SignInActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        mContext.startActivity(intent);
     }
 
     protected void googleSignIn() {
@@ -490,7 +413,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
         Log.d(TAG, "checkFirstGoogleSignIn for " + email);
 
-        mUsersRef
+        firebase.mUsersRef
                 .orderByChild("email")
                 .equalTo(email)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -544,17 +467,17 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                                 User user = new User(mGoogleAccount.getEmail(), mUserType);
                                 UserAccountSettings settings = new UserAccountSettings();
 
-                                user.setId(mAuth.getCurrentUser().getUid());
+                                user.setId(firebase.mAuth.getCurrentUser().getUid());
                                 // get info from Google account
                                 settings.setFirstName(mGoogleAccount.getGivenName());
                                 settings.setLastName(mGoogleAccount.getFamilyName());
                                 settings.setDisplayName(mGoogleAccount.getGivenName() + " " + mGoogleAccount.getFamilyName());
                                 settings.setProfilePhoto(mGoogleAccount.getPhotoUrl().toString());
 
-                                addUserInfo(user, settings);
+                                firebase.addUserInfo(user, settings);
                             }
 
-                            saveDeviceToken(mAuth.getCurrentUser().getUid());
+                            saveDeviceToken(firebase.mAuth.getCurrentUser().getUid());
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -609,27 +532,27 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         Log.d(TAG, "handleFacebookAccessToken:" + mFacebookAccessToken);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(mFacebookAccessToken.getToken());
-        mAuth.signInWithCredential(credential)
+        firebase.mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                            FirebaseUser currentUser = firebase.mAuth.getCurrentUser();
 
                             if (firstTime) {
                                 // add user default data
                                 User user = new User(currentUser.getEmail(), mUserType);
                                 UserAccountSettings settings = new UserAccountSettings();
 
-                                user.setId(mAuth.getCurrentUser().getUid());
+                                user.setId(firebase.mAuth.getCurrentUser().getUid());
                                 // get info from Facebook account
                                 settings.setFirstName(task.getResult().getUser().getDisplayName());
                                 settings.setDisplayName(task.getResult().getUser().getDisplayName());
                                 settings.setProfilePhoto(task.getResult().getUser().getPhotoUrl().toString());
 
-                                addUserInfo(user, settings);
+                                firebase.addUserInfo(user, settings);
                             }
 
                             saveDeviceToken(currentUser.getUid());
@@ -649,7 +572,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
         Map<String, Object> token = new HashMap<>();
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
         token.put(deviceToken, deviceToken);
-        mDeviceTokensRef.child(userId).updateChildren(token);
+        firebase.mDeviceTokensRef.child(userId).updateChildren(token);
     }
 
     /**
@@ -664,7 +587,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
 
         Log.d(TAG, "checkFirstFacebookSignIn for " + email);
 
-        mUsersRef
+        firebase.mUsersRef
                 .orderByChild("email")
                 .equalTo(email)
                 .addListenerForSingleValueEvent(new ValueEventListener() {

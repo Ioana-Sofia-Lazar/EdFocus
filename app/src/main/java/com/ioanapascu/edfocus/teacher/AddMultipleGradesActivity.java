@@ -19,7 +19,7 @@ import com.ioanapascu.edfocus.model.Course;
 import com.ioanapascu.edfocus.model.GradeDb;
 import com.ioanapascu.edfocus.model.GradeRow;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.MultipleGradesListAdapter;
+import com.ioanapascu.edfocus.others.MultipleGradesListAdapter;
 import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
     private void populateListView() {
         for (String studentId : mStudentIds) {
             // get student name from Firebase and create a row for him
-            mUserAccountSettingsRef.child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
+            firebase.mUserAccountSettingsRef.child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
@@ -106,7 +106,7 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
         mCoursesSpinner.setAdapter(dataAdapter);
 
         // get courses from firebase
-        mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCourseNames.clear();
@@ -143,9 +143,9 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
             GradeDb grade = new GradeDb(null, name, gradeRow.getGrade(), date, gradeRow.getNotes(),
                     mClassId, courseId, gradeRow.getStudentId());
 
-            String gradeId = mStudentGradesRef.child(mClassId).child(gradeRow.getStudentId()).push().getKey();
+            String gradeId = firebase.mStudentGradesRef.child(mClassId).child(gradeRow.getStudentId()).push().getKey();
             grade.setId(gradeId);
-            mStudentGradesRef.child(mClassId).child(gradeRow.getStudentId()).child(gradeId)
+            firebase.mStudentGradesRef.child(mClassId).child(gradeRow.getStudentId()).child(gradeId)
                     .setValue(grade);
         }
     }

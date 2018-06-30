@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Message;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.List;
 

@@ -18,7 +18,7 @@ import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Person;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.PeopleListAdapter;
+import com.ioanapascu.edfocus.others.PeopleListAdapter;
 
 import java.util.ArrayList;
 
@@ -82,7 +82,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        Query query = mUserAccountSettingsRef.orderByChild(getString(R.string.field_display_name)).equalTo(keyword);
+        Query query = firebase.mUserAccountSettingsRef.orderByChild(getString(R.string.field_display_name)).equalTo(keyword);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -93,7 +93,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                             settings.getUserType(), settings.getProfilePhoto());
 
                     // current user can't be a result of search
-                    if (!settings.getId().equals(CURRENT_USER_ID)) mPeople.add(person);
+                    if (!settings.getId().equals(firebase.getCurrentUserId())) mPeople.add(person);
                 }
 
                 // update people list view

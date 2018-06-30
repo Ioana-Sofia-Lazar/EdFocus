@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.UniversalImageLoader;
+import com.ioanapascu.edfocus.others.UniversalImageLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +86,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void showUserInfo() {
         // add listener for the settings of the user whose profile is being viewed
-        mUserAccountSettingsRef.child(mUserId).addValueEventListener(new ValueEventListener() {
+        firebase.mUserAccountSettingsRef.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve user info
@@ -112,7 +112,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         mUserTypeTextView.setText(capitalizedUserType);
 
         // set number of contacts
-        mContactsRef.child(mUserId).addValueEventListener(new ValueEventListener() {
+        firebase.mContactsRef.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mContactsTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));
@@ -125,7 +125,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         });
 
         // set number of classes
-        mUserClassesRef.child(mUserId).addValueEventListener(new ValueEventListener() {
+        firebase.mUserClassesRef.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mClassesTextView.setText(String.valueOf(dataSnapshot.getChildrenCount()));
@@ -138,7 +138,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         });
 
         // see if user being viewed has his information secret or unspecified
-        mSettingsRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mSettingsRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child("email").exists()) {
@@ -182,7 +182,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void checkRequestSent() {
         // see if the user whose profile is being viewed has a request from the current user already
-        mRequestsRef.child(mUserId).child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
+        firebase.mRequestsRef.child(mUserId).child(firebase.getCurrentUserId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -200,7 +200,8 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void checkRequestReceived() {
         // see if the current user has a request from the user whose profile is being viewed
-        mRequestsRef.child(CURRENT_USER_ID).child(mUserId).addValueEventListener(new ValueEventListener() {
+        firebase.mRequestsRef.child(firebase.getCurrentUserId()).child(mUserId)
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -218,7 +219,7 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void checkAlreadyContact() {
         // see if the user whose profile is being viewed is already a contact for the current user
-        mContactsRef.child(mUserId).child(CURRENT_USER_ID).addValueEventListener(new ValueEventListener() {
+        firebase.mContactsRef.child(mUserId).child(firebase.getCurrentUserId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -260,17 +261,18 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void addContactPossibilities() {
-        if (getCurrentUserType().equals("teacher") && mUserType.equals("teacher")) addContact();
-        if (getCurrentUserType().equals("teacher") && mUserType.equals("parent")) addContact();
-        if (getCurrentUserType().equals("teacher") && mUserType.equals("student")) addContact();
-        if (getCurrentUserType().equals("parent") && mUserType.equals("teacher")) addContact();
-        if (getCurrentUserType().equals("parent") && mUserType.equals("parent")) addContact();
-        if (getCurrentUserType().equals("parent") && mUserType.equals("student"))
+        String currentUserType = firebase.getCurrentUserType();
+        if (currentUserType.equals("teacher") && mUserType.equals("teacher")) addContact();
+        if (currentUserType.equals("teacher") && mUserType.equals("parent")) addContact();
+        if (currentUserType.equals("teacher") && mUserType.equals("student")) addContact();
+        if (currentUserType.equals("parent") && mUserType.equals("teacher")) addContact();
+        if (currentUserType.equals("parent") && mUserType.equals("parent")) addContact();
+        if (currentUserType.equals("parent") && mUserType.equals("student"))
             showParentAddStudentDialog();
-        if (getCurrentUserType().equals("student") && mUserType.equals("teacher")) addContact();
-        if (getCurrentUserType().equals("student") && mUserType.equals("parent"))
+        if (currentUserType.equals("student") && mUserType.equals("teacher")) addContact();
+        if (currentUserType.equals("student") && mUserType.equals("parent"))
             showStudentAddParentDialog();
-        if (getCurrentUserType().equals("student") && mUserType.equals("student")) addContact();
+        if (currentUserType.equals("student") && mUserType.equals("student")) addContact();
     }
 
     private void showStudentAddParentDialog() {
@@ -343,14 +345,14 @@ public class ViewProfileActivity extends BaseActivity implements View.OnClickLis
         // create request in the database
         Map<String, Object> request = new HashMap<>();
         request.put("requestType", requestType);
-        mRequestsRef.child(mUserId).child(CURRENT_USER_ID).updateChildren(request);
+        firebase.mRequestsRef.child(mUserId).child(firebase.getCurrentUserId()).updateChildren(request);
     }
 
     private void addContact() {
         // create request in the database
         Map<String, Object> request = new HashMap<>();
         request.put("requestType", "contact");
-        mRequestsRef.child(mUserId).child(CURRENT_USER_ID).updateChildren(request);
+        firebase.mRequestsRef.child(mUserId).child(firebase.getCurrentUserId()).updateChildren(request);
         hideWidgets(1);
     }
 

@@ -25,7 +25,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".parent.ParentProfileActivity" />
-        <activity android:name=".student.ChildProfileActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".shared.DrawerActivity"

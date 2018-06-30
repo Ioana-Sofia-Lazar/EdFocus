@@ -20,15 +20,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Contact;
 import com.ioanapascu.edfocus.model.RequestInfo;
 import com.ioanapascu.edfocus.model.UserAccountSettings;
-import com.ioanapascu.edfocus.utils.ContactsListAdapter;
+import com.ioanapascu.edfocus.others.ContactsListAdapter;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -46,9 +45,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     private ArrayList<Contact> mContacts;
     private ArrayList<RequestInfo> mRequests;
     private ContactsListAdapter mContactsListAdapter;
-
-    // db reference
-    private DatabaseReference mContactsRef, mSettingsRef, mRequestsRef;
+    private FirebaseUtils firebase;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -58,9 +55,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mContactsRef = FirebaseDatabase.getInstance().getReference().child("contacts");
-        mRequestsRef = FirebaseDatabase.getInstance().getReference().child("requests");
-        mSettingsRef = FirebaseDatabase.getInstance().getReference().child("userAccountSettings");
+        firebase = new FirebaseUtils(getContext());
     }
 
     /**
@@ -69,7 +64,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     private void displayContacts() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        mContactsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        firebase.mContactsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mContacts.clear();
@@ -98,7 +93,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
      * @param id
      */
     private void showContactData(final String id) {
-        mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
@@ -127,7 +122,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     public void displayRequests() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        mRequestsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        firebase.mRequestsRef.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mRequests.clear();
@@ -160,7 +155,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
      * @param id
      */
     private void showRequestData(final String id, final String requestType) {
-        mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);

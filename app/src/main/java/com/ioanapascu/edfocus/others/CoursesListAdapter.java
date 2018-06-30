@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,26 +13,22 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Course;
 import com.ioanapascu.edfocus.model.ScheduleEntry;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 
 public class CoursesListAdapter extends ArrayAdapter<Course> {
 
     private static final String TAG = "ClassesListAdapter";
-
+    private final FirebaseUtils firebase;
     // variables
     private Context mContext;
     private int mResource;
     private String mClassId, mUserType;
-
-    // firebase
-    private DatabaseReference mClassCoursesRef, mScheduleRef;
 
     public CoursesListAdapter(Context context, int resource, ArrayList<Course> objects, String classId,
                               String userType) {
@@ -41,8 +37,7 @@ public class CoursesListAdapter extends ArrayAdapter<Course> {
         mResource = resource;
         mClassId = classId;
         mUserType = userType;
-        mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
-        mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
+        firebase = new FirebaseUtils(mContext);
     }
 
     @NonNull
@@ -117,10 +112,10 @@ public class CoursesListAdapter extends ArrayAdapter<Course> {
 
     private void deleteCourseFromDb(final String id) {
         // delete course with id
-        mClassCoursesRef.child(mClassId).child(id).removeValue();
+        firebase.mClassCoursesRef.child(mClassId).child(id).removeValue();
 
         // delete all entries in schedule with this course
-        mScheduleRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mClassScheduleRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshotDays : dataSnapshot.getChildren()) { // iterate Mon, Tue, ..

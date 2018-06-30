@@ -27,10 +27,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 /**
  * Created by ioana on 2/23/2018.
@@ -47,15 +46,14 @@ public class SettingsFragment extends Fragment {
     View mSeparator;
 
     // variables
-    DatabaseReference mSettingsRef;
+    FirebaseUtils firebase;
     String mUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSettingsRef = FirebaseDatabase.getInstance().getReference().child("settings");
-        mUserId = ((DrawerActivity) getActivity()).getCurrentUserId();
+        mUserId = firebase.getCurrentUserId();
     }
 
     @Nullable
@@ -99,7 +97,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void displaySettings() {
-        mSettingsRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mSettingsRef.child(mUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEmailSwitch.setChecked((Boolean) dataSnapshot.child("email").getValue());
@@ -126,21 +124,21 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 toggleSwitchOptions(mEmailSwitch, mEmailNobody, mEmailContacts);
-                mSettingsRef.child(mUserId).child("email").setValue(isChecked);
+                firebase.mSettingsRef.child(mUserId).child("email").setValue(isChecked);
             }
         });
         mLocationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 toggleSwitchOptions(mLocationSwitch, mLocationNobody, mLocationContacts);
-                mSettingsRef.child(mUserId).child("location").setValue(isChecked);
+                firebase.mSettingsRef.child(mUserId).child("location").setValue(isChecked);
             }
         });
         mPhoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 toggleSwitchOptions(mPhoneSwitch, mPhoneNobody, mPhoneContacts);
-                mSettingsRef.child(mUserId).child("phone").setValue(isChecked);
+                firebase.mSettingsRef.child(mUserId).child("phone").setValue(isChecked);
             }
         });
     }

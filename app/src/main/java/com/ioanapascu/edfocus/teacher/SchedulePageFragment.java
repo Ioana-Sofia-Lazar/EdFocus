@@ -2,7 +2,9 @@ package com.ioanapascu.edfocus.teacher;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +18,13 @@ import android.widget.TimePicker;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Course;
 import com.ioanapascu.edfocus.model.ScheduleEntry;
 import com.ioanapascu.edfocus.model.ScheduleEntryAndCourse;
-import com.ioanapascu.edfocus.utils.ScheduleListAdapter;
+import com.ioanapascu.edfocus.others.ScheduleListAdapter;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 import com.ioanapascu.edfocus.views.NoCoursesDialog;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
     private ListView mScheduleListView;
     private RelativeLayout mNoCoursesLayout;
     private Button mAddCourseButton;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // variables
     private int mDayIndex; // can be 0, 1, 2, .., 6
@@ -49,8 +51,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
     private ArrayList<ScheduleEntryAndCourse> mEntries;
     private ArrayList<String> mCourseNames, mCourseIds;
     private String mClassId;
-
-    private DatabaseReference mScheduleRef, mClassCoursesRef;
+    private FirebaseUtils firebase;
 
     public static SchedulePageFragment newInstance(int page, String classId) {
         Bundle args = new Bundle();
@@ -66,10 +67,11 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         super.onCreate(savedInstanceState);
         mDayIndex = getArguments().getInt(ARG_PAGE);
         mClassId = getArguments().getString(CLASS_ID);
+        firebase = new FirebaseUtils(getContext());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_schedule_page, container, false);
 
@@ -77,24 +79,31 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         mCourseNames = new ArrayList<>();
         mCourseIds = new ArrayList<>();
 
-        mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
-        mClassCoursesRef = FirebaseDatabase.getInstance().getReference().child("classCourses");
-
         mScheduleListView = view.findViewById(R.id.list_schedule);
         mNoCoursesLayout = view.findViewById(R.id.layout_no_courses);
         mAddCourseButton = view.findViewById(R.id.btn_add_course);
 
         // only teacher can add courses to schedule
-        String userType = ((ScheduleActivity) getContext()).getCurrentUserType();
-        if (userType.equals("teacher")) {
+        if (firebase.getCurrentUserType().equals("teacher")) {
             mAddCourseButton.setVisibility(View.VISIBLE);
         }
 
         mAddCourseButton.setOnClickListener(this);
 
         mScheduleListAdapter = new ScheduleListAdapter(getContext(), R.layout.row_schedule_entry,
-                mEntries, mClassId, DAYS[mDayIndex], userType);
+                mEntries, mClassId, DAYS[mDayIndex], firebase.getCurrentUserType());
         mScheduleListView.setAdapter(mScheduleListAdapter);
+
+        mSwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+
+        // swipe to refresh
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                displaySchedule();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         displaySchedule();
 
@@ -105,7 +114,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         String day = DAYS[mDayIndex];
 
         // retrieve schedule from firebase for the currently selected day, sorted by starting time
-        mScheduleRef.child(mClassId).child(day).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
+        firebase.mClassScheduleRef.child(mClassId).child(day).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEntries.clear();
@@ -118,7 +127,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
                         final ScheduleEntry entry = data.getValue(ScheduleEntry.class);
 
                         // retrieve course info
-                        mClassCoursesRef.child(mClassId).child(entry.getCourseId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        ValueEventListener coursesListener = new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Course course = dataSnapshot.getValue(Course.class);
@@ -131,13 +140,12 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
-                        });
+                        };
+                        firebase.mClassCoursesRef.child(mClassId).child(entry.getCourseId()).addListenerForSingleValueEvent(coursesListener);
                     }
                 } else {
                     mNoCoursesLayout.setVisibility(View.VISIBLE);
                 }
-
-                mScheduleListAdapter.notifyDataSetChanged();
 
             }
 
@@ -174,12 +182,12 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
 
                 // get id where to put the new entry for schedule in firebase
-                String entryId = mScheduleRef.child(mClassId).child(DAYS[mDayIndex]).push().getKey();
+                String entryId = firebase.mClassScheduleRef.child(mClassId).child(DAYS[mDayIndex]).push().getKey();
                 float compareValue = getStartsAtFloat(startsAt);
                 ScheduleEntry entry = new ScheduleEntry(entryId, startsAt, endsAt, courseId, compareValue);
 
                 // save to firebase
-                mScheduleRef.child(mClassId).child(DAYS[mDayIndex]).child(entryId).setValue(entry);
+                firebase.mClassScheduleRef.child(mClassId).child(DAYS[mDayIndex]).child(entryId).setValue(entry);
                 dialog.dismiss();
             }
         });
@@ -238,7 +246,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         spinner.setAdapter(dataAdapter);
 
         // get courses from firebase
-        mClassCoursesRef.child(mClassId).addValueEventListener(new ValueEventListener() {
+        firebase.mClassCoursesRef.child(mClassId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCourseNames.clear();
@@ -266,7 +274,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         if (view == mAddCourseButton) {
             // if there are no courses for this class show error
             // otherwise show dialog to add a course to the schedule
-            mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
+            firebase.mClassCoursesRef.child(mClassId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getChildrenCount() == 0) {

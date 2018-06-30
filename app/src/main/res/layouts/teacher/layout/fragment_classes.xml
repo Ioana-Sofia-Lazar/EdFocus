@@ -42,16 +42,22 @@
 
         </RelativeLayout>
 
-        <ListView
-            android:id="@+id/list_classes"
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swiperefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/layout_no_classes"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="6dp"
-            android:scrollbars="none" />
+            android:layout_marginRight="20dp">
+
+            <ListView
+                android:id="@+id/list_classes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="6dp"
+                android:scrollbars="none" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 

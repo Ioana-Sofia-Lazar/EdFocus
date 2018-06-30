@@ -213,6 +213,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     } else {
                         saveToSharedPreferences(false, "none");
                         Toast.makeText(SignInActivity.this, "Check your Email Inbox for a Verification Link", Toast.LENGTH_LONG).show();
+
                     }
                 } else {
                     // no user is logged in

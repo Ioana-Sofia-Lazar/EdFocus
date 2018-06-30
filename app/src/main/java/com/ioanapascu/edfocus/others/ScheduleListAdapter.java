@@ -1,4 +1,4 @@
-package com.ioanapascu.edfocus.utils;
+package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,10 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.ScheduleEntryAndCourse;
+import com.ioanapascu.edfocus.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 
@@ -28,9 +27,7 @@ public class ScheduleListAdapter extends ArrayAdapter<ScheduleEntryAndCourse> {
     private Context mContext;
     private int mResource;
     private String mClassId, mDay, mUserType;
-
-    // firebase
-    private DatabaseReference mScheduleRef;
+    private FirebaseUtils firebase;
 
     public ScheduleListAdapter(Context context, int resource, ArrayList<ScheduleEntryAndCourse> objects,
                                String classId, String day, String userType) {
@@ -40,7 +37,7 @@ public class ScheduleListAdapter extends ArrayAdapter<ScheduleEntryAndCourse> {
         mClassId = classId;
         mDay = day;
         mUserType = userType;
-        mScheduleRef = FirebaseDatabase.getInstance().getReference().child("schedule");
+        firebase = new FirebaseUtils(mContext);
     }
 
     @NonNull
@@ -77,7 +74,7 @@ public class ScheduleListAdapter extends ArrayAdapter<ScheduleEntryAndCourse> {
             @Override
             public void onClick(View v) {
                 // delete entry
-                mScheduleRef.child(mClassId).child(mDay).child(entry.getEntry().getId()).removeValue();
+                firebase.mClassScheduleRef.child(mClassId).child(mDay).child(entry.getEntry().getId()).removeValue();
             }
         });
 
