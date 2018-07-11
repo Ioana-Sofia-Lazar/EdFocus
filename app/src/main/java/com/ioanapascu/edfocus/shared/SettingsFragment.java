@@ -53,6 +53,7 @@ public class SettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        firebase = new FirebaseUtils(getContext());
         mUserId = firebase.getCurrentUserId();
     }
 

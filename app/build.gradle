@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.ioanap.classbook"
+        applicationId "com.ioanap.edfocus"
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 2

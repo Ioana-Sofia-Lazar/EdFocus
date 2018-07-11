@@ -93,7 +93,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
      * @param id
      */
     private void showContactData(final String id) {
-        firebase.mSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.mUserAccountSettingsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserAccountSettings settings = dataSnapshot.getValue(UserAccountSettings.class);
