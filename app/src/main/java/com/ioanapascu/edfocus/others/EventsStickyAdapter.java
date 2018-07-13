@@ -12,11 +12,9 @@ import android.widget.TextView;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Event;
 import com.ioanapascu.edfocus.shared.EventsActivity;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -25,10 +23,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 
 public class EventsStickyAdapter extends ArrayAdapter<Event> implements StickyListHeadersAdapter {
-    private static String[] MONTHS = {"January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"};
-    private static String[] DAYS = {"", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-
     private ArrayList<Event> mEvents;
     private Context mContext;
     private int mResource, mHeaderResource;
@@ -71,11 +65,11 @@ public class EventsStickyAdapter extends ArrayAdapter<Event> implements StickyLi
         // only teacher can edit events
         if (mUserType.equals("teacher")) holder.mEditIcon.setVisibility(View.VISIBLE);
 
-        holder.mDayNumber.setText(event.getDate().split("-")[2]);
-        holder.mDayName.setText(getDayName(event.getDate()));
+        holder.mDayNumber.setText(String.valueOf(Utils.millisToDay(event.getDate())));
+        holder.mDayName.setText(String.valueOf(Utils.millisToDayName(event.getDate())));
         holder.mEventName.setText(event.getName());
         holder.mEventDescription.setText(event.getDescription());
-        holder.mTime.setText(event.getTime());
+        holder.mTime.setText(Utils.millisToTimeString(event.getDate()));
         holder.mLocation.setText(event.getLocation());
         holder.mEditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,20 +79,6 @@ public class EventsStickyAdapter extends ArrayAdapter<Event> implements StickyLi
         });
 
         return convertView;
-    }
-
-    private String getDayName(String date) {
-        // get what day of the week the date was
-
-        int year = Integer.parseInt(date.split("-")[0]);
-        int month = Integer.parseInt(date.split("-")[1]) - 1;
-        int day = Integer.parseInt(date.split("-")[2]);
-
-        Date d = new GregorianCalendar(year, month, day).getTime();
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-
-        return DAYS[c.get(Calendar.DAY_OF_WEEK)];
     }
 
     @Override
@@ -130,17 +110,16 @@ public class EventsStickyAdapter extends ArrayAdapter<Event> implements StickyLi
         }
 
         // set header text as month name for this event
-        int month = Integer.parseInt(getItem(position).getDate().split("-")[1]);
-        String year = getItem(position).getDate().split("-")[0];
-        holder.mMonth.setText(MONTHS[month - 1]);
-        holder.mYear.setText(year);
+        Event event = getItem(position);
+        holder.mMonth.setText(Utils.millisToMonthName(event.getDate()));
+        holder.mYear.setText(String.valueOf(Utils.millisToYear(event.getDate())));
         return convertView;
     }
 
     @Override
     public long getHeaderId(int position) {
         // associated header id (events are grouped by month)
-        return Long.parseLong(getItem(position).getDate().split("-")[1]);
+        return Utils.millisToMonth(getItem(position).getDate());
     }
 
     private class ViewHolder {

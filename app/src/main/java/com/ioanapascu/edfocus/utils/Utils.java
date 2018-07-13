@@ -14,6 +14,10 @@ import java.util.GregorianCalendar;
 
 public class Utils {
 
+    private static String[] MONTHS = {"January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"};
+    private static String[] DAYS = {"", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
     public static boolean toggleFieldError(TextInputLayout inputLayout, String input, String message) {
         if (input.isEmpty()) {
             inputLayout.setErrorEnabled(true);
@@ -57,6 +61,11 @@ public class Utils {
         return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }
 
+    public static String millisToTimeString(long dateInMillis) {
+        Date date = new Date(dateInMillis);
+        return new SimpleDateFormat("HH:mm").format(date);
+    }
+
     public static int millisToHour(long dateInMillis) {
         Date date = new Date(dateInMillis);
         Calendar calendar = GregorianCalendar.getInstance();
@@ -78,11 +87,25 @@ public class Utils {
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
+    public static String millisToDayName(long dateInMillis) {
+        Date date = new Date(dateInMillis);
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        return DAYS[calendar.get(Calendar.DAY_OF_WEEK)];
+    }
+
     public static int millisToMonth(long dateInMillis) {
         Date date = new Date(dateInMillis);
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.MONTH);
+    }
+
+    public static String millisToMonthName(long dateInMillis) {
+        Date date = new Date(dateInMillis);
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        return MONTHS[calendar.get(Calendar.MONTH)];
     }
 
     public static int millisToYear(long dateInMillis) {
@@ -94,6 +117,11 @@ public class Utils {
 
     public static long yearMonthDayToMillis(int year, int month, int day) {
         Date date = new GregorianCalendar(year, month, day).getTime();
+        return date.getTime();
+    }
+
+    public static long yearMonthDayHourMinuteToMillis(int year, int month, int day, int hour, int minute) {
+        Date date = new GregorianCalendar(year, month, day, hour, minute).getTime();
         return date.getTime();
     }
 

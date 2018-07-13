@@ -6,27 +6,20 @@ package com.ioanapascu.edfocus.model;
 
 public class Event {
     private String id;
-    private String date;
-    private String time;
+    private Long date;
     private String location;
     private String name;
     private String description;
-    // a long combining the date and the time of the event
-    private long compareValue;
 
     public Event() {
     }
 
-    public Event(String id, String date, String time, String location, String name, String description,
-                 long compareValue) {
+    public Event(String id, Long date, String location, String name, String description) {
         this.id = id;
         this.date = date;
-        this.time = time;
         this.location = location;
         this.name = name;
         this.description = description;
-        this.compareValue = compareValue;
-
     }
 
     public String getId() {
@@ -45,28 +38,12 @@ public class Event {
         this.location = location;
     }
 
-    public long getCompareValue() {
-        return compareValue;
-    }
-
-    public void setCompareValue(long compareValue) {
-        this.compareValue = compareValue;
-    }
-
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getName() {

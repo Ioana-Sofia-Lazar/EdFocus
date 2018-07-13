@@ -77,7 +77,7 @@ public class EventsActivity extends BaseActivity {
     }
 
     private void displayEvents() {
-        firebase.mClassEventsRef.child(mClassId).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
+        firebase.mClassEventsRef.child(mClassId).orderByChild("date").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEvents.clear();
@@ -146,18 +146,15 @@ public class EventsActivity extends BaseActivity {
                             descriptionText.setText(event.getDescription());
                             locationText.setText(event.getLocation());
 
-                            // parse time and set the time picker
-                            String time = event.getTime();
-                            String[] parts = time.split("\\:");
-                            timePicker.setCurrentHour(Integer.parseInt(parts[0]));
-                            timePicker.setCurrentMinute(Integer.parseInt(parts[1]));
+                            // set the time picker
+                            Long millis = event.getDate();
+                            timePicker.setCurrentHour(Utils.millisToHour(millis));
+                            timePicker.setCurrentMinute(Utils.millisToMinute(millis));
                             //timePicker.setHour(Integer.parseInt(parts[0]));
 
-                            // parse date and set the date picker
-                            String date = event.getDate();
-                            parts = date.split("-");
-                            datePicker.updateDate(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) - 1,
-                                    Integer.parseInt(parts[2]));
+                            // set the date picker
+                            datePicker.updateDate(Utils.millisToYear(millis),
+                                    Utils.millisToMonth(millis), Utils.millisToDay(millis));
                         }
 
                         @Override
@@ -178,9 +175,9 @@ public class EventsActivity extends BaseActivity {
                 String name = nameText.getText().toString();
                 String description = descriptionText.getText().toString();
                 String location = locationText.getText().toString();
-                String time = timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute();
-                String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
-                        + datePicker.getDayOfMonth();
+                Long date = Utils.yearMonthDayHourMinuteToMillis(datePicker.getYear(),
+                        datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(),
+                        timePicker.getCurrentMinute());
 
                 // validation
                 boolean valid = Utils.toggleFieldError(nameTil, name, "Please enter a name for the event.");
@@ -189,9 +186,7 @@ public class EventsActivity extends BaseActivity {
                     return;
                 }
 
-                String evenTime = getTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
-                Event event = new Event(eventId, date, evenTime, location, name, description,
-                        getCompareValue(date, time));
+                Event event = new Event(eventId, date, location, name, description);
 
                 // creating a new event
                 if (position == -1) {
@@ -251,37 +246,6 @@ public class EventsActivity extends BaseActivity {
         });
 
         mDialog.show();
-    }
-
-    private String getTime(int hour, int minute) {
-        String time = "";
-        //time += hour <= 9 ? "0" + String.valueOf(hour) : String.valueOf(hour);
-        if (hour <= 9) time += "0" + String.valueOf(hour);
-        else time += String.valueOf(hour);
-        time += ":";
-        if (minute <= 9) time += "0" + String.valueOf(minute);
-        else time += String.valueOf(minute);
-        //time += minute <= 9 ? "0" + String.valueOf(hour) : String.valueOf(minute);
-        return time;
-    }
-
-    /**
-     * @param date in format "2018-2-13"
-     * @param time in format "12:30"
-     * @return long value that will be used to sort events in Firebase e.g. 201802131230
-     */
-    private long getCompareValue(String date, String time) {
-        long value = 0;
-
-        String[] parts = date.split("-");
-        value = Long.parseLong(parts[0]);
-        value = value * 100 + Long.parseLong(parts[1]);
-        value = value * 100 + Long.parseLong(parts[2]);
-        parts = time.split("\\:");
-        value = value * 100 + Long.parseLong(parts[0]);
-        value = value * 100 + Long.parseLong(parts[1]);
-
-        return value;
     }
 
 }
