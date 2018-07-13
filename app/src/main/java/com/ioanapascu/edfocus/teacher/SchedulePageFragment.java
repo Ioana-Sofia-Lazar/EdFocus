@@ -204,36 +204,6 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
 
     }
 
-    /**
-     * If hour is 2 and minute 21 returns "02:21"
-     */
-    private String getTimeString(int hour, int minute) {
-        String time = "";
-
-        if (hour < 10) time += "0" + hour;
-        else time += hour;
-
-        time += ":";
-
-        if (minute < 10) time += "0" + minute;
-        else time += minute;
-
-        return time;
-    }
-
-    /**
-     * Value that starting times will be compared by
-     *
-     * @param startsAt string in format hh:mm
-     * @return float hh.mm
-     */
-    private float getStartsAtFloat(String startsAt) {
-        String[] parts = startsAt.split(":");
-        float time = Float.parseFloat(parts[0] + "." + parts[1]);
-
-        return time;
-    }
-
     private void populateSpinner(Spinner spinner) {
         // set adapter for spinner
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
