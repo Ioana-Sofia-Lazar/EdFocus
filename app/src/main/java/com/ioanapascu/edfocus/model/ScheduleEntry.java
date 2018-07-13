@@ -7,18 +7,16 @@ package com.ioanapascu.edfocus.model;
 
 public class ScheduleEntry {
 
-    String id;
-    String startsAt;
-    String endsAt;
-    String courseId;
-    float compareValue;
+    private String id;
+    private Long startsAt;
+    private Long endsAt;
+    private String courseId;
 
-    public ScheduleEntry(String id, String startsAt, String endsAt, String courseId, float compareValue) {
+    public ScheduleEntry(String id, Long startsAt, Long endsAt, String courseId) {
         this.id = id;
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.courseId = courseId;
-        this.compareValue = compareValue;
     }
 
     public ScheduleEntry() {
@@ -32,19 +30,19 @@ public class ScheduleEntry {
         this.id = id;
     }
 
-    public String getStartsAt() {
+    public Long getStartsAt() {
         return startsAt;
     }
 
-    public void setStartsAt(String startsAt) {
+    public void setStartsAt(Long startsAt) {
         this.startsAt = startsAt;
     }
 
-    public String getEndsAt() {
+    public Long getEndsAt() {
         return endsAt;
     }
 
-    public void setEndsAt(String endsAt) {
+    public void setEndsAt(Long endsAt) {
         this.endsAt = endsAt;
     }
 
@@ -56,11 +54,4 @@ public class ScheduleEntry {
         this.courseId = courseId;
     }
 
-    public float getCompareValue() {
-        return compareValue;
-    }
-
-    public void setCompareValue(float compareValue) {
-        this.compareValue = compareValue;
-    }
 }

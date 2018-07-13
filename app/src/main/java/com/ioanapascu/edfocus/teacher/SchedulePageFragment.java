@@ -25,6 +25,7 @@ import com.ioanapascu.edfocus.model.ScheduleEntry;
 import com.ioanapascu.edfocus.model.ScheduleEntryAndCourse;
 import com.ioanapascu.edfocus.others.ScheduleListAdapter;
 import com.ioanapascu.edfocus.utils.FirebaseUtils;
+import com.ioanapascu.edfocus.utils.Utils;
 import com.ioanapascu.edfocus.views.NoCoursesDialog;
 
 import java.util.ArrayList;
@@ -114,7 +115,7 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         String day = DAYS[mDayIndex];
 
         // retrieve schedule from firebase for the currently selected day, sorted by starting time
-        firebase.mClassScheduleRef.child(mClassId).child(day).orderByChild("compareValue").addValueEventListener(new ValueEventListener() {
+        firebase.mClassScheduleRef.child(mClassId).child(day).orderByChild("startsAt").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEntries.clear();
@@ -177,14 +178,13 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 // get info introduced by user
-                String startsAt = getTimeString(startTimePicker.getCurrentHour(), startTimePicker.getCurrentMinute());
-                String endsAt = getTimeString(endTimePicker.getCurrentHour(), endTimePicker.getCurrentMinute());
+                Long startsAt = Utils.hourMinuteToMillis(startTimePicker.getCurrentHour(), startTimePicker.getCurrentMinute());
+                Long endsAt = Utils.hourMinuteToMillis(endTimePicker.getCurrentHour(), endTimePicker.getCurrentMinute());
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
 
                 // get id where to put the new entry for schedule in firebase
                 String entryId = firebase.mClassScheduleRef.child(mClassId).child(DAYS[mDayIndex]).push().getKey();
-                float compareValue = getStartsAtFloat(startsAt);
-                ScheduleEntry entry = new ScheduleEntry(entryId, startsAt, endsAt, courseId, compareValue);
+                ScheduleEntry entry = new ScheduleEntry(entryId, startsAt, endsAt, courseId);
 
                 // save to firebase
                 firebase.mClassScheduleRef.child(mClassId).child(DAYS[mDayIndex]).child(entryId).setValue(entry);

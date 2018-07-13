@@ -125,6 +125,11 @@ public class Utils {
         return date.getTime();
     }
 
+    public static long hourMinuteToMillis(int hour, int minute) {
+        Date date = new GregorianCalendar(2018, 1, 1, hour, minute).getTime();
+        return date.getTime();
+    }
+
     public static String formatLastSeenDate(long dateInMillis) {
         String result = "";
         Date date = new Date(dateInMillis);

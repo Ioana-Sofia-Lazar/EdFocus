@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.ScheduleEntryAndCourse;
 import com.ioanapascu.edfocus.utils.FirebaseUtils;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -67,7 +68,9 @@ public class ScheduleListAdapter extends ArrayAdapter<ScheduleEntryAndCourse> {
             holder.mDeleteIcon.setVisibility(View.VISIBLE);
         }
 
-        holder.mPeriod.setText(String.format("%s - %s", entry.getEntry().getStartsAt(), entry.getEntry().getEndsAt()));
+        holder.mPeriod.setText(String.format("%s - %s",
+                Utils.millisToTimeString(entry.getEntry().getStartsAt()),
+                Utils.millisToTimeString(entry.getEntry().getEndsAt())));
         holder.mCourseName.setText(entry.getCourse().getName());
         holder.mCourseTeacher.setText(entry.getCourse().getTeacher());
         holder.mDeleteIcon.setOnClickListener(new View.OnClickListener() {
