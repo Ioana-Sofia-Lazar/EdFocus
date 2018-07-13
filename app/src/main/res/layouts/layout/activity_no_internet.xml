@@ -16,7 +16,7 @@
 
             <TextView
                 style="@style/ActivityTitle"
-                android:text="Classbook" />
+                android:text="EdFocus" />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Event;
 import com.ioanapascu.edfocus.others.EventsStickyAdapter;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -118,8 +120,11 @@ public class EventsActivity extends BaseActivity {
         ImageView deleteBtn = mDialog.findViewById(R.id.btn_delete);
         ImageView cancelImg = mDialog.findViewById(R.id.img_cancel);
         final EditText nameText = mDialog.findViewById(R.id.text_name);
+        final TextInputLayout nameTil = mDialog.findViewById(R.id.til_name);
         final EditText locationText = mDialog.findViewById(R.id.text_location);
+        final TextInputLayout locationTil = mDialog.findViewById(R.id.til_location);
         final EditText descriptionText = mDialog.findViewById(R.id.text_description);
+        final TextInputLayout descriptionTil = mDialog.findViewById(R.id.til_description);
 
         timePicker.setIs24HourView(true);
 
@@ -128,6 +133,7 @@ public class EventsActivity extends BaseActivity {
             // edit mode
             titleText.setText("Edit Event");
             createBtn.setText("Save");
+            infoText.setVisibility(View.GONE);
 
             // load event info and display it in widgets
             firebase.mClassEventsRef.child(mClassId).child(eventId).addListenerForSingleValueEvent(
@@ -175,6 +181,13 @@ public class EventsActivity extends BaseActivity {
                 String time = timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute();
                 String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
                         + datePicker.getDayOfMonth();
+
+                // validation
+                boolean valid = Utils.toggleFieldError(nameTil, name, "Please enter a name for the event.");
+                valid = Utils.toggleFieldError(locationTil, location, "Please enter a location for the event.") && valid;
+                if (!valid) {
+                    return;
+                }
 
                 String evenTime = getTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
                 Event event = new Event(eventId, date, evenTime, location, name, description,

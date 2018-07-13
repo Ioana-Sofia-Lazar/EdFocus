@@ -675,6 +675,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.O
                 checkFirstGoogleSignIn(mGoogleAccount.getEmail());
 
             } else {
+                Log.i("Google sign in failed", result.getStatus().getStatusMessage());
                 Toast.makeText(getApplicationContext(), "Sign In with Google Account failed...", Toast.LENGTH_SHORT).show();
             }
         }
