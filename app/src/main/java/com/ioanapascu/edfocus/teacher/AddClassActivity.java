@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -42,6 +43,7 @@ import com.ioanapascu.edfocus.model.Class;
 import com.ioanapascu.edfocus.others.SelectProfilePhotoDialog;
 import com.ioanapascu.edfocus.others.UniversalImageLoader;
 import com.ioanapascu.edfocus.utils.UniqueStringGenerator;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,6 +62,7 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
     private EditText mNameText, mSchoolText, mDescriptionText, mTokenText;
     private TextView mAddPhotoText, mTitleText, mInfoText;
     private LinearLayout mTokenLayout;
+    private TextInputLayout mNameTil, mSchoolTil, mDescriptionTil;
 
     // variables
     private Bitmap mSelectedBitmap;
@@ -85,8 +88,11 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
         // widgets
         mNameText = findViewById(R.id.txt_name);
+        mNameTil = findViewById(R.id.til_name);
         mSchoolText = findViewById(R.id.txt_school);
+        mSchoolTil = findViewById(R.id.til_school);
         mDescriptionText = findViewById(R.id.txt_description);
+        mDescriptionTil = findViewById(R.id.til_description);
         mTitleText = findViewById(R.id.text_title);
         mInfoText = findViewById(R.id.text_info);
         mTokenText = findViewById(R.id.txt_token);
@@ -228,14 +234,15 @@ public class AddClassActivity extends BaseActivity implements View.OnClickListen
 
     private void saveClass() {
         String name = mNameText.getText().toString();
-
-        if (name.isEmpty()) {
-            mNameText.setError("Please enter a name for your class");
-            return;
-        }
-
         String school = mSchoolText.getText().toString();
         String description = mDescriptionText.getText().toString();
+
+        // validation
+        boolean valid = Utils.toggleFieldError(mNameTil, name, "Please enter a name for the class.");
+        valid = Utils.toggleFieldError(mSchoolTil, school, "Please enter a school name.") && valid;
+        if (!valid) {
+            return;
+        }
 
         if (mClassId == null) {
             // creating new class

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -208,8 +209,11 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
 
         // dialog widgets
         final EditText gradeText = dialog.findViewById(R.id.text_grade);
+        final TextInputLayout gradeTil = dialog.findViewById(R.id.til_grade);
         final EditText descriptionText = dialog.findViewById(R.id.text_description);
+        final TextInputLayout descriptionTil = dialog.findViewById(R.id.til_description);
         final EditText nameText = dialog.findViewById(R.id.text_name);
+        final TextInputLayout nameTil = dialog.findViewById(R.id.til_name);
         final DatePicker datePicker = dialog.findViewById(R.id.date_picker);
         Button createBtn = dialog.findViewById(R.id.btn_create);
         ImageView deleteBtn = dialog.findViewById(R.id.btn_delete);
@@ -219,6 +223,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
         // hide delete button (available only in editing mode)
         deleteBtn.setVisibility(View.GONE);
 
+        // courses spinner
         populateSpinner(coursesSpinner);
 
         // add course button click
@@ -232,6 +237,13 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
                 String date = Utils.getDateString(datePicker.getYear(),
                         datePicker.getMonth() + 1, datePicker.getDayOfMonth());
+
+                // validation
+                boolean valid = Utils.toggleFieldError(gradeTil, gradeVal, "Please enter a value for the grade.");
+                valid = Utils.toggleFieldError(nameTil, name, "Please enter a name/title for the grade.") && valid;
+                if (!valid) {
+                    return;
+                }
 
                 // get id where to put the new grade in firebase
                 String gradeId = firebase.mStudentGradesRef.child(mClassId).child(studentId).push().getKey();

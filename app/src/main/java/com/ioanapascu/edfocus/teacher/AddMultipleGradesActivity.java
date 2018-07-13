@@ -1,6 +1,7 @@
 package com.ioanapascu.edfocus.teacher;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -32,6 +33,7 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
     private Spinner mCoursesSpinner;
     private DatePicker mDatePicker;
     private EditText mNameText;
+    TextInputLayout mNameTil;
 
     // variables
     private ArrayList<String> mStudentIds, mCourseNames, mCourseIds;
@@ -55,6 +57,7 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
         mSaveImg = findViewById(R.id.img_save);
         mDatePicker = findViewById(R.id.date_picker);
         mNameText = findViewById(R.id.text_name);
+        mNameTil = findViewById(R.id.til_name);
 
         mSaveImg.setOnClickListener(this);
         mGradesList.setNestedScrollingEnabled(false);
@@ -136,8 +139,22 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
                 mDatePicker.getDayOfMonth());
         String name = mNameText.getText().toString();
 
-        ArrayList<GradeRow> gradesInfo = (ArrayList<GradeRow>) mAdapter.getGradesInfo();
+        // validation
+        if (!Utils.toggleFieldError(mNameTil, name, "Please enter a name/title for the grade.")) {
+            return;
+        }
+        // check if teacher entered grade for every student
+        boolean allFilledIn = true;
+        for (int i = 0; i < mGradesList.getChildCount(); i++) {
+            MultipleGradesListAdapter.GradeViewHolder holder =
+                    (MultipleGradesListAdapter.GradeViewHolder) mGradesList.findViewHolderForAdapterPosition(i);
+            allFilledIn = holder.checkGradeField() && allFilledIn;
+        }
+        if (!allFilledIn) {
+            return;
+        }
 
+        ArrayList<GradeRow> gradesInfo = (ArrayList<GradeRow>) mAdapter.getGradesInfo();
         for (GradeRow gradeRow : gradesInfo) {
             // create grade to save in the database
             GradeDb grade = new GradeDb(null, name, gradeRow.getGrade(), date, gradeRow.getNotes(),
@@ -147,7 +164,10 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
             grade.setId(gradeId);
             firebase.mStudentGradesRef.child(mClassId).child(gradeRow.getStudentId()).child(gradeId)
                     .setValue(grade);
+
         }
+
+        finish();
     }
 
     @Override
@@ -155,7 +175,6 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
         if (view == mSaveImg) {
             // todo check if fields are filled
             saveAllGrades();
-            finish();
         }
     }
 }

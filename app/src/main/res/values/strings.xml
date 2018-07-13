@@ -37,7 +37,7 @@
     <string name="absent_all_day_info">If you check \'Absent All Day\' an absence will be added for every course of the selected day.</string>
 
     <!-- Events -->
-    <string name="add_event_info">Students will receive notifications when the event is created and 2 hours before the event.</string>
+    <string name="add_event_info">Students and their parents will receive a notification after the event is created.</string>
 
     <!-- No Courses -->
     <string name="schedule_no_courses_error">Before adding Courses to the Schedule, you need to create at least one Course from the Courses Page.</string>

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.ioanapascu.edfocus.BaseActivity;
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Course;
 import com.ioanapascu.edfocus.others.CoursesListAdapter;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -113,14 +115,17 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         dialog.setContentView(R.layout.dialog_add_course);
 
         // dialog widgets
-        final TextView titleTest = dialog.findViewById(R.id.txt_title);
-        final EditText nameText = dialog.findViewById(R.id.txt_name);
-        final EditText teacherText = dialog.findViewById(R.id.txt_teacher);
-        final EditText descriptionText = dialog.findViewById(R.id.txt_description);
+        final TextView titleText = dialog.findViewById(R.id.txt_title);
+        final EditText nameText = dialog.findViewById(R.id.text_name);
+        final TextInputLayout nameTil = dialog.findViewById(R.id.til_name);
+        final EditText teacherText = dialog.findViewById(R.id.text_teacher);
+        final TextInputLayout teacherTil = dialog.findViewById(R.id.til_teacher);
+        final EditText descriptionText = dialog.findViewById(R.id.text_description);
+        final TextInputLayout descriptionTil = dialog.findViewById(R.id.til_description);
         Button createBtn = dialog.findViewById(R.id.btn_create);
         ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
 
-        titleTest.setText("Edit Course Info");
+        titleText.setText("Edit Course Info");
         createBtn.setText("Save");
 
         // set old values
@@ -136,6 +141,13 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
                 String name = nameText.getText().toString();
                 String teacher = teacherText.getText().toString();
                 String description = descriptionText.getText().toString();
+
+                // validation
+                boolean valid = Utils.toggleFieldError(nameTil, name, "Please enter a name for the course.");
+                valid = Utils.toggleFieldError(teacherTil, teacher, "Please enter a name for the course's teacher.") && valid;
+                if (!valid) {
+                    return;
+                }
 
                 // save info at course id in firebase
                 Course newCourse = new Course(course.getId(), name, teacher, description);
@@ -163,9 +175,12 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
         dialog.setContentView(R.layout.dialog_add_course);
 
         // dialog widgets
-        final EditText nameText = dialog.findViewById(R.id.txt_name);
-        final EditText teacherText = dialog.findViewById(R.id.txt_teacher);
-        final EditText descriptionText = dialog.findViewById(R.id.txt_description);
+        final EditText nameText = dialog.findViewById(R.id.text_name);
+        final TextInputLayout nameTil = dialog.findViewById(R.id.til_name);
+        final EditText teacherText = dialog.findViewById(R.id.text_teacher);
+        final TextInputLayout teacherTil = dialog.findViewById(R.id.til_teacher);
+        final EditText descriptionText = dialog.findViewById(R.id.text_description);
+        final TextInputLayout descriptionTil = dialog.findViewById(R.id.til_description);
         Button createBtn = dialog.findViewById(R.id.btn_create);
         ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
 
@@ -177,6 +192,13 @@ public class CoursesActivity extends BaseActivity implements View.OnClickListene
                 String name = nameText.getText().toString();
                 String teacher = teacherText.getText().toString();
                 String description = descriptionText.getText().toString();
+
+                // validation
+                boolean valid = Utils.toggleFieldError(nameTil, name, "Please enter a name for the course.");
+                valid = Utils.toggleFieldError(teacherTil, name, "Please enter a name for the course's teacher.") && valid;
+                if (!valid) {
+                    return;
+                }
 
                 // get id where to put the new course in firebase
                 String courseId = firebase.mClassCoursesRef.child(firebase.getCurrentUserId()).push().getKey();

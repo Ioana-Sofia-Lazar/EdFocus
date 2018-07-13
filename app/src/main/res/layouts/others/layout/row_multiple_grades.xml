@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -14,20 +15,28 @@
             style="@style/TextBig"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/text_grade"
+            android:layout_toStartOf="@+id/til_grade"
             android:text="Student Name" />
 
-        <EditText
-            android:id="@+id/text_grade"
-            style="@style/TextBig"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_grade"
+            style="@style/FormFieldLayout"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="16dp"
-            android:hint="grade"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent" />
+            app:hintEnabled="false">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/text_grade"
+                style="@style/TextBig"
+                android:hint="grade"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent" />
+
+        </android.support.design.widget.TextInputLayout>
 
     </RelativeLayout>
 

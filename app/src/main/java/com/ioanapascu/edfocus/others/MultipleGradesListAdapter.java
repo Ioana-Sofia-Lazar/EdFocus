@@ -1,6 +1,7 @@
 package com.ioanapascu.edfocus.others;
 
 import android.content.Context;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.GradeRow;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ import java.util.List;
  */
 
 public class MultipleGradesListAdapter extends
-        RecyclerView.Adapter<MultipleGradesListAdapter.MyViewHolder> {
+        RecyclerView.Adapter<MultipleGradesListAdapter.GradeViewHolder> {
 
     private static final String TAG = "MultipleGradesListAdapter";
 
@@ -35,7 +37,7 @@ public class MultipleGradesListAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(GradeViewHolder holder, final int position) {
         GradeRow grade = mGrades.get(position);
         holder.mStudentName.setText(grade.getStudentName());
 
@@ -85,24 +87,30 @@ public class MultipleGradesListAdapter extends
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GradeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_multiple_grades, parent, false);
-        return new MyViewHolder(v);
+        return new GradeViewHolder(v);
     }
 
     /**
      * View holder class
      */
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class GradeViewHolder extends RecyclerView.ViewHolder {
         public TextView mStudentName;
         public EditText mGrade, mNotes;
+        public TextInputLayout mGradeTil;
 
-        public MyViewHolder(View view) {
+        public GradeViewHolder(View view) {
             super(view);
             mStudentName = view.findViewById(R.id.text_student_name);
             mGrade = view.findViewById(R.id.text_grade);
             mNotes = view.findViewById(R.id.text_notes);
+            mGradeTil = view.findViewById(R.id.til_grade);
+        }
+
+        public boolean checkGradeField() {
+            return Utils.toggleFieldError(mGradeTil, mGrade.getText().toString(), "*");
         }
     }
 }
