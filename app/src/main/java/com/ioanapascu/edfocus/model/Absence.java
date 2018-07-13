@@ -32,11 +32,11 @@ public class Absence {
         absenceDb.setId(id);
     }
 
-    public String getDate() {
+    public Long getDate() {
         return absenceDb.getDate();
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         absenceDb.setDate(date);
     }
 

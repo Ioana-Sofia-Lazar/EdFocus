@@ -294,8 +294,8 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 boolean absentAllDay = absentAllDayCB.isChecked();
                 boolean authorised = authorisedCB.isChecked();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = Utils.getDateString(datePicker.getYear(),
-                        datePicker.getMonth() + 1, datePicker.getDayOfMonth());
+                Long date = Utils.yearMonthDayToMillis(datePicker.getYear(),
+                        datePicker.getMonth(), datePicker.getDayOfMonth());
 
                 // get an array of the absences that need to be inserted
                 List<AbsenceDb> absences = new ArrayList<>();
@@ -330,7 +330,7 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
     }
 
     private void addAbsencesForAllDay(int year, int month, int day,
-                                      final String studentId, final String date, final boolean authorised) {
+                                      final String studentId, final Long date, final boolean authorised) {
         // find all courses from the day of the week that this date was
         final ArrayList<AbsenceDb> absences = new ArrayList<>();
 

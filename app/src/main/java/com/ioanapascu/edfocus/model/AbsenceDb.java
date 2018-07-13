@@ -6,7 +6,7 @@ package com.ioanapascu.edfocus.model;
 
 public class AbsenceDb {
     private String id;
-    private String date;
+    private Long date;
     private boolean authorised;
     private String classId;
     private String courseId;
@@ -15,7 +15,7 @@ public class AbsenceDb {
     public AbsenceDb() {
     }
 
-    public AbsenceDb(String id, String date, boolean authorised, String classId, String courseId, String studentId) {
+    public AbsenceDb(String id, Long date, boolean authorised, String classId, String courseId, String studentId) {
         this.id = id;
         this.date = date;
         this.authorised = authorised;
@@ -44,11 +44,11 @@ public class AbsenceDb {
         this.id = id;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

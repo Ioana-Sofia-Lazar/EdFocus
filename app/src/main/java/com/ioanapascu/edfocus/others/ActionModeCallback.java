@@ -162,8 +162,8 @@ public class ActionModeCallback implements ActionMode.Callback {
                 // get info introduced by user
                 boolean absentAllDay = absentAllDayCB.isChecked();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = Utils.getDateString(datePicker.getYear(),
-                        datePicker.getMonth() + 1, datePicker.getDayOfMonth());
+                Long date = Utils.yearMonthDayToMillis(datePicker.getYear(),
+                        datePicker.getMonth(), datePicker.getDayOfMonth());
 
                 // add absence for all selected students
                 for (String studentId : selectedStudentIds) {
@@ -201,7 +201,7 @@ public class ActionModeCallback implements ActionMode.Callback {
     }
 
     private void addAbsencesForAllDay(int year, int month, int day,
-                                      final String studentId, final String date) {
+                                      final String studentId, final Long date) {
         // find all courses from the day of the week that this date was
         final ArrayList<AbsenceDb> absences = new ArrayList<>();
 

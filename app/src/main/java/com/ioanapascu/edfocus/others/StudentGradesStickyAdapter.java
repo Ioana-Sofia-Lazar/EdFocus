@@ -142,8 +142,8 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
                             }
                         });
 
-                        // parse date and set the picker
-                        long date = grade.getDate();
+                        // set the picker
+                        Long date = grade.getDate();
                         datePicker.updateDate(Utils.millisToYear(date), Utils.millisToMonth(date),
                                 Utils.millisToDay(date));
 

@@ -23,6 +23,7 @@ import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Absence;
 import com.ioanapascu.edfocus.model.AbsenceDb;
 import com.ioanapascu.edfocus.utils.FirebaseUtils;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +80,7 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
 
         if (mUserType.equals("teacher")) holder.mEditIcon.setVisibility(View.VISIBLE);
 
-        holder.mDateText.setText(absence.getDate());
+        holder.mDateText.setText(Utils.millisToDateString(absence.getDate()));
         if (absence.isAuthorised()) {
             holder.mStatusText.setText("authorised");
             holder.mStatusText.setTextColor(mContext.getResources().getColor(R.color.cyan));
@@ -143,11 +144,10 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
                             }
                         });
 
-                        // parse date and set the picker
-                        String date = absence.getDate();
-                        String[] parts = date.split("-");
-                        datePicker.updateDate(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) - 1,
-                                Integer.parseInt(parts[2]));
+                        // set the picker
+                        Long millis = absence.getDate();
+                        datePicker.updateDate(Utils.millisToYear(millis), Utils.millisToMonth(millis),
+                                Utils.millisToDay(millis));
                     }
 
                     @Override
@@ -164,8 +164,8 @@ public class StudentAbsencesStickyAdapter extends ArrayAdapter<Absence> implemen
                 // get info introduced by user
                 boolean authorised = authorisedCB.isChecked();
                 String courseId = getItem(position).getCourseId();
-                String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
-                        + datePicker.getDayOfMonth();
+                Long date = Utils.yearMonthDayToMillis(datePicker.getYear(), datePicker.getMonth(),
+                        datePicker.getDayOfMonth());
 
                 AbsenceDb absence = new AbsenceDb(absenceId, date, authorised, mClassId, courseId, mStudentId);
 
