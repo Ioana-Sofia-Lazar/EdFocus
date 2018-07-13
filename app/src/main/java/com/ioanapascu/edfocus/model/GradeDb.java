@@ -9,7 +9,7 @@ public class GradeDb {
     private String id;
     private String name;
     private String grade;
-    private String date;
+    private Long date;
     private String description;
     private String classId;
     private String courseId;
@@ -18,8 +18,7 @@ public class GradeDb {
     public GradeDb() {
     }
 
-    public GradeDb(String id, String name, String grade, String date, String description, String classId, String courseId, String studentId) {
-
+    public GradeDb(String id, String name, String grade, Long date, String description, String classId, String courseId, String studentId) {
         this.id = id;
         this.name = name;
         this.grade = grade;
@@ -54,11 +53,11 @@ public class GradeDb {
         this.grade = grade;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

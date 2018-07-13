@@ -135,7 +135,7 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
 
     private void saveAllGrades() {
         String courseId = mCourseIds.get(mCoursesSpinner.getSelectedItemPosition());
-        String date = Utils.getDateString(mDatePicker.getYear(), mDatePicker.getMonth() + 1,
+        Long date = Utils.yearMonthDayToMillis(mDatePicker.getYear(), mDatePicker.getMonth(),
                 mDatePicker.getDayOfMonth());
         String name = mNameText.getText().toString();
 
@@ -173,7 +173,6 @@ public class AddMultipleGradesActivity extends BaseActivity implements View.OnCl
     @Override
     public void onClick(View view) {
         if (view == mSaveImg) {
-            // todo check if fields are filled
             saveAllGrades();
         }
     }

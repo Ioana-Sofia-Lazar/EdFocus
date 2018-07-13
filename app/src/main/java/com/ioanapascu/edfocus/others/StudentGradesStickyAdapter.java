@@ -23,6 +23,7 @@ import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Grade;
 import com.ioanapascu.edfocus.model.GradeDb;
 import com.ioanapascu.edfocus.utils.FirebaseUtils;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
         if (mUserType.equals("teacher")) holder.mEditIcon.setVisibility(View.VISIBLE);
 
         holder.mNameText.setText(grade.getName());
-        holder.mDateText.setText(grade.getDate());
+        holder.mDateText.setText(Utils.millisToDateString(grade.getDate()));
         holder.mGradeText.setText(grade.getGrade());
         holder.mDescriptionText.setText(grade.getDescription());
         holder.mEditIcon.setOnClickListener(new View.OnClickListener() {
@@ -142,10 +143,9 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
                         });
 
                         // parse date and set the picker
-                        String date = grade.getDate();
-                        String[] parts = date.split("-");
-                        datePicker.updateDate(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) - 1,
-                                Integer.parseInt(parts[2]));
+                        long date = grade.getDate();
+                        datePicker.updateDate(Utils.millisToYear(date), Utils.millisToMonth(date),
+                                Utils.millisToDay(date));
 
                     }
 
@@ -164,8 +164,8 @@ public class StudentGradesStickyAdapter extends ArrayAdapter<Grade> implements S
                 String gradeVal = gradeText.getText().toString();
                 String description = descriptionText.getText().toString();
                 String name = nameText.getText().toString();
-                String date = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-"
-                        + datePicker.getDayOfMonth();
+                long date = Utils.yearMonthDayToMillis(datePicker.getYear(), datePicker.getMonth(),
+                        datePicker.getDayOfMonth());
 
                 GradeDb grade = new GradeDb(gradeId, name, gradeVal, date, description, mClassId,
                         getItem(position).getCourseId(), mStudentId);

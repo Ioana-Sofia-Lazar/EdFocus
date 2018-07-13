@@ -58,11 +58,11 @@ public class Grade {
         this.gradeDb.setGrade(grade);
     }
 
-    public String getDate() {
+    public Long getDate() {
         return gradeDb.getDate();
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.gradeDb.setDate(date);
     }
 

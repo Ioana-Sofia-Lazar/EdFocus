@@ -235,8 +235,8 @@ public class StudentsListAdapter extends ArrayAdapter<Contact> implements PopupM
                 String description = descriptionText.getText().toString();
                 String name = nameText.getText().toString();
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
-                String date = Utils.getDateString(datePicker.getYear(),
-                        datePicker.getMonth() + 1, datePicker.getDayOfMonth());
+                Long date = Utils.yearMonthDayToMillis(datePicker.getYear(),
+                        datePicker.getMonth(), datePicker.getDayOfMonth());
 
                 // validation
                 boolean valid = Utils.toggleFieldError(gradeTil, gradeVal, "Please enter a value for the grade.");
