@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.ioanapascu.edfocus.R;
 import com.ioanapascu.edfocus.model.Notification;
+import com.ioanapascu.edfocus.utils.Utils;
 
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         final Notification notification = mNotificationList.get(position);
 
         holder.titleText.setText(notification.getTitle());
+        holder.dateText.setText(Utils.formatMessageDate(-notification.getCompareValue()));
         holder.messageText.setText(notification.getMessage());
         int drawableResourceId = mContext.getResources().getIdentifier(notification.getIcon(),
                 "drawable", mContext.getPackageName());
@@ -70,13 +72,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView titleText, messageText;
+        TextView titleText, messageText, dateText;
         ImageView iconImage;
         RelativeLayout containerLayout;
 
         MyViewHolder(View view) {
             super(view);
             titleText = view.findViewById(R.id.text_title);
+            dateText = view.findViewById(R.id.text_date);
             messageText = view.findViewById(R.id.text_message);
             iconImage = view.findViewById(R.id.icon);
             containerLayout = view.findViewById(R.id.layout_container);
