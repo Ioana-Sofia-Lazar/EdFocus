@@ -70,7 +70,7 @@
             android:name=".shared.ViewProfileActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.ioanap.classbook_TARGET_REQUEST_NOTIFICATION" />
+                <action android:name="com.ioanapascu.edfocus_TARGET_REQUEST_NOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -87,14 +87,14 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".teacher.StudentActivity">
             <intent-filter>
-                <action android:name="com.ioanap.classbook_TARGET_GRADE_NOTIFICATION" />
+                <action android:name="com.ioanapascu.edfocus_TARGET_GRADE_NOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".shared.EventsActivity">
             <intent-filter>
-                <action android:name="com.ioanap.classbook_TARGET_EVENT_NOTIFICATION" />
+                <action android:name="com.ioanapascu.edfocus_TARGET_EVENT_NOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -122,7 +122,7 @@
         <activity android:name=".IntroActivity" />
         <activity android:name=".shared.ConversationActivity">
             <intent-filter>
-                <action android:name="com.ioanap.classbook_TARGET_MESSAGE_NOTIFICATION" />
+                <action android:name="com.ioanapascu.edfocus_TARGET_MESSAGE_NOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
