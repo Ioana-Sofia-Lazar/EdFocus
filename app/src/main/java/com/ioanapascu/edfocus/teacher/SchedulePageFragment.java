@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.firebase.database.DataSnapshot;
@@ -167,8 +168,9 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
         startTimePicker.setIs24HourView(true);
         final TimePicker endTimePicker = dialog.findViewById(R.id.time_picker_end);
         endTimePicker.setIs24HourView(true);
-        Button createBtn = dialog.findViewById(R.id.btn_create);
-        ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
+        final TextView endsAtErrorText = dialog.findViewById(R.id.text_ends_at_error);
+        final Button createBtn = dialog.findViewById(R.id.btn_create);
+        final ImageView cancelImg = dialog.findViewById(R.id.img_cancel);
         final Spinner coursesSpinner = dialog.findViewById(R.id.spinner_courses);
 
         populateSpinner(coursesSpinner);
@@ -181,6 +183,13 @@ public class SchedulePageFragment extends Fragment implements View.OnClickListen
                 Long startsAt = Utils.hourMinuteToMillis(startTimePicker.getCurrentHour(), startTimePicker.getCurrentMinute());
                 Long endsAt = Utils.hourMinuteToMillis(endTimePicker.getCurrentHour(), endTimePicker.getCurrentMinute());
                 String courseId = mCourseIds.get(coursesSpinner.getSelectedItemPosition());
+
+                if (startsAt >= endsAt) {
+                    endsAtErrorText.setVisibility(View.VISIBLE);
+                    return;
+                } else {
+                    endsAtErrorText.setVisibility(View.GONE);
+                }
 
                 // get id where to put the new entry for schedule in firebase
                 String entryId = firebase.mClassScheduleRef.child(mClassId).child(DAYS[mDayIndex]).push().getKey();

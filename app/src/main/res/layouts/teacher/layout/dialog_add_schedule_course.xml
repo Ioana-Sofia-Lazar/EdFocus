@@ -43,6 +43,15 @@
                 android:id="@+id/time_picker_end"
                 style="@style/TimePicker" />
 
+            <TextView
+                android:id="@+id/text_ends_at_error"
+                style="@style/TextAppearance.Design.Error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Course cannot end before it starts."
+                android:textColor="@color/errorRed"
+                android:visibility="gone" />
+
             <Button
                 android:id="@+id/btn_create"
                 style="@style/Button"

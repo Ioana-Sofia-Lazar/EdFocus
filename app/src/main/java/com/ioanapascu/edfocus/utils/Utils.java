@@ -28,21 +28,6 @@ public class Utils {
         return true;
     }
 
-    public static String getDateString(int year, int month, int day) {
-        String date = "";
-        date += year + "-";
-
-        if (month < 10) date += "0" + month;
-        else date += month;
-
-        date += "-";
-
-        if (day < 10) date += "0" + day;
-        else date += day;
-
-        return date;
-    }
-
     public static String formatMessageDate(long dateInMillis) {
         String result;
         Date date = new Date(dateInMillis);
